@@ -1,0 +1,46 @@
+{
+  "name": "sevasetu-web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Public website and operational Admin Panel for the SevaSetu local/home-service worker platform.",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:reset": "supabase db reset",
+    "db:push": "supabase db push",
+    "db:types": "supabase gen types typescript --local > src/types/database.types.ts",
+    "firebase:rules": "firebase deploy --only storage"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.10",
+    "clsx": "^2.1.1",
+    "firebase": "^11.1.0",
+    "firebase-admin": "^13.0.2",
+    "lucide-react": "^0.469.0",
+    "next": "^15.5.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^2.6.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.5",
+    "@types/react": "^19.0.4",
+    "@types/react-dom": "^19.0.2",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^15.5.4",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8"
+  }
+}

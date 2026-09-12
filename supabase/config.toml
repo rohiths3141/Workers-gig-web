@@ -1,0 +1,30 @@
+project_id = "sevasetu"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[realtime]
+enabled = true
+
+# Supabase Auth is NOT the platform's authentication provider. Firebase
+# Authentication is. The local auth service stays disabled so no second identity
+# system can be created by accident during development.
+[auth]
+enabled = false
+
+# Supabase Storage is NOT used. All application media lives in Firebase Storage
+# and is referenced from public.media_assets.
+[storage]
+enabled = false

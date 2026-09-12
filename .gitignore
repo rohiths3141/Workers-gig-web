@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# Secrets — never commit
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*-service-account*.json
+firebase-adminsdk-*.json
+google-services.json
+GoogleService-Info.plist
+
+# ---------------------------------------------------------------------------
+# Node / Next.js (web/)
+# ---------------------------------------------------------------------------
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.vercel
+
+# ---------------------------------------------------------------------------
+# Flutter (customer-app/, worker-app/)
+# ---------------------------------------------------------------------------
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+**/ios/Pods/
+**/ios/.symlinks/
+**/android/.gradle/
+**/android/local.properties
+**/android/key.properties
+*.jks
+*.keystore
+
+# ---------------------------------------------------------------------------
+# Supabase / Firebase CLI local state
+# ---------------------------------------------------------------------------
+supabase/.branches
+supabase/.temp
+.firebase/
+firebase-debug.log
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

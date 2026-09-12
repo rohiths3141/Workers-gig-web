@@ -1,0 +1,58 @@
+rules_version = '2';
+
+// ===========================================================================
+// Firebase Storage security rules
+// ---------------------------------------------------------------------------
+// The platform's authorization model lives in Supabase: who owns a booking, who
+// is a party to a claim, which administrator holds workers.documents.read. None
+// of that is knowable from inside a Storage rule, so these rules do not try to
+// approximate it.
+//
+// Instead the rule set is deny-by-default, and every sensitive read and write
+// goes through the trusted backend:
+//
+//   client -> backend (verify Firebase ID token, check ownership in Supabase,
+//                      check permission, validate type and size)
+//          -> Admin SDK mints a short-lived signed URL
+//          -> client uploads to / downloads from that URL
+//
+// The Admin SDK bypasses these rules by design, so a locked-down rule set costs
+// the platform nothing and removes the entire class of bug where a client walks
+// another user's path (workers/someone-else/kyc/id.jpg).
+//
+// The one exception is service catalogue artwork, which is genuinely public and
+// is served directly so that service pages render fast.
+// ===========================================================================
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // -------------------------------------------------------------------
+    // Public: service catalogue artwork
+    // -------------------------------------------------------------------
+    // Read-only to everyone. Writes still go through the backend, so a signed-in
+    // user cannot replace the catalogue images.
+    match /services/{serviceId}/catalogue/{fileName} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // -------------------------------------------------------------------
+    // Everything else: no direct client access
+    // -------------------------------------------------------------------
+    // Covers, explicitly:
+    //   workers/{workerId}/profile|kyc|qualifications|rpl|background|insurance
+    //   customers/{customerId}/profile
+    //   bookings/{bookingId}/before-work|during-work|after-work|arrival|materials|receipts
+    //   claims/{claimId}/evidence
+    //   support/{ticketId}/attachments
+    //
+    // Identity documents, certificates, background checks, claim evidence and
+    // support attachments are never publicly readable and never directly
+    // writable. Access is always a short-lived signed URL issued after the
+    // backend has checked ownership and permission against Supabase.
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
