@@ -16,6 +16,7 @@ import { adminRoutes, publicRoutes } from '@/lib/config/routes';
 import { AppError } from '@/lib/errors/app-error';
 import {
   createSessionCookie,
+  ensureSupabaseRoleClaim,
   revokeUserSessions,
   verifyIdToken,
   verifySessionCookie,
@@ -52,6 +53,25 @@ export async function POST(request: NextRequest) {
     // 1. Authenticate. checkRevoked catches a user disabled since the token was
     //    issued, which is what stops a removed administrator signing back in.
     const user = await verifyIdToken(body.idToken, true);
+
+    // 1b. Supabase maps the token's `role` claim to a Postgres role, and Firebase
+    //     does not issue one. Without `role: "authenticated"` the forwarded token
+    //     is treated as anonymous and every RLS policy denies. Add the claim on
+    //     the server and ask the client for a fresh token that carries it. No
+    //     cookie is set from a token that Supabase would reject.
+    if (!user.hasSupabaseRole) {
+      await ensureSupabaseRoleClaim(user.uid);
+
+      logger.info('Added Supabase role claim; client must refresh its token', {
+        requestId,
+        uid: user.uid,
+      });
+
+      return ok(
+        { isAdmin: false, redirectTo: publicRoutes.home, refreshRequired: true },
+        { requestId },
+      );
+    }
 
     // 2. Mint the session cookie. Firebase refuses if the ID token is older than
     //    five minutes, so a cookie can only follow a real, recent sign-in.

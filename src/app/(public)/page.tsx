@@ -6,10 +6,8 @@ import {
   CreditCard,
   FileCheck2,
   Fingerprint,
-  MapPin,
   Receipt,
   ShieldCheck,
-  Star,
   UserCheck,
 } from 'lucide-react';
 

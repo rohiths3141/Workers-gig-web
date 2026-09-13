@@ -1,6 +1,6 @@
 import 'server-only';
 
-import { cert, getApp, getApps, initializeApp, type App } from 'firebase-admin/app';
+import { cert, getApps, initializeApp, type App } from 'firebase-admin/app';
 import { getAuth, type Auth, type DecodedIdToken } from 'firebase-admin/auth';
 import { getStorage, type Storage } from 'firebase-admin/storage';
 
@@ -66,6 +66,12 @@ export interface VerifiedFirebaseUser {
   /** Seconds since epoch at which the credential was issued. */
   authTime: number;
   signInProvider: string | null;
+  /**
+   * Whether the token carries `role: "authenticated"`. Supabase maps this claim
+   * to the Postgres role; without it a forwarded token is treated as anonymous
+   * and every RLS policy written for authenticated users denies.
+   */
+  hasSupabaseRole: boolean;
 }
 
 function toVerifiedUser(decoded: DecodedIdToken): VerifiedFirebaseUser {
@@ -77,6 +83,7 @@ function toVerifiedUser(decoded: DecodedIdToken): VerifiedFirebaseUser {
     displayName: typeof decoded.name === 'string' ? decoded.name : null,
     authTime: decoded.auth_time,
     signInProvider: decoded.firebase?.sign_in_provider ?? null,
+    hasSupabaseRole: decoded.role === 'authenticated',
   };
 }
 
@@ -125,6 +132,26 @@ export async function createSessionCookie(
  */
 export async function revokeUserSessions(uid: string): Promise<void> {
   await adminAuth().revokeRefreshTokens(uid);
+}
+
+/**
+ * Give a Firebase user the `role: "authenticated"` custom claim.
+ *
+ * Supabase Third-Party Auth assigns the Postgres role from this claim, and
+ * Firebase does not issue it by default. Existing custom claims are preserved,
+ * because setCustomUserClaims replaces the whole claim set.
+ *
+ * Only the Admin SDK can set claims, so a client cannot grant itself this or any
+ * other claim. It confers nothing beyond what RLS allows an ordinary signed-in
+ * user; administrator status is still decided by public.admin_users.
+ */
+export async function ensureSupabaseRoleClaim(uid: string): Promise<void> {
+  const record = await adminAuth().getUser(uid);
+  const existing = record.customClaims ?? {};
+
+  if (existing.role === 'authenticated') return;
+
+  await adminAuth().setCustomUserClaims(uid, { ...existing, role: 'authenticated' });
 }
 
 // ---------------------------------------------------------------------------

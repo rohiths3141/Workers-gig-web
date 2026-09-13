@@ -59,6 +59,12 @@ export async function POST(request: NextRequest) {
       return fail(AppError.forbidden('That token does not belong to this session.'));
     }
 
+    // A token without the Supabase role claim would be treated as anonymous by
+    // the database, so it is not worth storing.
+    if (!tokenUser.hasSupabaseRole) {
+      return fail(AppError.unauthenticated('Please sign in again to finish setting up your session.'));
+    }
+
     jar.set(idTokenCookieName(), body.idToken, sessionCookieOptions(55 * 60));
 
     return ok({ refreshed: true });

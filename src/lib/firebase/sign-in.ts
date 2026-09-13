@@ -165,19 +165,16 @@ export interface SessionExchangeResult {
   redirectTo: string;
 }
 
-/**
- * Exchange the Firebase ID token for an httpOnly server session.
- *
- * This is the moment authentication becomes authorization. The browser hands
- * over a token; the server verifies it, looks the Firebase UID up in
- * public.admin_users, and answers with what the person may actually do. The
- * client cannot influence that answer.
- */
-export async function establishServerSession(user: User): Promise<SessionExchangeResult> {
-  // `true` forces a refresh, so the token is newly minted. Firebase refuses to
-  // create a session cookie from an ID token older than five minutes.
-  const idToken = await user.getIdToken(true);
+interface SessionExchangeResponse extends SessionExchangeResult {
+  /**
+   * The server has just added the `role: "authenticated"` claim Supabase needs,
+   * and the token that was sent predates it. The client must mint a fresh token
+   * and exchange again.
+   */
+  refreshRequired: boolean;
+}
 
+async function postIdToken(idToken: string): Promise<SessionExchangeResponse> {
   const response = await fetch(apiRoutes.session, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -197,12 +194,42 @@ export async function establishServerSession(user: User): Promise<SessionExchang
     throw new SignInError('session/exchange-failed', message);
   }
 
-  const data = (payload as { data?: SessionExchangeResult })?.data;
+  const data = (payload as { data?: Partial<SessionExchangeResponse> })?.data;
 
   return {
     isAdmin: data?.isAdmin ?? false,
     redirectTo: data?.redirectTo ?? '/',
+    refreshRequired: data?.refreshRequired ?? false,
   };
+}
+
+/**
+ * Exchange the Firebase ID token for an httpOnly server session.
+ *
+ * This is the moment authentication becomes authorization. The browser hands
+ * over a token; the server verifies it, looks the Firebase UID up in
+ * public.admin_users, and answers with what the person may actually do. The
+ * client cannot influence that answer.
+ */
+export async function establishServerSession(user: User): Promise<SessionExchangeResult> {
+  // `true` forces a newly minted token. Firebase refuses to create a session
+  // cookie from an ID token older than five minutes.
+  let result = await postIdToken(await user.getIdToken(true));
+
+  // First sign-in for this account: the server added the Supabase role claim,
+  // which only appears in tokens minted after it was set.
+  if (result.refreshRequired) {
+    result = await postIdToken(await user.getIdToken(true));
+  }
+
+  if (result.refreshRequired) {
+    throw new SignInError(
+      'session/claims-pending',
+      'Your account is still being set up. Please try signing in again in a moment.',
+    );
+  }
+
+  return { isAdmin: result.isAdmin, redirectTo: result.redirectTo };
 }
 
 /** Sign out of Firebase and clear the server session cookies. */

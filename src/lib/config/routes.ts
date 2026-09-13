@@ -141,6 +141,8 @@ export const adminRoutes = {
 export const apiRoutes = {
   session: '/api/auth/session',
   sessionRefresh: '/api/auth/session/refresh',
+  /** Adds the Supabase role claim for app users. Bearer Firebase ID token. */
+  authClaims: '/api/auth/claims',
 
   adminWorkers: '/api/admin/workers',
   adminWorker: (id: string) => `/api/admin/workers/${id}`,

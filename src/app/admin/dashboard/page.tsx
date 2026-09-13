@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Inbox } from 'lucide-react';
 
-import { PageHeader, PageSection, StatCard } from '@/components/admin/page-parts';
+import { PageHeader, StatCard } from '@/components/admin/page-parts';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Card, CardHeader } from '@/components/ui/card';
 import { CellStack, DataTable, type Column } from '@/components/ui/data-table';

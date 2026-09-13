@@ -60,14 +60,23 @@ type Handler<TBody, TQuery, TResult> = (
   context: AdminRouteContext<TBody, TQuery>,
 ) => Promise<{ data: TResult; meta?: ApiMeta; status?: number }>;
 
-/** Next.js 15 passes route params as a promise. */
-type RouteParams = { params: Promise<Record<string, string>> };
+/**
+ * Route context as Next.js 15 passes it: params arrive as a promise.
+ *
+ * Next's build validates each exported handler against that route's concrete
+ * context, e.g. `{ params: Promise<{ id: string }> }`, and checks assignability
+ * in both directions. No single concrete type is compatible both ways with
+ * every route's params shape, so this one line uses `any`. The value is read
+ * back as a string record, and every handler validates the params it uses.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type RouteParams = { params: Promise<any> };
 
 export function withAdminRoute<TBody = undefined, TQuery = undefined, TResult = unknown>(
   options: AdminRouteOptions<TBody, TQuery>,
   handler: Handler<TBody, TQuery, TResult>,
 ) {
-  return async (request: NextRequest, routeContext?: RouteParams): Promise<NextResponse> => {
+  return async (request: NextRequest, routeContext: RouteParams): Promise<NextResponse> => {
     const requestId = request.headers.get('x-request-id') ?? randomUUID();
     const started = Date.now();
 
@@ -84,7 +93,7 @@ export function withAdminRoute<TBody = undefined, TQuery = undefined, TResult = 
       });
 
       // ---- validate ----------------------------------------------------
-      const params = routeContext ? await routeContext.params : {};
+      const params = ((await routeContext.params) ?? {}) as Record<string, string>;
 
       let body = undefined as TBody;
       if (options.bodySchema) {

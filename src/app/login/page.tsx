@@ -6,7 +6,8 @@ import { ShieldCheck } from 'lucide-react';
 import { LoginForm } from '@/app/login/login-form';
 import { getAdminSession } from '@/lib/auth/admin-session';
 import { publicEnv } from '@/lib/config/env';
-import { adminRoutes, isAdminPath, publicRoutes } from '@/lib/config/routes';
+import { safeRedirect } from '@/lib/auth/safe-redirect';
+import { adminRoutes, publicRoutes } from '@/lib/config/routes';
 
 export const metadata: Metadata = {
   title: 'Sign in',
@@ -75,19 +76,4 @@ export default async function LoginPage({
       </div>
     </main>
   );
-}
-
-/**
- * Validate the post-login destination.
- *
- * An unchecked `next` parameter is an open-redirect: an attacker sends
- * /login?next=https://evil.example and the victim is bounced off-site straight
- * after authenticating. Only a relative path inside the admin surface is
- * accepted — no absolute URLs, no protocol-relative `//host` form.
- */
-function safeRedirect(next: string | undefined): string | undefined {
-  if (!next) return undefined;
-  if (!next.startsWith('/') || next.startsWith('//')) return undefined;
-  if (!isAdminPath(next)) return undefined;
-  return next;
 }
