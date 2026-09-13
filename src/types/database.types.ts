@@ -751,6 +751,15 @@ export interface Database {
       };
     };
     Functions: {
+      // Worker app contracts. See supabase/migrations/0013.
+      worker_complete_media_upload: {
+        Args: { p_media_id: string };
+        Returns: MediaAssetRow;
+      };
+      worker_fail_media_upload: {
+        Args: { p_media_id: string; p_reason: string };
+        Returns: undefined;
+      };
       admin_has_permission: {
         Args: { p_permission: string };
         Returns: boolean;

@@ -207,7 +207,7 @@ begin
     (p_booking_id,
      case when p_admin_override then 'ADMIN_OVERRIDE'::public.booking_event_type
           else v_transition.event_type end,
-     v_before ->> 'status',
+     (v_before ->> 'status')::public.booking_status,
      p_to_status,
      p_actor_type,
      v_actor_id,

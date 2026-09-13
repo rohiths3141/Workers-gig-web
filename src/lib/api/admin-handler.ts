@@ -36,7 +36,7 @@ export interface AdminRouteContext<TBody, TQuery> {
   session: AdminSession;
   body: TBody;
   query: TQuery;
-  params: Record<string, string>;
+  params: Record<string, string | undefined>;
   request: NextRequest;
   requestId: string;
 }
@@ -61,16 +61,12 @@ type Handler<TBody, TQuery, TResult> = (
 ) => Promise<{ data: TResult; meta?: ApiMeta; status?: number }>;
 
 /**
- * Route context as Next.js 15 passes it: params arrive as a promise.
- *
- * Next's build validates each exported handler against that route's concrete
- * context, e.g. `{ params: Promise<{ id: string }> }`, and checks assignability
- * in both directions. No single concrete type is compatible both ways with
- * every route's params shape, so this one line uses `any`. The value is read
- * back as a string record, and every handler validates the params it uses.
+ * Next.js 15 passes route params as a promise, and types the second argument of
+ * a route export as required. Declaring it optional makes `next build` reject
+ * the export outright, so it is required here and a route with no dynamic
+ * segment simply receives an empty params object.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type RouteParams = { params: Promise<any> };
+type RouteParams = { params: Promise<Record<string, string | undefined>> };
 
 export function withAdminRoute<TBody = undefined, TQuery = undefined, TResult = unknown>(
   options: AdminRouteOptions<TBody, TQuery>,
@@ -93,7 +89,7 @@ export function withAdminRoute<TBody = undefined, TQuery = undefined, TResult = 
       });
 
       // ---- validate ----------------------------------------------------
-      const params = ((await routeContext.params) ?? {}) as Record<string, string>;
+      const params = (await routeContext?.params) ?? {};
 
       let body = undefined as TBody;
       if (options.bodySchema) {
