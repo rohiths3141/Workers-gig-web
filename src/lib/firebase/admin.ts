@@ -2,12 +2,11 @@ import 'server-only';
 
 import { cert, getApps, initializeApp, type App } from 'firebase-admin/app';
 import { getAuth, type Auth, type DecodedIdToken } from 'firebase-admin/auth';
-import { getStorage, type Storage } from 'firebase-admin/storage';
 
 import { serverEnv } from '@/lib/config/env';
 
 /**
- * Firebase Admin SDK — the trusted half of authentication and storage.
+ * Firebase Admin SDK — the trusted half of authentication.
  *
  * Guarded by `server-only`: importing this from a client component is a build
  * error, not a runtime surprise. The service account private key never reaches
@@ -16,8 +15,8 @@ import { serverEnv } from '@/lib/config/env';
  * Responsibilities:
  *   - Verify Firebase ID tokens and session cookies.
  *   - Mint httpOnly session cookies for the web surfaces.
- *   - Sign short-lived URLs for objects in Firebase Storage, only after the
- *     caller's ownership or permission has been checked against Supabase.
+ *
+ * File storage is Supabase Storage, not Firebase — see lib/supabase/storage.ts.
  */
 
 const ADMIN_APP_NAME = 'wervexa-admin';
@@ -43,14 +42,6 @@ function adminApp(): App {
 
 export function adminAuth(): Auth {
   return getAuth(adminApp());
-}
-
-export function adminStorage(): Storage {
-  return getStorage(adminApp());
-}
-
-export function storageBucket() {
-  return adminStorage().bucket(serverEnv().firebaseAdmin.storageBucket);
 }
 
 // ---------------------------------------------------------------------------
@@ -152,74 +143,4 @@ export async function ensureSupabaseRoleClaim(uid: string): Promise<void> {
   if (existing.role === 'authenticated') return;
 
   await adminAuth().setCustomUserClaims(uid, { ...existing, role: 'authenticated' });
-}
-
-// ---------------------------------------------------------------------------
-// Storage
-// ---------------------------------------------------------------------------
-
-/**
- * A short-lived, read-only URL for one object.
- *
- * Callers must have already established that the requester is entitled to the
- * object. This function performs no authorization of its own — see
- * features/media/server/media-access.ts, which is the only place that should
- * call it.
- */
-export async function signedDownloadUrl(
-  objectPath: string,
-  expiresInSeconds: number,
-): Promise<string> {
-  const [url] = await storageBucket()
-    .file(objectPath)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'read',
-      expires: Date.now() + expiresInSeconds * 1000,
-    });
-
-  return url;
-}
-
-/**
- * A short-lived, single-purpose upload URL.
- *
- * The content type is bound into the signature, so the client cannot upload a
- * different kind of file than the one that was authorized.
- */
-export async function signedUploadUrl(
-  objectPath: string,
-  contentType: string,
-  expiresInSeconds: number,
-): Promise<string> {
-  const [url] = await storageBucket()
-    .file(objectPath)
-    .getSignedUrl({
-      version: 'v4',
-      action: 'write',
-      contentType,
-      expires: Date.now() + expiresInSeconds * 1000,
-    });
-
-  return url;
-}
-
-/** Confirm an object actually exists and report its true size and type. */
-export async function objectMetadata(
-  objectPath: string,
-): Promise<{ exists: boolean; size: number | null; contentType: string | null }> {
-  const file = storageBucket().file(objectPath);
-  const [exists] = await file.exists();
-
-  if (!exists) {
-    return { exists: false, size: null, contentType: null };
-  }
-
-  const [metadata] = await file.getMetadata();
-
-  return {
-    exists: true,
-    size: metadata.size ? Number(metadata.size) : null,
-    contentType: metadata.contentType ?? null,
-  };
 }
