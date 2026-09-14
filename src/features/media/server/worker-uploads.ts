@@ -4,22 +4,18 @@ import { randomUUID } from 'node:crypto';
 
 import { AppError } from '@/lib/errors/app-error';
 import type { WorkerSession } from '@/lib/auth/worker-session';
-import {
-  objectMetadata,
-  signedDownloadUrl,
-  signedUploadUrl,
-  storageBucket,
-} from '@/lib/firebase/admin';
+import { MEDIA_BUCKET, objectMetadata, signedDownloadUrl, signedUploadUrl } from '@/lib/supabase/storage';
 import { logger } from '@/lib/logging/logger';
 import { MediaPurpose, MediaType } from '@/types/domain';
 
 /**
  * Authorizing an upload from the Worker app.
  *
- * The Firebase Storage rules for this project deny every client read and write,
- * deliberately: a Storage rule cannot know who is a party to a booking, or which
- * administrator holds workers.documents.read. So the client never touches
- * Storage directly, and this module is the only thing that lets bytes in.
+ * Files live in a private Supabase Storage bucket (see migration 0017) with no
+ * client-facing storage policies: a policy cannot know who is a party to a
+ * booking, or which administrator holds workers.documents.read. So the client
+ * never touches Storage directly, and this module — using the service-role
+ * client from lib/supabase/storage.ts — is the only thing that lets bytes in.
  *
  * The rule that makes it safe is that the storage path is BUILT HERE, from the
  * purpose rule and the owning resource id, and never accepted from the request.
@@ -161,7 +157,7 @@ export async function authorizeWorkerUpload(
   const { error: insertError } = await session.db.from('media_assets').insert({
     id: mediaAssetId,
     firebase_storage_path: storagePath,
-    storage_bucket: storageBucket().name,
+    storage_bucket: MEDIA_BUCKET,
     media_type: mediaTypeFor(mimeType),
     purpose,
     upload_status: 'PENDING',
@@ -214,7 +210,7 @@ export async function completeWorkerUpload(
 ): Promise<{ id: string; uploadStatus: string }> {
   const { data: asset, error } = await session.db
     .from('media_assets')
-    .select('id, firebase_storage_path, file_size_bytes, upload_status, worker_id')
+    .select('id, firebase_storage_path, file_size_bytes, mime_type, upload_status, worker_id')
     .eq('id', mediaAssetId)
     .maybeSingle();
 
@@ -241,6 +237,20 @@ export async function completeWorkerUpload(
       mediaAssetId,
       expected: asset.file_size_bytes,
       actual: metadata.size,
+    });
+    await markFailed(session, mediaAssetId, 'The uploaded file did not match.');
+    throw AppError.validation('That upload did not finish. Please try again.');
+  }
+
+  // Supabase does not bind content type into the signed URL itself the way
+  // Firebase's V4 signatures did, so the type guarantee is enforced here
+  // instead: whatever the client actually PUT is compared against what the
+  // upload was authorized for.
+  if (metadata.contentType !== null && metadata.contentType !== asset.mime_type) {
+    logger.warn('Uploaded object content type does not match authorization', {
+      mediaAssetId,
+      expected: asset.mime_type,
+      actual: metadata.contentType,
     });
     await markFailed(session, mediaAssetId, 'The uploaded file did not match.');
     throw AppError.validation('That upload did not finish. Please try again.');

@@ -2,12 +2,12 @@ import 'server-only';
 
 import type { AdminSession } from '@/lib/auth/admin-session';
 import { AppError } from '@/lib/errors/app-error';
-import { objectMetadata, signedDownloadUrl } from '@/lib/firebase/admin';
+import { objectMetadata, signedDownloadUrl } from '@/lib/supabase/storage';
 import { logger } from '@/lib/logging/logger';
 import { MediaSensitivity, MediaUploadStatus } from '@/types/domain';
 
 /**
- * Access to media held in Firebase Storage.
+ * Access to media held in Supabase Storage.
  *
  * This is the only place in the web tier that mints a download URL, and it is
  * the reason a client-supplied storage path is never trusted anywhere: the path
@@ -19,7 +19,7 @@ import { MediaSensitivity, MediaUploadStatus } from '@/types/domain';
  *     -> row read through the operator's RLS-scoped client
  *     -> permission named by the purpose rule checked against this operator
  *     -> access to a SENSITIVE file recorded in the audit trail
- *     -> short-lived signed URL minted by the Firebase Admin SDK
+ *     -> short-lived signed URL minted by the Supabase service-role client
  *
  * Nothing sensitive is ever public, and a URL that does escape stops working
  * within minutes.
