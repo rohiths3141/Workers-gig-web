@@ -1,8 +1,8 @@
 {
-  "name": "sevasetu-web",
+  "name": "wervexa-web",
   "version": "0.1.0",
   "private": true,
-  "description": "Public website and operational Admin Panel for the SevaSetu local/home-service worker platform.",
+  "description": "Public website and operational Admin Panel for the Wervexa local/home-service worker platform.",
   "engines": {
     "node": ">=20.11.0"
   },

@@ -7,10 +7,10 @@
 --
 -- Run against a database with migrations 0001-0013 applied:
 --
---   createdb sevasetu_test
---   psql -d sevasetu_test -c 'create publication supabase_realtime'
---   for f in supabase/migrations/0*.sql; do psql -d sevasetu_test -f "$f"; done
---   psql -d sevasetu_test -f supabase/tests/worker_contracts_test.sql
+--   createdb wervexa_test
+--   psql -d wervexa_test -c 'create publication supabase_realtime'
+--   for f in supabase/migrations/0*.sql; do psql -d wervexa_test -f "$f"; done
+--   psql -d wervexa_test -f supabase/tests/worker_contracts_test.sql
 --
 -- A raised exception fails the run: any line reading "TEST FAILED" means a
 -- guard that should have refused did not. The identity is simulated with

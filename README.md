@@ -1,4 +1,4 @@
-# SevaSetu — Web (Public Website + Admin Panel)
+# Wervexa — Web (Public Website + Admin Panel)
 
 A local/home-service platform connecting customers with verified skilled workers
 (electricians, plumbers, AC and appliance technicians, and other home-service

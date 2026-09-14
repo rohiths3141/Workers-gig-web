@@ -20,7 +20,7 @@ import { serverEnv } from '@/lib/config/env';
  *     caller's ownership or permission has been checked against Supabase.
  */
 
-const ADMIN_APP_NAME = 'sevasetu-admin';
+const ADMIN_APP_NAME = 'wervexa-admin';
 
 function adminApp(): App {
   const existing = getApps().find((a) => a.name === ADMIN_APP_NAME);

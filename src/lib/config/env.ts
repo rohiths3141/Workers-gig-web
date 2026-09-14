@@ -112,7 +112,7 @@ function readPublicEnv(): PublicEnv {
       adminPathPrefix: process.env.NEXT_PUBLIC_ADMIN_PATH_PREFIX ?? '/admin',
     },
     brand: {
-      name: process.env.NEXT_PUBLIC_BRAND_NAME || 'SevaSetu',
+      name: process.env.NEXT_PUBLIC_BRAND_NAME || 'Wervexa',
       tagline:
         process.env.NEXT_PUBLIC_BRAND_TAGLINE || 'Verified home-service professionals, near you',
       legalEntityName: process.env.NEXT_PUBLIC_LEGAL_ENTITY_NAME || undefined,
@@ -181,6 +181,16 @@ const serverEnvSchema = z.object({
     contactFormEnabled: z.boolean(),
   }),
   logLevel: z.enum(['debug', 'info', 'warn', 'error']),
+  /**
+   * Razorpay — used only server-side to create orders and verify payment
+   * signatures for the Customer App checkout flow. The key SECRET must never
+   * reach a client; the key ID (not secret) is separately embedded in the
+   * Flutter app's own build config to open the checkout SDK.
+   */
+  razorpay: z.object({
+    keyId: optionalString,
+    keySecret: optionalString,
+  }),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
@@ -218,6 +228,10 @@ function readServerEnv(): ServerEnv {
       contactFormEnabled: process.env.CONTACT_FORM_ENABLED !== 'false',
     },
     logLevel: (process.env.LOG_LEVEL ?? 'info') as ServerEnv['logLevel'],
+    razorpay: {
+      keyId: process.env.RAZORPAY_KEY_ID || undefined,
+      keySecret: process.env.RAZORPAY_KEY_SECRET || undefined,
+    },
   };
 
   const parsed = serverEnvSchema.safeParse(raw);
