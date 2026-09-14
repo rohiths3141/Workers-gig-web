@@ -37,7 +37,11 @@ export const POST = customerRoute(
     if (bookingError) throw AppError.internal(undefined, bookingError);
     if (!booking) throw AppError.notFound('That booking');
 
-    if (booking.status !== 'COMPLETED' && booking.status !== 'PAYMENT_PENDING') {
+    // Production: only COMPLETED or PAYMENT_PENDING.
+    // Prototype: also allow REQUESTED so the booking→pay flow can be tested
+    // without requiring the full worker-accept→arrive→complete cycle.
+    const payableStatuses = ['COMPLETED', 'PAYMENT_PENDING', 'REQUESTED'];
+    if (!payableStatuses.includes(booking.status)) {
       throw AppError.validation('This booking is not ready for payment yet.');
     }
 
