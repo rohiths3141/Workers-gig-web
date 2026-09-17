@@ -10,8 +10,10 @@ import { cn } from '@/lib/utils/cn';
  * browser never receives a full table and slices it locally, which is what
  * keeps an admin list usable once there are fifty thousand bookings.
  *
- * On a narrow screen the table scrolls inside its own container rather than
- * widening the page, so the admin layout stays intact on a tablet or phone.
+ * On a phone each row is rendered as a stacked card (first column as the
+ * title, the rest as label/value lines) so nothing needs sideways scrolling.
+ * From the sm breakpoint up it is a normal table, which still scrolls inside
+ * its own container if it is wider than a tablet.
  */
 
 export interface Column<T> {
@@ -67,8 +69,56 @@ export function DataTable<T>({
     return <div className={cn('border-t border-ink-200', className)}>{empty}</div>;
   }
 
+  // The lowest-priority columns stay off the phone cards too, so a card stays
+  // short enough to scan in a list.
+  const [titleColumn, ...detailColumns] = columns;
+  const cardColumns = detailColumns.filter(
+    (column) => column.hideBelow !== 'lg' && column.hideBelow !== 'xl',
+  );
+
   return (
-    <div className={cn('scroll-x border-t border-ink-200', className)}>
+    <>
+    <ul className={cn('divide-y divide-ink-100 border-t border-ink-200 sm:hidden', className)}>
+      {caption && <li className="sr-only">{caption}</li>}
+      {rows.map((row) => {
+        const href = rowHref?.(row);
+        const title = titleColumn ? titleColumn.cell(row) : null;
+
+        return (
+          <li key={rowKey(row)} className="bg-white px-4 py-3 text-sm">
+            <div className="min-w-0 font-medium text-ink-900">
+              {href ? (
+                <Link
+                  href={href}
+                  className="block hover:text-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+                >
+                  {title}
+                </Link>
+              ) : (
+                title
+              )}
+            </div>
+
+            {cardColumns.length > 0 && (
+              <dl className="mt-2 space-y-1.5">
+                {cardColumns.map((column) => (
+                  <div key={column.key} className="flex items-start justify-between gap-3">
+                    <dt className="shrink-0 pt-0.5 text-xs font-medium uppercase tracking-wide text-ink-500">
+                      {column.header}
+                    </dt>
+                    <dd className={cn('min-w-0 text-right text-ink-700', column.numeric && 'tabular')}>
+                      {column.cell(row)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </li>
+        );
+      })}
+    </ul>
+
+    <div className={cn('scroll-x hidden border-t border-ink-200 sm:block', className)}>
       <table className="w-full min-w-max border-collapse text-sm">
         {caption && <caption className="sr-only">{caption}</caption>}
 
@@ -135,6 +185,7 @@ export function DataTable<T>({
         </tbody>
       </table>
     </div>
+    </>
   );
 }
 
