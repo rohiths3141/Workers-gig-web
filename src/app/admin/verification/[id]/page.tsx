@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { FileWarning } from 'lucide-react';
 
-import { DocumentLink } from '@/components/admin/document-link';
+import { DocumentPreview } from '@/components/admin/document-preview';
 import { ForbiddenPanel, PageHeader } from '@/components/admin/page-parts';
 import { VerificationDecisionPanel } from '@/components/admin/verification-decision-panel';
 import { StatusBadge } from '@/components/shared/status-badge';
@@ -13,7 +13,7 @@ import { guardPage } from '@/lib/auth/page-guard';
 import { adminRoutes } from '@/lib/config/routes';
 import { formatDate, formatDateTime, humaniseEnum } from '@/lib/utils/format';
 import { verificationTypeLabel } from '@/lib/utils/labels';
-import { MediaSensitivity, VerificationStatus, VerificationType } from '@/types/domain';
+import { MediaPurpose, MediaSensitivity, VerificationStatus, VerificationType } from '@/types/domain';
 import type { Json, WorkerVerificationRow } from '@/types/database.types';
 
 export const metadata: Metadata = { title: 'Verification case' };
@@ -25,6 +25,21 @@ type CaseDetail = WorkerVerificationRow & {
 
 /** Checks that go stale and should carry an expiry date when approved. */
 const EXPIRING_TYPES: string[] = [VerificationType.BACKGROUND_CHECK, VerificationType.INSURANCE, VerificationType.RPL_SKILL];
+
+/**
+ * The worker app uploads a document before it submits the check, so uploads
+ * are owned by the worker rather than linked to the case. They are matched to
+ * the case by the purpose each check type uploads under.
+ */
+const PURPOSES_BY_TYPE: Partial<Record<string, string[]>> = {
+  [VerificationType.IDENTITY_KYC]: [MediaPurpose.WORKER_KYC_DOCUMENT],
+  [VerificationType.ADDRESS]: [MediaPurpose.WORKER_KYC_DOCUMENT],
+  [VerificationType.ITI_CERTIFICATE]: [MediaPurpose.WORKER_QUALIFICATION],
+  [VerificationType.DIPLOMA]: [MediaPurpose.WORKER_QUALIFICATION],
+  [VerificationType.RPL_SKILL]: [MediaPurpose.WORKER_RPL_CREDENTIAL],
+  [VerificationType.BACKGROUND_CHECK]: [MediaPurpose.WORKER_BACKGROUND_CHECK],
+  [VerificationType.INSURANCE]: [MediaPurpose.WORKER_INSURANCE_DOCUMENT],
+};
 
 /**
  * One verification case.
@@ -48,14 +63,19 @@ export default async function VerificationCasePage({ params }: { params: Promise
   if (!record) notFound();
 
   const canSeeDocuments = session.permissions.includes('workers.documents.read');
+  const purposes = PURPOSES_BY_TYPE[record.type] ?? [];
+  const ownership =
+    purposes.length > 0
+      ? `verification_id.eq.${id},and(worker_id.eq.${record.worker_id},purpose.in.(${purposes.join(',')}))`
+      : `verification_id.eq.${id}`;
   const { data: documents } = canSeeDocuments
     ? await session.db
         .from('media_assets')
         .select('id, original_file_name, mime_type, sensitivity, created_at')
-        .eq('verification_id', id)
+        .or(ownership)
         .eq('upload_status', 'COMPLETED')
         .is('deleted_at', null)
-        .order('created_at')
+        .order('created_at', { ascending: false })
     : { data: null };
 
   const isDecided = record.status === VerificationStatus.APPROVED || record.status === VerificationStatus.REJECTED;
@@ -136,9 +156,9 @@ export default async function VerificationCasePage({ params }: { params: Promise
                 </p>
               </CardBody>
             ) : documents && documents.length > 0 ? (
-              <CardBody className="grid gap-2 sm:grid-cols-2">
+              <CardBody className="grid gap-4 sm:grid-cols-2">
                 {documents.map((doc) => (
-                  <DocumentLink key={doc.id} mediaId={doc.id} fileName={doc.original_file_name} mimeType={doc.mime_type} sensitive={doc.sensitivity === MediaSensitivity.SENSITIVE} />
+                  <DocumentPreview key={doc.id} mediaId={doc.id} fileName={doc.original_file_name} mimeType={doc.mime_type} sensitive={doc.sensitivity === MediaSensitivity.SENSITIVE} />
                 ))}
               </CardBody>
             ) : (

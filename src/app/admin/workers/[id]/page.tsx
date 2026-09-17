@@ -131,6 +131,10 @@ export default async function WorkerDetailPage({
   ]);
 
   const backgroundCheck = verifications.data?.find((v) => v.type === 'BACKGROUND_CHECK');
+  const bankAccount = verifications.data?.find((v) => v.type === 'BANK_ACCOUNT');
+  const isBankVerified =
+    bankAccount?.status === 'APPROVED' &&
+    (!bankAccount.expires_at || new Date(bankAccount.expires_at) > new Date());
   const canOpenBackgroundCheck =
     !backgroundCheck ||
     !(
@@ -536,8 +540,8 @@ export default async function WorkerDetailPage({
                   ['Identity (KYC)', worker.is_kyc_verified],
                   ['Background check', worker.is_background_verified],
                   ['Qualification', worker.is_qualification_verified],
-                  ['Skill (RPL)', worker.is_skill_verified],
                   ['Insurance', worker.is_insured],
+                  ['Bank account', isBankVerified],
                 ].map(([label, held]) => (
                   <div key={String(label)} className="flex items-center justify-between gap-3">
                     <span className="text-sm text-ink-700">{label}</span>
