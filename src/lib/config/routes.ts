@@ -184,7 +184,7 @@ export const apiRoutes = {
   adminAuditLogs: '/api/admin/audit-logs',
   adminSettings: '/api/admin/settings',
 
-  /** Short-lived signed URL for one Firebase Storage object. */
+  /** Short-lived signed URL for one Supabase Storage object. */
   adminMediaUrl: (mediaId: string) => `/api/admin/media/${mediaId}/url`,
 
   publicContact: '/api/public/contact',

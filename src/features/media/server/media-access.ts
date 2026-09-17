@@ -160,7 +160,7 @@ export async function signedUrlForMedia(
 }
 
 /**
- * Confirm an object really exists in Firebase Storage and matches its record.
+ * Confirm an object really exists in Supabase Storage and matches its record.
  *
  * Used by the upload-completion path and by operational checks. A record whose
  * object is missing, or whose size disagrees with what was declared, must not be

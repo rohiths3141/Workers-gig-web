@@ -508,7 +508,7 @@ export default async function WorkerDetailPage({
               <EmptyState
                 icon={<FileWarning aria-hidden className="size-5" />}
                 title="No documents on file"
-                description="Documents are uploaded from the worker app and stored in Firebase Storage."
+                description="Documents are uploaded from the worker app and stored in Supabase Storage."
               />
             )}
           </Card>

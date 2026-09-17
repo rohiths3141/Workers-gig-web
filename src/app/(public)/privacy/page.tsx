@@ -50,7 +50,7 @@ export default function PrivacyPage() {
           heading: 'Where your data is stored',
           body: (
             <>
-              <p>Sign-in is handled by Firebase Authentication. Files — photographs, identity documents and certificates — are stored in private Firebase Storage. Account, booking and payment records are stored in a Supabase PostgreSQL database.</p>
+              <p>Sign-in is handled by Firebase Authentication. Files — photographs, identity documents and certificates — are stored in private Supabase Storage. Account, booking and payment records are stored in a Supabase PostgreSQL database.</p>
               <p>Identity and qualification documents are never publicly accessible. Staff access them only through time-limited links issued after a permission check, and each access is recorded.</p>
             </>
           ),

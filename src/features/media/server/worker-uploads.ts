@@ -201,7 +201,7 @@ export async function authorizeWorkerUpload(
  * Confirm the bytes actually landed.
  *
  * Only this function may move an asset to COMPLETED, and it does so only after
- * asking Firebase whether the object exists and how big it is. A client saying
+ * asking Supabase Storage whether the object exists and how big it is. A client saying
  * "done" is not evidence that anything was uploaded.
  */
 export async function completeWorkerUpload(
