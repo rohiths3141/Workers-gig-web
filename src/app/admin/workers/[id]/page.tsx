@@ -353,6 +353,21 @@ export default async function WorkerDetailPage({
                     </div>
 
                     <StatusBadge kind="verification" status={record.status} />
+
+                    <PermissionGuard permissions={session.permissions} required="verification.read">
+                      <Link
+                        href={adminRoutes.verificationCase(record.id)}
+                        className={
+                          ['PENDING', 'UNDER_REVIEW', 'MORE_INFO_REQUIRED'].includes(record.status)
+                            ? 'rounded-lg bg-brand-700 px-3 py-1.5 text-sm font-medium text-white hover:bg-brand-800'
+                            : 'text-sm font-medium text-brand-700 hover:text-brand-800'
+                        }
+                      >
+                        {['PENDING', 'UNDER_REVIEW', 'MORE_INFO_REQUIRED'].includes(record.status)
+                          ? 'Review'
+                          : 'View'}
+                      </Link>
+                    </PermissionGuard>
                   </li>
                 ))}
               </ul>
