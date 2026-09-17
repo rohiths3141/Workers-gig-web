@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   Sparkles,
   Target,
+  UserCheck,
   Users,
   Wallet,
   type LucideIcon,
@@ -121,6 +122,12 @@ export const ADMIN_NAVIGATION: NavSection[] = [
         icon: ShieldCheck,
         permission: 'verification.read',
         matchPrefix: true,
+      },
+      {
+        label: 'Background checks',
+        href: `${adminRoutes.verification()}?type=BACKGROUND_CHECK`,
+        icon: UserCheck,
+        permission: 'verification.read',
       },
       {
         label: 'Gig review',
