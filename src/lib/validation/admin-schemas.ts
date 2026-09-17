@@ -63,6 +63,27 @@ export const bookingTransitionSchema = z.object({
 });
 
 // ---------------------------------------------------------------------------
+// Insurance
+// ---------------------------------------------------------------------------
+const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Choose a date.');
+
+export const insuranceRecordSchema = z
+  .object({
+    workerId: z.string().uuid(),
+    providerName: z.string().trim().min(2, 'Enter the insurer.').max(120),
+    policyNumber: z.string().trim().min(3, 'Enter the policy number.').max(80),
+    coverageAmountMinor: z.number().int().positive('Coverage must be greater than zero.'),
+    premiumAmountMinor: z.number().int().nonnegative().optional(),
+    startDate: isoDate,
+    endDate: isoDate,
+    notes: z.string().trim().max(1000).optional(),
+  })
+  .refine((value) => value.endDate > value.startDate, {
+    message: 'The policy must end after it starts.',
+    path: ['endDate'],
+  });
+
+// ---------------------------------------------------------------------------
 // Gig review
 // ---------------------------------------------------------------------------
 export const gigDecisionSchema = z

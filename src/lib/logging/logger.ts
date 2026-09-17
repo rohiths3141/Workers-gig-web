@@ -57,7 +57,7 @@ const REDACTED_KEYS = new Set([
   'account_number',
   'accountnumber',
   'ifsc',
-  'firebase_storage_path',
+  'storage_path',
   'storagepath',
 ]);
 

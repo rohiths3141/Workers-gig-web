@@ -681,7 +681,7 @@ export type ContactMessageRow = {
 
 export type MediaAssetRow = {
   id: string;
-  firebase_storage_path: string;
+  storage_path: string;
   storage_bucket: string;
   media_type: MediaType;
   purpose: MediaPurpose;
@@ -795,6 +795,19 @@ export interface Database {
       admin_transition_booking: {
         Args: { p_booking_id: string; p_to_status: BookingStatus; p_reason: string };
         Returns: BookingRow;
+      };
+      admin_record_insurance: {
+        Args: {
+          p_worker_id: string;
+          p_provider_name: string;
+          p_policy_number: string;
+          p_coverage_amount_minor: number;
+          p_start_date: string;
+          p_end_date: string;
+          p_premium_amount_minor?: number | null;
+          p_notes?: string | null;
+        };
+        Returns: InsurancePolicyRow;
       };
       admin_decide_gig: {
         Args: { p_gig_id: string; p_decision: 'APPROVE' | 'REJECT'; p_reason?: string | null };

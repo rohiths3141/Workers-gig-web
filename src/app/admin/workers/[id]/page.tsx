@@ -5,6 +5,7 @@ import { FileWarning, ShieldCheck, Star } from 'lucide-react';
 
 import { ActionButton } from '@/components/admin/action-button';
 import { DocumentLink } from '@/components/admin/document-link';
+import { InsuranceRecordForm } from '@/components/admin/insurance-record-form';
 import {
   ForbiddenPanel,
   PageHeader,
@@ -511,6 +512,22 @@ export default async function WorkerDetailPage({
               />
             )}
           </Card>
+
+          <PermissionGuard permissions={session.permissions} required="insurance.update">
+            <Card>
+              <CardHeader
+                title="Insurance"
+                description={
+                  worker.is_insured
+                    ? 'Insured. Recording a new policy replaces the current cover.'
+                    : 'Not insured. Record the policy once it has been arranged.'
+                }
+              />
+              <CardBody>
+                <InsuranceRecordForm workerId={worker.id} />
+              </CardBody>
+            </Card>
+          </PermissionGuard>
 
           <PageSection title="Verification summary">
             <Card>

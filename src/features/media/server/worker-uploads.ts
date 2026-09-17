@@ -157,7 +157,7 @@ export async function authorizeWorkerUpload(
   //    so naming it here would make every insert fail.
   const { error: insertError } = await session.db.from('media_assets').insert({
     id: mediaAssetId,
-    firebase_storage_path: storagePath,
+    storage_path: storagePath,
     storage_bucket: MEDIA_BUCKET,
     media_type: mediaTypeFor(mimeType),
     purpose,
@@ -210,7 +210,7 @@ export async function completeWorkerUpload(
 ): Promise<{ id: string; uploadStatus: string }> {
   const { data: asset, error } = await session.db
     .from('media_assets')
-    .select('id, firebase_storage_path, file_size_bytes, mime_type, upload_status, worker_id')
+    .select('id, storage_path, file_size_bytes, mime_type, upload_status, worker_id')
     .eq('id', mediaAssetId)
     .maybeSingle();
 
@@ -222,7 +222,7 @@ export async function completeWorkerUpload(
     return { id: asset.id, uploadStatus: 'COMPLETED' };
   }
 
-  const metadata = await objectMetadata(asset.firebase_storage_path);
+  const metadata = await objectMetadata(asset.storage_path);
 
   if (!metadata.exists) {
     await markFailed(session, mediaAssetId, 'The file did not finish uploading.');
@@ -286,7 +286,7 @@ export async function signedUrlForWorker(
 ): Promise<{ url: string; expiresAt: string }> {
   const { data: asset, error } = await session.db
     .from('media_assets')
-    .select('id, firebase_storage_path, sensitivity, upload_status, deleted_at')
+    .select('id, storage_path, sensitivity, upload_status, deleted_at')
     .eq('id', mediaAssetId)
     .maybeSingle();
 
@@ -304,7 +304,7 @@ export async function signedUrlForWorker(
   const ttl =
     DOWNLOAD_TTL_SECONDS[asset.sensitivity as keyof typeof DOWNLOAD_TTL_SECONDS] ?? 300;
 
-  const url = await signedDownloadUrl(asset.firebase_storage_path, ttl);
+  const url = await signedDownloadUrl(asset.storage_path, ttl);
 
   return {
     url,

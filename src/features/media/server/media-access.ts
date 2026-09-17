@@ -58,7 +58,7 @@ export async function signedUrlForMedia(
   const { data: media, error } = await session.db
     .from('media_assets')
     .select(
-      'id, firebase_storage_path, storage_bucket, purpose, sensitivity, upload_status, original_file_name, mime_type, file_size_bytes, worker_id, booking_id, claim_id, support_ticket_id, deleted_at',
+      'id, storage_path, storage_bucket, purpose, sensitivity, upload_status, original_file_name, mime_type, file_size_bytes, worker_id, booking_id, claim_id, support_ticket_id, deleted_at',
     )
     .eq('id', mediaId)
     .maybeSingle();
@@ -138,7 +138,7 @@ export async function signedUrlForMedia(
   const ttl = TTL_SECONDS[media.sensitivity as keyof typeof TTL_SECONDS] ?? 300;
 
   try {
-    const url = await signedDownloadUrl(media.firebase_storage_path, ttl);
+    const url = await signedDownloadUrl(media.storage_path, ttl);
 
     return {
       id: media.id,
