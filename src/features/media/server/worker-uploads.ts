@@ -152,15 +152,15 @@ export async function authorizeWorkerUpload(
     mimeType,
   });
 
-  // 4. Record the intent. PENDING means "authorized but not yet arrived", and
-  //    nothing in the platform treats a PENDING asset as evidence.
+  // 4. Record the intent. The row starts PENDING by column default ("authorized
+  //    but not yet arrived"); upload_status is not in the worker INSERT grant,
+  //    so naming it here would make every insert fail.
   const { error: insertError } = await session.db.from('media_assets').insert({
     id: mediaAssetId,
     firebase_storage_path: storagePath,
     storage_bucket: MEDIA_BUCKET,
     media_type: mediaTypeFor(mimeType),
     purpose,
-    upload_status: 'PENDING',
     uploaded_by_type: 'WORKER',
     uploaded_by_firebase_uid: session.user.uid,
     [rule.owner_column]: owner.id,
