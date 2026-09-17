@@ -39,3 +39,15 @@ project_id = "env(FIREBASE_PROJECT_ID)"
 # and is referenced from public.media_assets.
 [storage]
 enabled = false
+
+[functions.kyc-digilocker]
+verify_jwt = false
+
+[functions.kyc-provider]
+verify_jwt = false
+
+# Called by trigger_notification_webhook() via pg_net with a shared secret in
+# the Authorization header, not a Supabase-issued JWT — the function verifies
+# that secret itself.
+[functions.send-notifications]
+verify_jwt = false

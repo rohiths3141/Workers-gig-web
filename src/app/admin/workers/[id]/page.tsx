@@ -129,6 +129,15 @@ export default async function WorkerDetailPage({
       : Promise.resolve({ count: null }),
   ]);
 
+  const backgroundCheck = verifications.data?.find((v) => v.type === 'BACKGROUND_CHECK');
+  const canOpenBackgroundCheck =
+    !backgroundCheck ||
+    !(
+      ['PENDING', 'UNDER_REVIEW'].includes(backgroundCheck.status) ||
+      (backgroundCheck.status === 'APPROVED' &&
+        (!backgroundCheck.expires_at || new Date(backgroundCheck.expires_at) > new Date()))
+    );
+
   const isRestricted = (
     [
       WorkerStatus.RESTRICTED,
@@ -285,14 +294,29 @@ export default async function WorkerDetailPage({
               title="Verification"
               description="Each check is decided individually and can expire."
               actions={
-                <PermissionGuard permissions={session.permissions} required="verification.read">
-                  <Link
-                    href={`${adminRoutes.verification()}?worker=${worker.id}`}
-                    className="text-sm font-medium text-brand-700 hover:text-brand-800"
-                  >
-                    Open in queue
-                  </Link>
-                </PermissionGuard>
+                <div className="flex items-center gap-3">
+                  <PermissionGuard permissions={session.permissions} required="verification.review">
+                    {canOpenBackgroundCheck && (
+                      <ActionButton
+                        endpoint={apiRoutes.adminWorkerBackgroundCheck(worker.id)}
+                        label="Start background check"
+                        variant="outline"
+                        confirmTitle="Start a background check?"
+                        confirmDescription="Opens a background-check case for this worker. It goes to the verification provider, or appears in the verification queue for a decision."
+                        confirmLabel="Start check"
+                        successMessage="Background check opened"
+                      />
+                    )}
+                  </PermissionGuard>
+                  <PermissionGuard permissions={session.permissions} required="verification.read">
+                    <Link
+                      href={`${adminRoutes.verification()}?worker=${worker.id}`}
+                      className="text-sm font-medium text-brand-700 hover:text-brand-800"
+                    >
+                      Open in queue
+                    </Link>
+                  </PermissionGuard>
+                </div>
               }
             />
 

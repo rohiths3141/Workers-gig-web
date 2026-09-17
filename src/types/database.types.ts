@@ -772,6 +772,10 @@ export interface Database {
         Args: { p_booking_id: string; p_to_status: BookingStatus; p_reason: string };
         Returns: BookingRow;
       };
+      admin_open_background_check: {
+        Args: { p_worker_id: string };
+        Returns: WorkerVerificationRow;
+      };
       decide_verification: {
         Args: {
           p_verification_id: string;

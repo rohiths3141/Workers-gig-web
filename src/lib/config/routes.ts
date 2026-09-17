@@ -147,6 +147,7 @@ export const apiRoutes = {
   adminWorkers: '/api/admin/workers',
   adminWorker: (id: string) => `/api/admin/workers/${id}`,
   adminWorkerStatus: (id: string) => `/api/admin/workers/${id}/status`,
+  adminWorkerBackgroundCheck: (id: string) => `/api/admin/workers/${id}/background-check`,
 
   adminCustomers: '/api/admin/customers',
   adminCustomerStatus: (id: string) => `/api/admin/customers/${id}/status`,
