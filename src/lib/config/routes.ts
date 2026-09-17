@@ -105,6 +105,7 @@ export const adminRoutes = {
 
   verification: () => adminRoute('/verification'),
   verificationCase: (id: string) => adminRoute('/verification', id),
+  gigs: () => adminRoute('/gigs'),
 
   services: () => adminRoute('/services'),
   matching: () => adminRoute('/matching'),
@@ -148,6 +149,7 @@ export const apiRoutes = {
   adminWorker: (id: string) => `/api/admin/workers/${id}`,
   adminWorkerStatus: (id: string) => `/api/admin/workers/${id}/status`,
   adminWorkerBackgroundCheck: (id: string) => `/api/admin/workers/${id}/background-check`,
+  adminGigDecision: (id: string) => `/api/admin/gigs/${id}/decision`,
 
   adminCustomers: '/api/admin/customers',
   adminCustomerStatus: (id: string) => `/api/admin/customers/${id}/status`,

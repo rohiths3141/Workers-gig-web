@@ -239,6 +239,29 @@ export type WorkerServiceRow = {
   created_at: string;
 };
 
+export type GigStatus = 'DRAFT' | 'PENDING_REVIEW' | 'ACTIVE' | 'PAUSED' | 'REJECTED' | 'ARCHIVED';
+
+export type WorkerGigRow = {
+  id: string;
+  worker_id: string;
+  service_id: string;
+  title: string;
+  description: string | null;
+  status: GigStatus;
+  price_minor: number;
+  currency: string;
+  pricing_unit: string;
+  estimated_duration_minutes: number;
+  service_radius_km: number | null;
+  submitted_at: string | null;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  rejection_reason: string | null;
+  jobs_completed: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type WorkerVerificationRow = {
   id: string;
   worker_id: string;
@@ -721,6 +744,7 @@ export interface Database {
       workers: Table<WorkerRow>;
       worker_services: Table<WorkerServiceRow>;
       worker_verifications: Table<WorkerVerificationRow>;
+      worker_gigs: Table<WorkerGigRow>;
       insurance_policies: Table<InsurancePolicyRow>;
       bookings: Table<BookingRow>;
       booking_events: Table<BookingEventRow>;
@@ -771,6 +795,10 @@ export interface Database {
       admin_transition_booking: {
         Args: { p_booking_id: string; p_to_status: BookingStatus; p_reason: string };
         Returns: BookingRow;
+      };
+      admin_decide_gig: {
+        Args: { p_gig_id: string; p_decision: 'APPROVE' | 'REJECT'; p_reason?: string | null };
+        Returns: WorkerGigRow;
       };
       admin_open_background_check: {
         Args: { p_worker_id: string };

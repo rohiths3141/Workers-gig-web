@@ -63,6 +63,19 @@ export const bookingTransitionSchema = z.object({
 });
 
 // ---------------------------------------------------------------------------
+// Gig review
+// ---------------------------------------------------------------------------
+export const gigDecisionSchema = z
+  .object({
+    decision: z.enum(['APPROVE', 'REJECT']),
+    reason: z.string().trim().max(1000).optional(),
+  })
+  .refine((value) => value.decision !== 'REJECT' || (value.reason?.length ?? 0) >= 5, {
+    message: 'A rejection needs a reason of at least 5 characters.',
+    path: ['reason'],
+  });
+
+// ---------------------------------------------------------------------------
 // Verification
 // ---------------------------------------------------------------------------
 export const verificationDecisionSchema = z
