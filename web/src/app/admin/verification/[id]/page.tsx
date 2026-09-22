@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { FileWarning } from 'lucide-react';
+import { CheckCircle2, FileWarning, Fingerprint, XCircle } from 'lucide-react';
 
 import { DocumentPreview } from '@/components/admin/document-preview';
 import { ForbiddenPanel, PageHeader } from '@/components/admin/page-parts';
 import { VerificationDecisionPanel } from '@/components/admin/verification-decision-panel';
 import { StatusBadge } from '@/components/shared/status-badge';
+import { Badge } from '@/components/ui/badge';
 import { Card, CardBody, CardHeader, Field, FieldGrid } from '@/components/ui/card';
 import { Alert, EmptyState } from '@/components/ui/feedback';
 import { guardPage } from '@/lib/auth/page-guard';
@@ -147,6 +148,13 @@ export default async function VerificationCasePage({ params }: { params: Promise
             )}
           </Card>
 
+          {record.type === VerificationType.IDENTITY_KYC && (
+            <AadhaarVerificationCard
+              details={record.details}
+              registeredName={record.workers?.full_name ?? null}
+            />
+          )}
+
           <Card>
             <CardHeader title="Documents" description={canSeeDocuments ? 'Each document you open is recorded in the audit trail' : undefined} />
             {!canSeeDocuments ? (
@@ -195,11 +203,148 @@ export default async function VerificationCasePage({ params }: { params: Promise
 /**
  * Flatten the free-form details object into label/value pairs. Nested values are
  * shown as compact JSON rather than dropped, so nothing submitted is hidden.
+ *
+ * Keys displayed in their own dedicated card (Aadhaar / DigiLocker internals)
+ * are excluded so the reviewer isn't shown the same data twice.
  */
+const DETAIL_KEYS_WITH_DEDICATED_CARD = new Set(['provider_raw_response', 'digilocker']);
+
 function toDisplayEntries(details: Json): Array<[string, string]> {
   if (!details || typeof details !== 'object' || Array.isArray(details)) return [];
-  return Object.entries(details).map(([key, value]) => [
-    key,
-    value === null ? '—' : typeof value === 'object' ? JSON.stringify(value) : String(value),
-  ]);
+  return Object.entries(details)
+    .filter(([key]) => !DETAIL_KEYS_WITH_DEDICATED_CARD.has(key))
+    .map(([key, value]) => [
+      key,
+      value === null ? '—' : typeof value === 'object' ? JSON.stringify(value) : String(value),
+    ]);
+}
+
+// ---------------------------------------------------------------------------
+// Aadhaar Identity Check card
+// ---------------------------------------------------------------------------
+
+interface ProviderRawResponse {
+  uid?: string;
+  name?: string;
+  dob?: string;
+  gender?: string;
+  message?: string;
+  name_match?: boolean;
+}
+
+function AadhaarVerificationCard({
+  details,
+  registeredName,
+}: {
+  details: Json;
+  registeredName: string | null;
+}) {
+  const obj = details && typeof details === 'object' && !Array.isArray(details) ? details : null;
+  const raw = (obj as Record<string, unknown> | null)?.provider_raw_response as ProviderRawResponse | undefined;
+  const dl = (obj as Record<string, unknown> | null)?.digilocker as Record<string, unknown> | undefined;
+
+  if (!raw && !dl) {
+    return (
+      <Card>
+        <CardHeader
+          title={
+            <span className="flex items-center gap-2">
+              <Fingerprint aria-hidden className="size-5 text-ink-400" />
+              Aadhaar identity check
+            </span>
+          }
+        />
+        <CardBody>
+          <p className="text-sm text-ink-500">
+            No Aadhaar data has been captured yet. The worker app must complete the DigiLocker
+            consent flow and the <code className="rounded bg-ink-100 px-1 py-0.5 font-mono text-xs">/status</code> endpoint
+            must be polled to fetch the verified document.
+          </p>
+        </CardBody>
+      </Card>
+    );
+  }
+
+  const nameMatch = raw?.name_match;
+  const genderLabel = raw?.gender === 'M' ? 'Male' : raw?.gender === 'F' ? 'Female' : raw?.gender ?? '—';
+
+  return (
+    <Card>
+      <CardHeader
+        title={
+          <span className="flex items-center gap-2">
+            <Fingerprint aria-hidden className="size-5 text-brand-600" />
+            Aadhaar identity check
+          </span>
+        }
+        description="Data returned by DigiLocker after the worker completed Aadhaar e-KYC"
+      />
+      <CardBody>
+        {raw ? (
+          <>
+            {/* Name comparison row */}
+            <div className="mb-5 rounded-lg border border-ink-200 bg-ink-50/50 p-4">
+              <p className="mb-3 text-xs font-medium uppercase tracking-wide text-ink-500">Name comparison</p>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <div>
+                  <p className="text-xs text-ink-500">Registered name</p>
+                  <p className="mt-0.5 text-sm font-medium text-ink-900">{registeredName ?? '—'}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-ink-500">Aadhaar name</p>
+                  <p className="mt-0.5 text-sm font-medium text-ink-900">{raw.name ?? '—'}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-ink-500">Match</p>
+                  <div className="mt-0.5">
+                    {nameMatch === true ? (
+                      <Badge tone="success" dot>
+                        <CheckCircle2 aria-hidden className="size-3.5" /> Match
+                      </Badge>
+                    ) : nameMatch === false ? (
+                      <Badge tone="danger" dot>
+                        <XCircle aria-hidden className="size-3.5" /> Mismatch
+                      </Badge>
+                    ) : (
+                      <Badge tone="neutral">Not checked</Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Detail fields */}
+            <FieldGrid columns={3}>
+              <Field label="Aadhaar UID (masked)" value={raw.uid ?? '—'} />
+              <Field label="Date of birth" value={raw.dob ?? '—'} />
+              <Field label="Gender" value={genderLabel} />
+            </FieldGrid>
+          </>
+        ) : (
+          <p className="text-sm text-ink-500">
+            Aadhaar document data has not been fetched yet. The DigiLocker session is active but
+            the <code className="rounded bg-ink-100 px-1 py-0.5 font-mono text-xs">/status</code> endpoint
+            has not completed the document retrieval.
+          </p>
+        )}
+      </CardBody>
+
+      {/* DigiLocker session reference — collapsible footer */}
+      {dl && (
+        <footer className="border-t border-ink-200 bg-ink-50/60 px-5 py-3">
+          <details className="group">
+            <summary className="cursor-pointer text-xs font-medium text-ink-500 hover:text-ink-700">
+              DigiLocker session reference
+            </summary>
+            <div className="mt-2">
+              <FieldGrid columns={2}>
+                <Field label="Verification ID" value={String(dl.verification_id ?? '—')} />
+                <Field label="Reference ID" value={String(dl.reference_id ?? '—')} />
+              </FieldGrid>
+            </div>
+          </details>
+        </footer>
+      )}
+    </Card>
+  );
 }
