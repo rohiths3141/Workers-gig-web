@@ -1,0 +1,615 @@
+{
+  "generatedFrom": "web/supabase/migrations",
+  "generatedBy": "web/supabase/scripts/generate-db-contract.mjs",
+  "note": "Regenerate after any migration that adds or changes an enum.",
+  "enums": {
+    "actor_type": [
+      "CUSTOMER",
+      "WORKER",
+      "ADMIN",
+      "SYSTEM"
+    ],
+    "admin_role": [
+      "SUPER_ADMIN",
+      "ADMIN",
+      "VERIFICATION_ADMIN",
+      "OPERATIONS_ADMIN",
+      "FINANCE_ADMIN",
+      "SUPPORT_ADMIN"
+    ],
+    "booking_event_type": [
+      "REQUEST_CREATED",
+      "MATCHING_STARTED",
+      "WORKER_MATCHED",
+      "WORKER_OFFERED",
+      "WORKER_ACCEPTED",
+      "WORKER_DECLINED",
+      "WORKER_SELECTED",
+      "BOOKING_CONFIRMED",
+      "TRAVEL_STARTED",
+      "WORKER_ARRIVED",
+      "ARRIVAL_VERIFIED",
+      "WORK_STARTED",
+      "MATERIAL_REQUESTED",
+      "MATERIAL_APPROVED",
+      "MATERIAL_REJECTED",
+      "WORK_COMPLETED",
+      "CUSTOMER_APPROVED",
+      "PAYMENT_INITIATED",
+      "PAYMENT_COMPLETED",
+      "PAYMENT_FAILED",
+      "RATING_SUBMITTED",
+      "BOOKING_CLOSED",
+      "BOOKING_CANCELLED",
+      "DISPUTE_RAISED",
+      "ADMIN_OVERRIDE",
+      "REQUESTED",
+      "OFFER_ACCEPTED",
+      "SERVICE_REQUEST_BOOKED"
+    ],
+    "booking_source": [
+      "DIRECT_GIG",
+      "CUSTOMER_REQUEST"
+    ],
+    "booking_status": [
+      "REQUESTED",
+      "ACCEPTED",
+      "CONFIRMED",
+      "TRAVELING",
+      "ARRIVED",
+      "IN_PROGRESS",
+      "AWAITING_APPROVAL",
+      "COMPLETED",
+      "PAYMENT_PENDING",
+      "PAID",
+      "CLOSED",
+      "CANCELLED",
+      "DISPUTED",
+      "EXPIRED"
+    ],
+    "budget_type": [
+      "NONE",
+      "FIXED",
+      "RANGE"
+    ],
+    "claim_status": [
+      "SUBMITTED",
+      "UNDER_REVIEW",
+      "MORE_INFORMATION_REQUIRED",
+      "APPROVED",
+      "PARTIALLY_APPROVED",
+      "REJECTED",
+      "CLOSED"
+    ],
+    "claim_type": [
+      "PROPERTY_DAMAGE",
+      "THEFT",
+      "INJURY",
+      "POOR_WORKMANSHIP",
+      "OVERCHARGING",
+      "OTHER"
+    ],
+    "contact_message_status": [
+      "NEW",
+      "IN_PROGRESS",
+      "RESOLVED",
+      "SPAM"
+    ],
+    "customer_status": [
+      "ACTIVE",
+      "RESTRICTED",
+      "SUSPENDED",
+      "DEACTIVATED"
+    ],
+    "gig_status": [
+      "DRAFT",
+      "PENDING_REVIEW",
+      "ACTIVE",
+      "PAUSED",
+      "REJECTED",
+      "ARCHIVED"
+    ],
+    "insurance_status": [
+      "PENDING",
+      "ACTIVE",
+      "EXPIRING_SOON",
+      "EXPIRED",
+      "LAPSED",
+      "CANCELLED"
+    ],
+    "material_status": [
+      "REQUESTED",
+      "CUSTOMER_REVIEW",
+      "APPROVED",
+      "REJECTED",
+      "PURCHASED",
+      "COST_RECORDED",
+      "BILLED",
+      "CANCELLED"
+    ],
+    "media_purpose": [
+      "WORKER_PROFILE_PHOTO",
+      "WORKER_KYC_DOCUMENT",
+      "WORKER_QUALIFICATION",
+      "WORKER_RPL_CREDENTIAL",
+      "WORKER_BACKGROUND_CHECK",
+      "WORKER_INSURANCE_DOCUMENT",
+      "CUSTOMER_PROFILE_PHOTO",
+      "BOOKING_BEFORE_WORK",
+      "BOOKING_DURING_WORK",
+      "BOOKING_AFTER_WORK",
+      "BOOKING_ARRIVAL_PROOF",
+      "BOOKING_MATERIAL_PHOTO",
+      "BOOKING_RECEIPT",
+      "CLAIM_EVIDENCE",
+      "SUPPORT_ATTACHMENT",
+      "SERVICE_CATALOGUE_IMAGE",
+      "SERVICE_REQUEST_PHOTO"
+    ],
+    "media_sensitivity": [
+      "PUBLIC",
+      "INTERNAL",
+      "SENSITIVE"
+    ],
+    "media_type": [
+      "IMAGE",
+      "VIDEO",
+      "DOCUMENT",
+      "AUDIO"
+    ],
+    "media_upload_status": [
+      "PENDING",
+      "UPLOADING",
+      "COMPLETED",
+      "FAILED",
+      "QUARANTINED",
+      "DELETED"
+    ],
+    "notification_channel": [
+      "PUSH",
+      "SMS",
+      "EMAIL",
+      "IN_APP"
+    ],
+    "notification_status": [
+      "QUEUED",
+      "SENDING",
+      "SENT",
+      "DELIVERED",
+      "FAILED",
+      "CANCELLED"
+    ],
+    "offer_status": [
+      "SUBMITTED",
+      "VIEWED",
+      "SHORTLISTED",
+      "ACCEPTED",
+      "REJECTED",
+      "WITHDRAWN",
+      "EXPIRED",
+      "CLOSED"
+    ],
+    "payment_status": [
+      "PENDING",
+      "PROCESSING",
+      "SUCCESS",
+      "FAILED",
+      "REFUNDED",
+      "PARTIALLY_REFUNDED"
+    ],
+    "payout_status": [
+      "REQUESTED",
+      "PROCESSING",
+      "COMPLETED",
+      "FAILED",
+      "REJECTED"
+    ],
+    "profile_role": [
+      "CUSTOMER",
+      "WORKER",
+      "ADMIN"
+    ],
+    "profile_status": [
+      "ACTIVE",
+      "DISABLED",
+      "PENDING_DELETION"
+    ],
+    "schedule_type": [
+      "ASAP",
+      "TODAY",
+      "TOMORROW",
+      "SPECIFIC_DATE"
+    ],
+    "service_request_status": [
+      "DRAFT",
+      "OPEN",
+      "RECEIVING_OFFERS",
+      "WORKER_SELECTED",
+      "BOOKED",
+      "CANCELLED",
+      "EXPIRED",
+      "CLOSED"
+    ],
+    "support_category": [
+      "BOOKING",
+      "PAYMENT",
+      "PAYOUT",
+      "VERIFICATION",
+      "ACCOUNT",
+      "SAFETY",
+      "CLAIM",
+      "APP_ISSUE",
+      "OTHER"
+    ],
+    "support_priority": [
+      "LOW",
+      "MEDIUM",
+      "HIGH",
+      "URGENT"
+    ],
+    "support_status": [
+      "OPEN",
+      "IN_PROGRESS",
+      "WAITING_FOR_USER",
+      "RESOLVED",
+      "CLOSED"
+    ],
+    "verification_status": [
+      "NOT_SUBMITTED",
+      "PENDING",
+      "UNDER_REVIEW",
+      "MORE_INFO_REQUIRED",
+      "APPROVED",
+      "REJECTED",
+      "EXPIRED",
+      "NOT_APPLICABLE"
+    ],
+    "verification_type": [
+      "IDENTITY_KYC",
+      "ADDRESS",
+      "ITI_CERTIFICATE",
+      "DIPLOMA",
+      "RPL_SKILL",
+      "BACKGROUND_CHECK",
+      "INSURANCE",
+      "BANK_ACCOUNT"
+    ],
+    "wallet_transaction_type": [
+      "CREDIT_JOB_EARNING",
+      "CREDIT_MATERIAL_REIMBURSEMENT",
+      "CREDIT_ADJUSTMENT",
+      "CREDIT_PAYOUT_REVERSAL",
+      "DEBIT_PLATFORM_FEE",
+      "DEBIT_PAYOUT",
+      "DEBIT_ADJUSTMENT",
+      "DEBIT_CLAIM_RECOVERY"
+    ],
+    "worker_availability": [
+      "AVAILABLE",
+      "BUSY",
+      "OFFLINE"
+    ],
+    "worker_status": [
+      "REGISTERED",
+      "VERIFICATION_PENDING",
+      "ACTIVE",
+      "INACTIVE",
+      "RESTRICTED",
+      "SUSPENDED",
+      "REJECTED",
+      "DEACTIVATED"
+    ]
+  },
+  "checkConstraints": {
+    "outcome": [
+      "SUCCESS",
+      "FAILURE"
+    ],
+    "platform": [
+      "ANDROID",
+      "IOS",
+      "WEB"
+    ],
+    "pricing_unit": [
+      "PER_JOB",
+      "PER_HOUR",
+      "PER_DAY",
+      "PER_UNIT",
+      "PER_SQFT"
+    ],
+    "rater_type": [
+      "CUSTOMER",
+      "WORKER"
+    ],
+    "status": [
+      "REQUESTED",
+      "CANCELLED",
+      "EXPIRED"
+    ]
+  },
+  "rpcPayloadKeys": {
+    "transition_booking": [
+      "final_amount_minor",
+      "status",
+      "worker_id"
+    ],
+    "decide_verification": [
+      "expires_at",
+      "reviewed_by",
+      "status"
+    ],
+    "expire_stale_verifications": [
+      "expired_count"
+    ],
+    "run_matching": [
+      "availability",
+      "background",
+      "computed_at",
+      "gig_gate_applied",
+      "gig_price_minor",
+      "insurance",
+      "kyc",
+      "max_radius_km",
+      "proximity",
+      "qualification",
+      "rating",
+      "service_id",
+      "service_slug",
+      "skill",
+      "trade",
+      "weights"
+    ],
+    "admin_adjust_wallet": [
+      "amount_minor",
+      "balance_after_minor",
+      "direction",
+      "transaction_id"
+    ],
+    "decide_payout": [
+      "amount_minor",
+      "ledger_transaction_id",
+      "status"
+    ],
+    "decide_claim": [
+      "amount_approved_minor",
+      "status"
+    ],
+    "admin_set_worker_status": [
+      "restriction_reason",
+      "status"
+    ],
+    "admin_set_customer_status": [
+      "status"
+    ],
+    "admin_set_ticket_status": [
+      "status"
+    ],
+    "admin_assign_ticket": [
+      "assigned_admin_id"
+    ],
+    "worker_eligibility": [
+      "account_status",
+      "action",
+      "active_gig_count",
+      "availability",
+      "code",
+      "eligible",
+      "message",
+      "reasons",
+      "status",
+      "worker_id"
+    ],
+    "worker_set_availability": [
+      "availability",
+      "eligibility"
+    ],
+    "worker_accept_offer": [
+      "candidate_rank",
+      "match_score"
+    ],
+    "worker_decline_offer": [
+      "candidate_rank"
+    ],
+    "worker_verify_arrival": [
+      "already_verified",
+      "attempts",
+      "attempts_remaining",
+      "verified"
+    ],
+    "worker_request_material": [
+      "estimated_cost_minor",
+      "material_id"
+    ],
+    "worker_rate_customer": [
+      "rating"
+    ],
+    "worker_earnings_summary": [
+      "lifetime_minor",
+      "month_minor",
+      "today_minor",
+      "week_minor"
+    ],
+    "worker_earning_breakdowns": [
+      "at",
+      "booking_code",
+      "currency",
+      "fees_minor",
+      "gross_minor",
+      "net_minor",
+      "service_name"
+    ],
+    "worker_respond_to_claim": [
+      "worker_id"
+    ],
+    "customer_find_gigs": [
+      "approx_latitude",
+      "approx_longitude",
+      "bio",
+      "city",
+      "currency",
+      "description",
+      "distance_km",
+      "estimated_duration_minutes",
+      "experience_years",
+      "gig_id",
+      "is_background_verified",
+      "is_insured",
+      "is_kyc_verified",
+      "price_minor",
+      "pricing_unit",
+      "title",
+      "worker_code",
+      "worker_id",
+      "worker_jobs_completed",
+      "worker_name",
+      "worker_rating",
+      "worker_rating_count"
+    ],
+    "customer_create_booking": [
+      "gig_id",
+      "gig_title",
+      "note",
+      "price_minor",
+      "service_name",
+      "sqlerrm"
+    ],
+    "customer_approve_material": [
+      "estimated_cost_minor",
+      "material_id"
+    ],
+    "customer_reject_material": [
+      "material_id"
+    ],
+    "customer_rate_worker": [
+      "rating"
+    ],
+    "customer_accept_offer": [
+      "booking_source",
+      "offer_id",
+      "proposed_price",
+      "request_code",
+      "service_request_id",
+      "worker_name"
+    ],
+    "worker_find_eligible_requests": [
+      "already_offered",
+      "approx_latitude",
+      "approx_longitude",
+      "budget_max_minor",
+      "budget_min_minor",
+      "budget_type",
+      "category_id",
+      "category_name",
+      "city",
+      "created_at",
+      "currency",
+      "description",
+      "distance_km",
+      "expires_at",
+      "has_matching_gig",
+      "id",
+      "max_offers",
+      "offer_count",
+      "request_code",
+      "schedule_type",
+      "scheduled_date",
+      "status",
+      "time_window_end",
+      "time_window_start",
+      "title"
+    ],
+    "worker_get_request_detail": [
+      "additional_notes",
+      "approx_latitude",
+      "approx_longitude",
+      "budget_max_minor",
+      "budget_min_minor",
+      "budget_type",
+      "category_id",
+      "category_name",
+      "city",
+      "created_at",
+      "currency",
+      "customer_first_name",
+      "customer_rating",
+      "description",
+      "expires_at",
+      "has_matching_gig",
+      "id",
+      "max_offers",
+      "my_offer_id",
+      "my_offer_status",
+      "offer_count",
+      "request_code",
+      "schedule_type",
+      "scheduled_date",
+      "status",
+      "time_window_end",
+      "time_window_start",
+      "title"
+    ],
+    "record_provider_kyc_result": [
+      "provider",
+      "provider_raw_response",
+      "status"
+    ],
+    "trigger_kyc_provider_webhook": [
+      "Authorization",
+      "details",
+      "type",
+      "verification_id",
+      "worker_id"
+    ],
+    "worker_ingest_location": [
+      "accuracy",
+      "booking_id",
+      "heading",
+      "latitude",
+      "longitude",
+      "speed",
+      "updated_at"
+    ],
+    "notify_workers_new_request": [
+      "distance_km",
+      "request_id",
+      "type"
+    ],
+    "trigger_notification_webhook": [
+      "Authorization",
+      "notification_id"
+    ],
+    "admin_open_background_check": [
+      "status",
+      "worker_id"
+    ],
+    "admin_decide_gig": [
+      "status"
+    ],
+    "worker_submit_bank_account": [
+      "account_holder_name",
+      "account_last4",
+      "account_number",
+      "bank_name",
+      "ifsc"
+    ],
+    "admin_record_insurance": [
+      "end_date",
+      "insurance_policy_id",
+      "policy_number",
+      "provider_name",
+      "status",
+      "worker_id"
+    ],
+    "settle_prepaid_booking": [
+      "payment_id",
+      "prepaid"
+    ],
+    "booking_events_prepaid_flow": [
+      "note",
+      "prepaid"
+    ],
+    "rebind_profile_to_uid": [
+      "firebase_uid"
+    ]
+  }
+}

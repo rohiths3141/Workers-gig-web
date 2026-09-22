@@ -1,0 +1,1450 @@
+{
+  "note": "Shape of real production data: types, nullability and code-like values only. No names, phone numbers, addresses or free text. Regenerate with web/supabase/scripts/profile-app-data.mjs.",
+  "capturedAt": "2026-09-18",
+  "queries": {
+    "workers": {
+      "table": "workers",
+      "select": "id, firebase_uid, worker_code, full_name, phone, email, status, availability, primary_service_id, experience_years, bio, city, state, pincode, gender, address_line, latitude, longitude, service_radius_km, rating_avg, rating_count, jobs_completed, jobs_cancelled, is_kyc_verified, is_qualification_verified, is_skill_verified, is_background_verified, is_insured, verified_at, restriction_reason, created_at, updated_at",
+      "rowsProfiled": 8,
+      "columns": {
+        "address_line": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "availability": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "AVAILABLE",
+            "OFFLINE"
+          ]
+        },
+        "bio": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "city": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "email": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "experience_years": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "firebase_uid": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "full_name": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code",
+            "text"
+          ]
+        },
+        "gender": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "MALE"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "is_background_verified": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "is_insured": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "is_kyc_verified": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "is_qualification_verified": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "is_skill_verified": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "jobs_cancelled": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "jobs_completed": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "latitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "longitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "phone": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ]
+        },
+        "pincode": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ]
+        },
+        "primary_service_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "rating_avg": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "rating_count": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "restriction_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "service_radius_km": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "state": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACTIVE",
+            "REGISTERED",
+            "VERIFICATION_PENDING"
+          ]
+        },
+        "updated_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "verified_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "worker_code": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        }
+      }
+    },
+    "services": {
+      "table": "services",
+      "select": "id, name, slug, short_description, icon_key, required_verifications, base_visit_fee_minor",
+      "rowsProfiled": 8,
+      "columns": {
+        "base_visit_fee_minor": {
+          "types": [],
+          "nullable": true
+        },
+        "icon_key": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "name": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "required_verifications": {
+          "types": [
+            "array"
+          ],
+          "nullable": false,
+          "values": [
+            "BACKGROUND_CHECK",
+            "IDENTITY_KYC",
+            "ITI_CERTIFICATE"
+          ]
+        },
+        "short_description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "slug": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        }
+      }
+    },
+    "bookings": {
+      "table": "bookings",
+      "select": "id, booking_code, status, service_id, gig_id, problem_description, scheduled_at, address_line, city, state, pincode, latitude, longitude, quoted_amount_minor, labour_amount_minor, material_amount_minor, platform_fee_minor, worker_amount_minor, final_amount_minor, currency, arrival_verified_at, accepted_at, confirmed_at, travel_started_at, arrived_at, work_started_at, completed_at, paid_at, cancelled_at, cancellation_reason, created_at, services(name, slug), customers(full_name, phone), worker_gigs(title)",
+      "rowsProfiled": 17,
+      "columns": {
+        "accepted_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "address_line": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "arrival_verified_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "arrived_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "booking_code": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "cancellation_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "cancelled_at": {
+          "types": [],
+          "nullable": true
+        },
+        "city": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "completed_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "confirmed_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "customers": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "full_name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            },
+            "phone": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "code"
+              ]
+            }
+          }
+        },
+        "final_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "gig_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "labour_amount_minor": {
+          "types": [],
+          "nullable": true
+        },
+        "latitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "longitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "material_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "paid_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "pincode": {
+          "types": [],
+          "nullable": true
+        },
+        "platform_fee_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "problem_description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "quoted_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "scheduled_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "service_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "services": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            },
+            "slug": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        },
+        "state": {
+          "types": [],
+          "nullable": true
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "PAID",
+            "REQUESTED"
+          ]
+        },
+        "travel_started_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "work_started_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "worker_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "worker_gigs": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "title": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "materials": {
+      "table": "materials",
+      "select": "id, booking_id, name, description, quantity, unit, estimated_cost_minor, actual_cost_minor, currency, status, customer_rejection_reason, created_at",
+      "rowsProfiled": 0,
+      "columns": {}
+    },
+    "worker_gigs": {
+      "table": "worker_gigs",
+      "select": "id, worker_id, service_id, title, description, status, price_minor, currency, pricing_unit, estimated_duration_minutes, service_radius_km, rejection_reason, submitted_at, reviewed_at, jobs_completed, created_at, updated_at, services(name, slug)",
+      "rowsProfiled": 5,
+      "columns": {
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "description": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "estimated_duration_minutes": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "jobs_completed": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "price_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "pricing_unit": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "PER_HOUR",
+            "PER_JOB"
+          ]
+        },
+        "rejection_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "reviewed_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "service_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "service_radius_km": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "services": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            },
+            "slug": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACTIVE"
+          ]
+        },
+        "submitted_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "title": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "updated_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "worker_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        }
+      }
+    },
+    "worker_verifications": {
+      "table": "worker_verifications",
+      "select": "id, type, status, details, submitted_at, reviewed_at, rejection_reason, info_requested, expires_at, created_at, updated_at",
+      "rowsProfiled": 21,
+      "columns": {
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "details": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "insurance_policy_id": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "uuid"
+              ]
+            },
+            "policy_number": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            },
+            "provider_name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        },
+        "expires_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "info_requested": {
+          "types": [],
+          "nullable": true
+        },
+        "rejection_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "reviewed_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "APPROVED"
+          ]
+        },
+        "submitted_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "BACKGROUND_CHECK",
+            "BANK_ACCOUNT",
+            "IDENTITY_KYC",
+            "INSURANCE",
+            "ITI_CERTIFICATE"
+          ]
+        },
+        "updated_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        }
+      }
+    },
+    "notifications": {
+      "table": "notifications",
+      "select": "id, title, body, template_key, payload, read_at, created_at",
+      "rowsProfiled": 0,
+      "columns": {}
+    },
+    "wallets": {
+      "table": "wallets",
+      "select": "id, worker_id, balance_minor, total_credited_minor, total_debited_minor, currency, is_frozen, frozen_reason, last_transaction_at",
+      "rowsProfiled": 8,
+      "columns": {
+        "balance_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "frozen_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "is_frozen": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "last_transaction_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "total_credited_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "total_debited_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "worker_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        }
+      }
+    },
+    "wallet_transactions": {
+      "table": "wallet_transactions",
+      "select": "id, type, amount_minor, balance_after_minor, currency, description, reference_type, reference_id, created_at",
+      "rowsProfiled": 2,
+      "columns": {
+        "amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "balance_after_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "reference_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "reference_type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "PAYMENT"
+          ]
+        },
+        "type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "CREDIT_JOB_EARNING"
+          ]
+        }
+      }
+    },
+    "payouts": {
+      "table": "payouts",
+      "select": "id, payout_code, amount_minor, currency, status, method, account_last4, bank_name, requested_at, completed_at, failure_reason, decision_reason",
+      "rowsProfiled": 1,
+      "columns": {
+        "account_last4": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ]
+        },
+        "amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "bank_name": {
+          "types": [],
+          "nullable": true
+        },
+        "completed_at": {
+          "types": [],
+          "nullable": true
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "decision_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "failure_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "method": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "BANK_TRANSFER"
+          ]
+        },
+        "payout_code": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "requested_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "REQUESTED"
+          ]
+        }
+      }
+    },
+    "booking_events": {
+      "table": "booking_events",
+      "select": "id, event_type, from_status, to_status, note, created_at",
+      "rowsProfiled": 39,
+      "columns": {
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "event_type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ARRIVAL_VERIFIED",
+            "BOOKING_CONFIRMED",
+            "CUSTOMER_APPROVED",
+            "PAYMENT_COMPLETED",
+            "PAYMENT_INITIATED",
+            "RATING_SUBMITTED",
+            "REQUESTED",
+            "TRAVEL_STARTED",
+            "WORKER_ACCEPTED",
+            "WORKER_ARRIVED",
+            "WORK_COMPLETED",
+            "WORK_STARTED"
+          ]
+        },
+        "from_status": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACCEPTED",
+            "ARRIVED",
+            "AWAITING_APPROVAL",
+            "COMPLETED",
+            "CONFIRMED",
+            "IN_PROGRESS",
+            "PAYMENT_PENDING",
+            "REQUESTED",
+            "TRAVELING"
+          ]
+        },
+        "id": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "note": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "to_status": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACCEPTED",
+            "ARRIVED",
+            "AWAITING_APPROVAL",
+            "COMPLETED",
+            "CONFIRMED",
+            "IN_PROGRESS",
+            "PAID",
+            "PAYMENT_PENDING",
+            "REQUESTED",
+            "TRAVELING"
+          ]
+        }
+      }
+    },
+    "media_assets": {
+      "table": "media_assets",
+      "select": "id, purpose, upload_status, mime_type, file_size_bytes, original_file_name, booking_id, worker_id, material_id, captured_at, created_at, width, height, duration_seconds",
+      "rowsProfiled": 8,
+      "columns": {
+        "booking_id": {
+          "types": [],
+          "nullable": true
+        },
+        "captured_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "duration_seconds": {
+          "types": [],
+          "nullable": true
+        },
+        "file_size_bytes": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "height": {
+          "types": [],
+          "nullable": true
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "material_id": {
+          "types": [],
+          "nullable": true
+        },
+        "mime_type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "original_file_name": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "purpose": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "WORKER_PROFILE_PHOTO",
+            "WORKER_QUALIFICATION"
+          ]
+        },
+        "upload_status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "COMPLETED",
+            "PENDING"
+          ]
+        },
+        "width": {
+          "types": [],
+          "nullable": true
+        },
+        "worker_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        }
+      }
+    }
+  }
+}

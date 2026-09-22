@@ -1,0 +1,984 @@
+{
+  "note": "Shape of real production data: types, nullability and code-like values only. No names, phone numbers, addresses or free text. Regenerate with web/supabase/scripts/profile-app-data.mjs.",
+  "capturedAt": "2026-09-18",
+  "queries": {
+    "bookings": {
+      "table": "bookings",
+      "select": "id, booking_code, customer_id, service_id, status, problem_description, address_line, city, state, pincode, quoted_amount_minor, final_amount_minor, currency, worker_id, scheduled_at, latitude, longitude, customer_notes, created_at, completed_at, cancelled_at, cancellation_reason, services!inner(name), workers(full_name, phone, rating_avg)",
+      "rowsProfiled": 17,
+      "columns": {
+        "address_line": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "booking_code": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "cancellation_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "cancelled_at": {
+          "types": [],
+          "nullable": true
+        },
+        "city": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "completed_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "customer_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "customer_notes": {
+          "types": [],
+          "nullable": true
+        },
+        "final_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "latitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "longitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "pincode": {
+          "types": [],
+          "nullable": true
+        },
+        "problem_description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "quoted_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "scheduled_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "service_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "services": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        },
+        "state": {
+          "types": [],
+          "nullable": true
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "PAID",
+            "REQUESTED"
+          ]
+        },
+        "worker_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "workers": {
+          "types": [
+            "object"
+          ],
+          "nullable": true,
+          "nested": {
+            "full_name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            },
+            "phone": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "code"
+              ]
+            },
+            "rating_avg": {
+              "types": [
+                "number"
+              ],
+              "nullable": false
+            }
+          }
+        }
+      }
+    },
+    "services": {
+      "table": "services",
+      "select": "id, name, slug, description, short_description, icon_key, display_order",
+      "rowsProfiled": 8,
+      "columns": {
+        "description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "display_order": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "icon_key": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "name": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "short_description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "slug": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        }
+      }
+    },
+    "service_problems": {
+      "table": "service_problems",
+      "select": "id, service_id, title, description",
+      "rowsProfiled": 28,
+      "columns": {
+        "description": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "service_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "title": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        }
+      }
+    },
+    "customers": {
+      "table": "customers",
+      "select": "*",
+      "rowsProfiled": 4,
+      "columns": {
+        "address_line": {
+          "types": [],
+          "nullable": true
+        },
+        "city": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "email": {
+          "types": [],
+          "nullable": true
+        },
+        "firebase_uid": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "full_name": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "latitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "longitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": true
+        },
+        "phone": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ]
+        },
+        "pincode": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "code"
+          ]
+        },
+        "profile_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "profile_media_id": {
+          "types": [],
+          "nullable": true
+        },
+        "rating_avg": {
+          "types": [],
+          "nullable": true
+        },
+        "rating_count": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "restricted_at": {
+          "types": [],
+          "nullable": true
+        },
+        "restricted_by": {
+          "types": [],
+          "nullable": true
+        },
+        "restriction_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "state": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACTIVE"
+          ]
+        },
+        "updated_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        }
+      }
+    },
+    "customer_addresses": {
+      "table": "customer_addresses",
+      "select": "*",
+      "rowsProfiled": 0,
+      "columns": {}
+    },
+    "materials": {
+      "table": "materials",
+      "select": "*",
+      "rowsProfiled": 0,
+      "columns": {}
+    },
+    "payments": {
+      "table": "payments",
+      "select": "*",
+      "rowsProfiled": 11,
+      "columns": {
+        "amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "booking_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "captured_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "currency": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "INR"
+          ]
+        },
+        "customer_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "failed_at": {
+          "types": [],
+          "nullable": true
+        },
+        "failure_code": {
+          "types": [],
+          "nullable": true
+        },
+        "failure_reason": {
+          "types": [],
+          "nullable": true
+        },
+        "gateway": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "gateway_order_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "gateway_payload": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "razorpayOrderId": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        },
+        "gateway_payment_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "gateway_signature_verified": {
+          "types": [
+            "boolean"
+          ],
+          "nullable": false
+        },
+        "gateway_verified_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "idempotency_key": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "initiated_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "material_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "method": {
+          "types": [],
+          "nullable": true
+        },
+        "payment_code": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "text"
+          ]
+        },
+        "platform_fee_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "refunded_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "status": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "PENDING",
+            "SUCCESS"
+          ]
+        },
+        "updated_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "worker_amount_minor": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        }
+      }
+    },
+    "notifications": {
+      "table": "notifications",
+      "select": "*",
+      "rowsProfiled": 0,
+      "columns": {}
+    },
+    "booking_events": {
+      "table": "booking_events",
+      "select": "*",
+      "rowsProfiled": 39,
+      "columns": {
+        "actor_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "actor_type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "CUSTOMER",
+            "SYSTEM",
+            "WORKER"
+          ]
+        },
+        "booking_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "created_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "event_type": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ARRIVAL_VERIFIED",
+            "BOOKING_CONFIRMED",
+            "CUSTOMER_APPROVED",
+            "PAYMENT_COMPLETED",
+            "PAYMENT_INITIATED",
+            "RATING_SUBMITTED",
+            "REQUESTED",
+            "TRAVEL_STARTED",
+            "WORKER_ACCEPTED",
+            "WORKER_ARRIVED",
+            "WORK_COMPLETED",
+            "WORK_STARTED"
+          ]
+        },
+        "from_status": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACCEPTED",
+            "ARRIVED",
+            "AWAITING_APPROVAL",
+            "COMPLETED",
+            "CONFIRMED",
+            "IN_PROGRESS",
+            "PAYMENT_PENDING",
+            "REQUESTED",
+            "TRAVELING"
+          ]
+        },
+        "id": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "metadata": {
+          "types": [
+            "object"
+          ],
+          "nullable": false,
+          "nested": {
+            "gig_id": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "uuid"
+              ]
+            },
+            "gig_title": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            },
+            "price_minor": {
+              "types": [
+                "number"
+              ],
+              "nullable": false
+            },
+            "service_name": {
+              "types": [
+                "string"
+              ],
+              "nullable": false,
+              "formats": [
+                "text"
+              ]
+            }
+          }
+        },
+        "note": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "text"
+          ]
+        },
+        "to_status": {
+          "types": [
+            "string"
+          ],
+          "nullable": true,
+          "formats": [
+            "code"
+          ],
+          "values": [
+            "ACCEPTED",
+            "ARRIVED",
+            "AWAITING_APPROVAL",
+            "COMPLETED",
+            "CONFIRMED",
+            "IN_PROGRESS",
+            "PAID",
+            "PAYMENT_PENDING",
+            "REQUESTED",
+            "TRAVELING"
+          ]
+        }
+      }
+    },
+    "worker_locations": {
+      "table": "worker_locations",
+      "select": "*",
+      "rowsProfiled": 44,
+      "columns": {
+        "accuracy": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "booking_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "heading": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        },
+        "latitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "longitude": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "recorded_at": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "timestamp"
+          ]
+        },
+        "speed": {
+          "types": [
+            "number"
+          ],
+          "nullable": false
+        },
+        "worker_id": {
+          "types": [
+            "string"
+          ],
+          "nullable": false,
+          "formats": [
+            "uuid"
+          ]
+        }
+      }
+    },
+    "customer_service_requests": {
+      "table": "customer_service_requests",
+      "select": "*",
+      "rowsProfiled": 0,
+      "columns": {}
+    },
+    "service_request_offers": {
+      "table": "service_request_offers",
+      "select": "*",
+      "rowsProfiled": 0,
+      "columns": {}
+    }
+  }
+}

@@ -1,0 +1,134 @@
+# ==========================================================================
+# SIH-89 Monorepo — Root .gitignore
+# ==========================================================================
+
+# ---------------------------------------------------------------------------
+# Secrets & credentials — NEVER commit these to a public repo
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*-service-account*.json
+firebase-adminsdk-*.json
+*.jks
+*.keystore
+*.p12
+*.pem
+
+# Dart / Flutter env files with API keys
+dart-defines.env
+define.json
+
+# Google services configs (contain API keys / app IDs)
+google-services.json
+GoogleService-Info.plist
+
+# Android signing
+**/key.properties
+
+# ---------------------------------------------------------------------------
+# Node.js / Next.js  (web/)
+# ---------------------------------------------------------------------------
+node_modules/
+.next/
+out/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------------------------------------------------------------------------
+# Flutter / Dart  (customer-app/, worker-app/)
+# ---------------------------------------------------------------------------
+**/doc/api/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/.last_build_id
+**/android/.gradle/
+**/android/.kotlin/
+**/android/local.properties
+**/android/captures/
+**/android/gradlew
+**/android/gradlew.bat
+**/android/GeneratedPluginRegistrant.java
+*.class
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio build artifacts
+**/android/app/debug/
+**/android/app/profile/
+**/android/app/release/
+
+# ---------------------------------------------------------------------------
+# Supabase / Firebase CLI local state
+# ---------------------------------------------------------------------------
+supabase/.branches
+supabase/.temp
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# ---------------------------------------------------------------------------
+# IDE / Editor settings
+# ---------------------------------------------------------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-project
+*.sublime-workspace
+
+# ---------------------------------------------------------------------------
+# OS generated files
+# ---------------------------------------------------------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# ---------------------------------------------------------------------------
+# AI / agent config (optional — remove if you want to share these)
+# ---------------------------------------------------------------------------
+.claude/
+.agents/
+.test_screens/
+.antigravityignore
+
+# ---------------------------------------------------------------------------
+# Misc
+# ---------------------------------------------------------------------------
+*.log
+*.pyc
+*.swp
+*.swo
+*~
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/

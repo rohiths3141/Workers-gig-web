@@ -1,0 +1,53 @@
+project_id = "wervexa"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 15
+
+[studio]
+enabled = true
+port = 54323
+
+[realtime]
+enabled = true
+
+# Supabase Auth is NOT the platform's authentication provider. Firebase
+# Authentication is. The auth service runs only because it hosts third-party JWT
+# verification; every sign-up path is switched off so no second identity system
+# can be created by accident.
+[auth]
+enabled = true
+enable_signup = false
+
+[auth.email]
+enable_signup = false
+
+# Accept Firebase ID tokens. Tokens must carry role = "authenticated", which the
+# web tier adds on first sign-in (see ensureSupabaseRoleClaim).
+[auth.third_party.firebase]
+enabled = true
+project_id = "env(FIREBASE_PROJECT_ID)"
+
+# Supabase Storage is NOT used. All application media lives in Firebase Storage
+# and is referenced from public.media_assets.
+[storage]
+enabled = false
+
+[functions.kyc-digilocker]
+verify_jwt = false
+
+[functions.kyc-provider]
+verify_jwt = false
+
+# Called by trigger_notification_webhook() via pg_net with a shared secret in
+# the Authorization header, not a Supabase-issued JWT — the function verifies
+# that secret itself.
+[functions.send-notifications]
+verify_jwt = false

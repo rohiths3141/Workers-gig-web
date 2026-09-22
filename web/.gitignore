@@ -1,0 +1,53 @@
+# ==========================================================================
+# SevaSetu — Web (Next.js + TypeScript)
+# ==========================================================================
+
+# ---------------------------------------------------------------------------
+# Secrets — never commit
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*-service-account*.json
+firebase-adminsdk-*.json
+google-services.json
+GoogleService-Info.plist
+
+# ---------------------------------------------------------------------------
+# Node / Next.js
+# ---------------------------------------------------------------------------
+node_modules/
+.next/
+out/
+build/
+dist/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+.vercel/
+.turbo/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ---------------------------------------------------------------------------
+# Supabase / Firebase CLI local state
+# ---------------------------------------------------------------------------
+supabase/.branches
+supabase/.temp
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
+# ---------------------------------------------------------------------------
+# Editors / OS
+# ---------------------------------------------------------------------------
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
