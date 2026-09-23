@@ -15,11 +15,11 @@ import 'core/supabase/supabase_client_provider.dart';
 /// Firebase options for com.wervexa.app (Android).
 /// Values sourced from google-services.json — safe to commit (public config).
 const _androidOptions = FirebaseOptions(
-  apiKey: 'AIzaSyBY68gchkPTlltTUt9oYhM0da9EVLK4Mz4',
-  appId: '1:38879531950:android:fe21d05f1e085338536e3f',
-  messagingSenderId: '38879531950',
-  projectId: 'workers-gig',
-  storageBucket: 'workers-gig.firebasestorage.app',
+  apiKey: 'AIzaSyCRHlRfpQKKIHW74aWUMWJae_1uh708RHs',
+  appId: '1:923758115399:android:3e90b777a102549993cf62',
+  messagingSenderId: '923758115399',
+  projectId: 'workers-gig-58a66',
+  storageBucket: 'workers-gig-58a66.firebasestorage.app',
 );
 
 Future<void> main() async {

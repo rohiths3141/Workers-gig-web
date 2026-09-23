@@ -25,7 +25,7 @@ class SplashScreen extends ConsumerWidget {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 360),
                   child: Image.asset(
-                    'assets/images/splash_workers.webp',
+                    'assets/images/splash_workers.png',
                     fit: BoxFit.contain,
                     filterQuality: FilterQuality.medium,
                   ),
