@@ -22,6 +22,7 @@ const SECTIONS = [
       { href: publicRoutes.howItWorks, label: 'How it works' },
       { href: publicRoutes.forCustomers, label: 'For customers' },
       { href: publicRoutes.forWorkers, label: 'For workers' },
+      { href: publicRoutes.download, label: 'Download the apps' },
       { href: publicRoutes.verification, label: 'Verification' },
       { href: publicRoutes.safety, label: 'Safety' },
     ],

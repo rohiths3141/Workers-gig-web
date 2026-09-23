@@ -20,6 +20,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: publicRoutes.howItWorks, priority: 0.8, changeFrequency: 'monthly' },
     { path: publicRoutes.forCustomers, priority: 0.8, changeFrequency: 'monthly' },
     { path: publicRoutes.forWorkers, priority: 0.8, changeFrequency: 'monthly' },
+    { path: publicRoutes.download, priority: 0.8, changeFrequency: 'weekly' },
     { path: publicRoutes.verification, priority: 0.7, changeFrequency: 'monthly' },
     { path: publicRoutes.safety, priority: 0.7, changeFrequency: 'monthly' },
     { path: publicRoutes.faq, priority: 0.6, changeFrequency: 'monthly' },

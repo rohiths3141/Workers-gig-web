@@ -70,6 +70,7 @@ export const publicRoutes = {
   howItWorks: '/how-it-works',
   forCustomers: '/for-customers',
   forWorkers: '/for-workers',
+  download: '/download',
   verification: '/verification',
   safety: '/safety',
   about: '/about',

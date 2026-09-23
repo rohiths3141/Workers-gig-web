@@ -72,6 +72,12 @@ export interface ButtonLinkProps {
   children: React.ReactNode;
   /** Set for links leaving the site; adds the security rel and a new tab. */
   external?: boolean;
+  /**
+   * Set for a file to save rather than a page to visit; the value is the name
+   * it is saved under. Renders a plain anchor — next/link would try to route to
+   * the file as if it were a page.
+   */
+  download?: string;
 }
 
 /** A link styled as a button. Stays an anchor, so it keeps link semantics. */
@@ -83,8 +89,17 @@ export function ButtonLink({
   className,
   children,
   external,
+  download,
 }: ButtonLinkProps) {
   const classes = cn(BASE, VARIANTS[variant], SIZES[size], fullWidth && 'w-full', className);
+
+  if (download) {
+    return (
+      <a href={href} download={download} className={classes}>
+        {children}
+      </a>
+    );
+  }
 
   if (external) {
     return (

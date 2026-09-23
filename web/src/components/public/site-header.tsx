@@ -23,6 +23,7 @@ const NAV_ITEMS = [
   { href: publicRoutes.howItWorks, label: 'How it works' },
   { href: publicRoutes.forCustomers, label: 'For customers' },
   { href: publicRoutes.forWorkers, label: 'For workers' },
+  { href: publicRoutes.download, label: 'Download' },
   { href: publicRoutes.safety, label: 'Safety' },
   { href: publicRoutes.about, label: 'About' },
   { href: publicRoutes.faq, label: 'FAQ' },

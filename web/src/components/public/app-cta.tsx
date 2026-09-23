@@ -1,16 +1,18 @@
-import { Smartphone } from 'lucide-react';
+import { Download, Smartphone } from 'lucide-react';
 
 import { ButtonLink } from '@/components/ui/button';
 import { publicEnv } from '@/lib/config/env';
+import { publicRoutes } from '@/lib/config/routes';
 import { cn } from '@/lib/utils/cn';
 
 /**
  * App download call to action.
  *
- * Store links come from environment configuration. When a link has not been
- * configured, the button is not rendered — and when neither is configured, the
- * whole block collapses to an honest "coming to the app stores" line instead of
- * pointing at a URL that does not exist.
+ * Store links come from environment configuration. Until a Play Store link is
+ * configured, Android goes to this site's own download page, which serves the
+ * APK directly — so there is always a real way to get the app. An iOS button
+ * appears only once an App Store link exists; there is no iOS build to point at
+ * otherwise.
  *
  * A dead store badge on a launch site costs more trust than an absent one.
  */
@@ -26,11 +28,10 @@ export function AppCta({
   description: string;
   className?: string;
 }) {
-  const { apps, brand } = publicEnv();
+  const { apps } = publicEnv();
 
   const android = audience === 'customer' ? apps.customerAndroid : apps.workerAndroid;
   const ios = audience === 'customer' ? apps.customerIos : apps.workerIos;
-  const hasAnyLink = Boolean(android || ios);
 
   return (
     <div
@@ -53,9 +54,14 @@ export function AppCta({
         </div>
 
         <div className="flex shrink-0 flex-col gap-2 sm:min-w-48">
-          {android && (
+          {android ? (
             <ButtonLink href={android} external fullWidth>
               Get it on Android
+            </ButtonLink>
+          ) : (
+            <ButtonLink href={`${publicRoutes.download}#${audience}`} fullWidth>
+              <Download aria-hidden className="size-4" />
+              Download for Android
             </ButtonLink>
           )}
 
@@ -63,19 +69,6 @@ export function AppCta({
             <ButtonLink href={ios} external variant="outline" fullWidth>
               Download on iOS
             </ButtonLink>
-          )}
-
-          {!hasAnyLink && (
-            <p className="rounded-lg border border-brand-200 bg-white px-4 py-3 text-sm text-ink-600">
-              The {audience} app is coming to the app stores. Write to{' '}
-              <a
-                href={`mailto:${brand.supportEmail}`}
-                className="font-medium text-brand-700 underline"
-              >
-                {brand.supportEmail}
-              </a>{' '}
-              to be told when it is available.
-            </p>
           )}
         </div>
       </div>

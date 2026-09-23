@@ -131,6 +131,19 @@ const nextConfig: NextConfig = {
         source: '/api/:path*',
         headers: [{ key: 'Cache-Control', value: 'no-store, max-age=0' }],
       },
+      // The app APKs on /download. The file names are stable across releases,
+      // so browsers must revalidate rather than keep an old build. The explicit
+      // type matters because nosniff is set above: without it a browser may
+      // save the file under the wrong type, and the phone will not install it.
+      {
+        source: '/downloads/:file*',
+        headers: [
+          { key: 'Content-Type', value: 'application/vnd.android.package-archive' },
+          { key: 'Content-Disposition', value: 'attachment' },
+          { key: 'Cache-Control', value: 'public, max-age=0, must-revalidate' },
+          { key: 'X-Robots-Tag', value: 'noindex' },
+        ],
+      },
     ];
   },
 };
