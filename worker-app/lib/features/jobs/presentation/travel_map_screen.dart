@@ -10,11 +10,13 @@ import '../../../app/providers/providers.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/job.dart';
 import '../../../domain/repositories/repositories.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import 'jobs_controller.dart';
 
 /// The in-app map shown while the worker is travelling to a job.
@@ -130,7 +132,7 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
         _routeLoading = false;
       }),
       (failure) => setState(() {
-        _routeError = 'Route unavailable';
+        _routeError = context.l10n.travelRouteUnavailable;
         _routeLoading = false;
       }),
     );
@@ -151,10 +153,10 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
 
   Widget _buildMap(Job job) {
     if (job.latitude == null || job.longitude == null) {
-      return const EmptyStateView(
+      return EmptyStateView(
         icon: Icons.location_off_outlined,
-        title: 'No destination set',
-        message: 'This job has no service location to route to.',
+        title: context.l10n.travelNoDestination,
+        message: context.l10n.travelNoDestinationBody,
       );
     }
 
@@ -172,14 +174,14 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
               markerId: const MarkerId('destination'),
               position: destination,
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-              infoWindow: const InfoWindow(title: 'Job location'),
+              infoWindow: InfoWindow(title: context.l10n.travelJobLocation),
             ),
             if (worker != null)
               Marker(
                 markerId: const MarkerId('worker'),
                 position: worker,
                 icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-                infoWindow: const InfoWindow(title: 'You'),
+                infoWindow: InfoWindow(title: context.l10n.travelYou),
               ),
           },
           polylines: {
@@ -257,6 +259,7 @@ class _BottomCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final isBusy = ref.watch(jobActionsProvider).isLoading;
     final next = job.status.workerNextStatus;
 
@@ -278,27 +281,27 @@ class _BottomCard extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(job.customerName ?? 'Customer', style: AppTypography.titleMedium.copyWith(color: context.ink)),
+          Text(job.customerName ?? l10n.travelCustomer, style: AppTypography.titleMedium.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.xxs),
-          Text(job.gigTitle ?? job.serviceName,
+          Text(job.gigTitle ?? localizedServiceName(l10n, job.serviceName),
               style: AppTypography.bodySmall.copyWith(color: context.inkSecondary)),
           const SizedBox(height: AppSpacing.md),
           if (error != null)
             Text(error!, style: AppTypography.bodySmall.copyWith(color: AppColors.danger))
           else if (isLoading && route == null)
-            Text('Calculating route...',
+            Text(l10n.travelCalculating,
                 style: AppTypography.bodySmall.copyWith(color: context.inkSecondary))
           else if (route != null)
             Row(
               children: [
                 Icon(Icons.near_me_outlined, size: 16, color: context.inkSecondary),
                 const SizedBox(width: AppSpacing.xs),
-                Text(_formatDistance(route!.distanceMeters),
+                Text(_formatDistance(l10n, route!.distanceMeters),
                     style: AppTypography.bodyMedium.copyWith(color: context.ink)),
                 const SizedBox(width: AppSpacing.lg),
                 Icon(Icons.schedule_rounded, size: 16, color: context.inkSecondary),
                 const SizedBox(width: AppSpacing.xs),
-                Text(_formatEta(route!.durationSeconds),
+                Text(_formatEta(l10n, route!.durationSeconds),
                     style: AppTypography.bodyMedium.copyWith(color: context.ink)),
               ],
             ),
@@ -325,7 +328,9 @@ class _BottomCard extends ConsumerWidget {
                         height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Text(job.status == BookingStatus.traveling ? 'I have arrived' : 'Continue'),
+                    : Text(job.status == BookingStatus.traveling
+                        ? l10n.jobActionArrived
+                        : l10n.commonContinue),
               ),
             ),
         ],
@@ -333,15 +338,17 @@ class _BottomCard extends ConsumerWidget {
     );
   }
 
-  static String _formatDistance(int? metres) {
+  static String _formatDistance(AppLocalizations l10n, int? metres) {
     if (metres == null) return '—';
-    if (metres < 1000) return '$metres m';
-    return '${(metres / 1000).toStringAsFixed(1)} km';
+    if (metres < 1000) return l10n.distanceMetres('$metres');
+    return l10n.distanceKm((metres / 1000).toStringAsFixed(1));
   }
 
-  static String _formatEta(int? seconds) {
+  static String _formatEta(AppLocalizations l10n, int? seconds) {
     if (seconds == null) return '—';
     final minutes = (seconds / 60).ceil();
-    return minutes < 60 ? '$minutes min' : '${(minutes / 60).toStringAsFixed(1)} hr';
+    return minutes < 60
+        ? l10n.etaMinutes('$minutes')
+        : l10n.etaHours((minutes / 60).toStringAsFixed(1));
   }
 }

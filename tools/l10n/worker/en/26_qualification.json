@@ -1,0 +1,14 @@
+{
+  "qualSubmitted": "Submitted for review.",
+  "qualTitle": "Your qualification",
+  "qualIti": "ITI",
+  "qualInstitute": "Institute",
+  "qualInstituteHint": "e.g. Government ITI, Coimbatore",
+  "qualName": "Qualification",
+  "qualNameHint": "e.g. Electrician",
+  "qualSpeciality": "Speciality (optional)",
+  "qualSpecialityHint": "e.g. Industrial wiring",
+  "qualYear": "Year completed",
+  "qualCertificate": "Your certificate",
+  "qualCertificateBody": "A clear photo or PDF of the certificate."
+}

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/localization/l10n.dart';
 import '../jobs_controller.dart';
 
 /// Arrival verification.
@@ -86,9 +87,8 @@ class _ArrivalSheetState extends ConsumerState<ArrivalSheet> {
           _controller.clear();
           _attemptsRemaining = verification.attemptsRemaining;
           _error = _attemptsRemaining == null
-              ? 'That code is not correct.'
-              : 'That code is not correct. '
-                  '${_attemptsRemaining!} attempt${_attemptsRemaining == 1 ? '' : 's'} left.';
+              ? context.l10n.arrivalWrongCode
+              : context.l10n.arrivalWrongCodeAttempts(_attemptsRemaining!);
         });
       },
       // A failure is the request not landing, not a wrong code: keep what the
@@ -99,6 +99,7 @@ class _ArrivalSheetState extends ConsumerState<ArrivalSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final outOfAttempts = _attemptsRemaining == 0;
 
     return SafeArea(
@@ -110,12 +111,12 @@ class _ArrivalSheetState extends ConsumerState<ArrivalSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Confirm you have arrived',
+            Text(l10n.arrivalTitle,
                 style:
                     AppTypography.headlineMedium.copyWith(color: context.ink)),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Ask the customer to read out the code from their app, then type it here.',
+              l10n.arrivalBody,
               style:
                   AppTypography.bodyLarge.copyWith(color: context.inkSecondary),
             ),
@@ -152,7 +153,7 @@ class _ArrivalSheetState extends ConsumerState<ArrivalSheet> {
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 child: Text(
-                  'Too many incorrect codes. Please contact support to continue this job.',
+                  l10n.arrivalLocked,
                   style: AppTypography.bodyMedium
                       .copyWith(color: AppColors.danger),
                 ),
@@ -169,14 +170,14 @@ class _ArrivalSheetState extends ConsumerState<ArrivalSheet> {
                           valueColor: AlwaysStoppedAnimation(Colors.white),
                         ),
                       )
-                    : const Text('Confirm arrival'),
+                    : Text(l10n.arrivalConfirm),
               ),
 
             const SizedBox(height: AppSpacing.md),
             Center(
               child: TextButton(
                 onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Not yet'),
+                child: Text(l10n.arrivalNotYet),
               ),
             ),
           ],

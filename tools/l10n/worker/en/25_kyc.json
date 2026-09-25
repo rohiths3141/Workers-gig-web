@@ -1,0 +1,11 @@
+{
+  "kycStillWaiting": "Still waiting on DigiLocker. You can check back from here later.",
+  "kycTitle": "Identity check",
+  "kycHeadline": "Confirm who you are",
+  "kycIntro": "Customers let you into their homes, so we verify every worker's identity through DigiLocker, the Government of India's document platform. Nothing is uploaded — you just approve the request on your own Aadhaar account.",
+  "kycPrivacy": "Your Aadhaar details are confirmed directly with DigiLocker. We store only what proves the check happened — never your photo or a copy of your Aadhaar.",
+  "kycVerified": "Your identity is verified.",
+  "kycAwaitingConsent": "Complete the DigiLocker consent in your browser, then come back here.",
+  "kycChecking": "Checking with DigiLocker…",
+  "kycStart": "Verify with DigiLocker"
+}

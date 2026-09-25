@@ -1,0 +1,23 @@
+{
+  "payoutEnterAmount": "Enter how much you want to withdraw",
+  "payoutUpTo": "You can withdraw up to {amount} right now",
+  "payoutMinimum": "The smallest withdrawal is {amount}",
+  "payoutRequested": "Withdrawal of {amount} requested. We will update you as it is processed.",
+  "payoutAvailableNow": "Available now",
+  "payoutPendingMore": "{amount} more is still being processed and cannot be withdrawn yet.",
+  "payoutHowMuch": "How much?",
+  "payoutAll": "All",
+  "payoutPercent": "{percent}%",
+  "payoutProcessNotice": "Withdrawals are checked and then sent to your registered bank account. You will see the status update here at every step.",
+  "payoutRequest": "Request withdrawal",
+  "bankChecking": "Checking your bank account…",
+  "bankPaidTo": "Paid to account ending {last4}",
+  "bankVerifiedFallback": "Your verified bank account",
+  "bankBeingVerified": "Bank account being verified",
+  "bankBeingVerifiedBody": "You can withdraw once our team has verified it.",
+  "bankNotVerified": "Bank account not verified",
+  "bankNotVerifiedBody": "Check your details and submit them again.",
+  "bankAddTitle": "Add a bank account",
+  "bankAddBody": "Withdrawals are paid to a bank account our team has verified.",
+  "bankAddAction": "Add bank account"
+}

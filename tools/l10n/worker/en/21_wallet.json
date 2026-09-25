@@ -1,0 +1,14 @@
+{
+  "walletAllTransactions": "All transactions",
+  "walletFrozen": "Withdrawals are on hold while we look into something. Contact support for details.",
+  "walletWithdraw": "Withdraw",
+  "walletNothingPending": "Nothing to withdraw yet. {amount} is still being processed and moves to your balance once those jobs are approved.",
+  "walletNothingYet": "Nothing to withdraw yet. Your earnings appear here once a customer approves a finished job.",
+  "walletRecentEarnings": "Recent earnings",
+  "walletNoEarnings": "No earnings yet",
+  "walletNoEarningsBody": "Your earnings will appear here once a completed job has been paid for.",
+  "walletAvailable": "Available to withdraw",
+  "walletProcessing": "Being processed",
+  "walletProcessingHint": "Released after the holding period",
+  "walletTotalEarned": "Earned in total"
+}

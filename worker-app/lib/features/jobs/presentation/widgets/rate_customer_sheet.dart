@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/localization/l10n.dart';
 import '../../../../shared/widgets/common_widgets.dart';
 import '../jobs_controller.dart';
 
@@ -60,7 +61,7 @@ class _RateCustomerSheetState extends ConsumerState<RateCustomerSheet> {
     result.fold(
       (_) {
         Navigator.of(context).pop();
-        showSuccess(context, 'Thank you for the feedback.');
+        showSuccess(context, context.l10n.rateThanks);
       },
       (failure) => showFailure(context, failure.message),
     );
@@ -68,6 +69,7 @@ class _RateCustomerSheetState extends ConsumerState<RateCustomerSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -75,12 +77,12 @@ class _RateCustomerSheetState extends ConsumerState<RateCustomerSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('How was this customer?',
+            Text(l10n.rateTitle,
                 style:
                     AppTypography.headlineMedium.copyWith(color: context.ink)),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'Your rating is private and helps us look after workers.',
+              l10n.rateBody,
               style:
                   AppTypography.bodyMedium.copyWith(color: context.inkSecondary),
             ),
@@ -108,8 +110,8 @@ class _RateCustomerSheetState extends ConsumerState<RateCustomerSheet> {
               controller: _comment,
               maxLines: 3,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Anything to add? (optional)',
+              decoration: InputDecoration(
+                labelText: l10n.rateCommentLabel,
               ),
             ),
             const SizedBox(height: AppSpacing.xl),
@@ -124,7 +126,7 @@ class _RateCustomerSheetState extends ConsumerState<RateCustomerSheet> {
                         valueColor: AlwaysStoppedAnimation(Colors.white),
                       ),
                     )
-                  : const Text('Submit rating'),
+                  : Text(l10n.rateSubmit),
             ),
           ],
         ),

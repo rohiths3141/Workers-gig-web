@@ -61,24 +61,30 @@ class Gig {
 
   /// "45 min", "2 hr 30 min", "3 days" — written the way a worker would say it.
   String get durationLabel {
+    final l10n = AppStrings.current;
     final minutes = estimatedDurationMinutes;
-    if (minutes < 60) return '$minutes min';
+    if (minutes < 60) return l10n.durationMinutes('$minutes');
     if (minutes < 1440) {
       final hours = minutes ~/ 60;
       final rest = minutes % 60;
-      return rest == 0 ? '$hours hr' : '$hours hr $rest min';
+      return rest == 0
+          ? l10n.durationHours('$hours')
+          : l10n.durationHoursMinutes('$hours', '$rest');
     }
-    final days = (minutes / 1440).round();
-    return days == 1 ? '1 day' : '$days days';
+    return l10n.durationDays((minutes / 1440).round());
   }
 
-  String get priceLabel => switch (pricingUnit) {
-        PricingUnit.perJob => price.format(),
-        PricingUnit.perHour => '${price.format()}/hr',
-        PricingUnit.perDay => '${price.format()}/day',
-        PricingUnit.perUnit => '${price.format()}/unit',
-        PricingUnit.perSqft => '${price.format()}/sq ft',
-      };
+  String get priceLabel {
+    final l10n = AppStrings.current;
+    final amount = price.format();
+    return switch (pricingUnit) {
+      PricingUnit.perJob => amount,
+      PricingUnit.perHour => l10n.pricePerHour(amount),
+      PricingUnit.perDay => l10n.pricePerDay(amount),
+      PricingUnit.perUnit => l10n.pricePerUnit(amount),
+      PricingUnit.perSqft => l10n.pricePerSqft(amount),
+    };
+  }
 
   /// Whether this gig can currently win work. Both halves matter: a live gig
   /// belonging to an offline worker wins nothing, and that combination is shown

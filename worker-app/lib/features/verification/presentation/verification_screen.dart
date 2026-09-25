@@ -7,6 +7,7 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/verification.dart';
 import '../../../shared/widgets/async_value_view.dart';
@@ -24,11 +25,12 @@ class VerificationScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final verifications = ref.watch(verificationsProvider);
     final policies = ref.watch(insurancePoliciesProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Verification')),
+      appBar: AppBar(title: Text(l10n.verificationTitle)),
       body: AsyncValueView<List<VerificationCase>>(
         value: verifications,
         onRetry: () => ref.invalidate(verificationsProvider),
@@ -41,9 +43,9 @@ class VerificationScreen extends ConsumerWidget {
             children: [
               AppCard(
                 child: LabelledProgress(
-                  label: 'Verified checks',
+                  label: l10n.verificationProgress,
                   value: cases.isEmpty ? 0 : approved / cases.length,
-                  trailing: '$approved of ${cases.length}',
+                  trailing: l10n.verificationCount(approved, cases.length),
                 ),
               ),
               const SizedBox(height: AppSpacing.xl),
@@ -55,7 +57,7 @@ class VerificationScreen extends ConsumerWidget {
                 ),
 
               const SizedBox(height: AppSpacing.lg),
-              const SectionHeader(title: 'Insurance'),
+              SectionHeader(title: l10n.verificationInsurance),
 
               policies.when(
                 loading: () => const ListSkeleton(itemCount: 1, itemHeight: 88),
@@ -78,12 +80,12 @@ class VerificationScreen extends ConsumerWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('No active cover',
+                                Text(l10n.verificationNoCover,
                                     style: AppTypography.titleMedium
                                         .copyWith(color: context.ink)),
                                 const SizedBox(height: AppSpacing.xxs),
                                 Text(
-                                  'You do not currently have an insurance policy on file with us.',
+                                  l10n.verificationNoCoverBody,
                                   style: AppTypography.bodySmall
                                       .copyWith(color: context.inkSecondary),
                                 ),
@@ -121,33 +123,19 @@ class _VerificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final (title, description) = switch (verification.type) {
-      VerificationType.identityKyc => (
-          'Identity',
-          'A government ID so customers know who is coming to their home.',
-        ),
-      VerificationType.address => ('Address', 'Proof of where you live.'),
-      VerificationType.itiCertificate => (
-          'ITI certificate',
-          'Your trade certificate from an Industrial Training Institute.',
-        ),
-      VerificationType.diploma => ('Diploma', 'A recognised technical diploma.'),
-      VerificationType.rplSkill => (
-          'Skill assessment',
-          'Recognition of Prior Learning: your experience assessed and certified.',
-        ),
-      VerificationType.backgroundCheck => (
-          'Background check',
-          'We run this ourselves. You do not need to do anything.',
-        ),
-      VerificationType.insurance => (
-          'Insurance',
-          'Cover for accidental damage while you work. Our team adds your policy once it is arranged.',
-        ),
-      VerificationType.bankAccount => (
-          'Bank account',
-          'Where your withdrawals are paid.',
-        ),
+      VerificationType.identityKyc =>
+        (l10n.verifyIdentity, l10n.verifyIdentityBody),
+      VerificationType.address => (l10n.verifyAddress, l10n.verifyAddressBody),
+      VerificationType.itiCertificate => (l10n.verifyIti, l10n.verifyItiBody),
+      VerificationType.diploma => (l10n.verifyDiploma, l10n.verifyDiplomaBody),
+      VerificationType.rplSkill => (l10n.verifyRpl, l10n.verifyRplBody),
+      VerificationType.backgroundCheck =>
+        (l10n.verifyBackground, l10n.verifyBackgroundBody),
+      VerificationType.insurance =>
+        (l10n.verificationInsurance, l10n.verifyInsuranceBody),
+      VerificationType.bankAccount => (l10n.verifyBank, l10n.verifyBankBody),
     };
 
     final route = switch (verification.type) {
@@ -210,7 +198,8 @@ class _VerificationTile extends StatelessWidget {
               verification.expiresAt != null) ...[
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Valid until ${DateFormat('d MMM yyyy').format(verification.expiresAt!)}',
+              l10n.verificationValidUntil(DateFormat('d MMM yyyy', context.dateLocale)
+                  .format(verification.expiresAt!)),
               style:
                   AppTypography.bodySmall.copyWith(color: context.inkTertiary),
             ),
@@ -222,8 +211,8 @@ class _VerificationTile extends StatelessWidget {
               children: [
                 Text(
                   verification.status == VerificationStatus.notSubmitted
-                      ? 'Start'
-                      : 'Update',
+                      ? l10n.verificationStart
+                      : l10n.verificationUpdate,
                   style: AppTypography.label.copyWith(color: AppColors.primary),
                 ),
                 const Icon(Icons.chevron_right_rounded,
@@ -244,6 +233,7 @@ class _PolicyTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,18 +246,19 @@ class _PolicyTile extends StatelessWidget {
                         AppTypography.titleMedium.copyWith(color: context.ink)),
               ),
               StatusBadge(
-                label: policy.isCovering ? 'ACTIVE' : 'NOT ACTIVE',
+                label: policy.isCovering ? l10n.policyActive : l10n.policyNotActive,
                 color:
                     policy.isCovering ? AppColors.success : AppColors.inkTertiary,
               ),
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          DetailRow(label: 'Policy', value: policy.maskedPolicyNumber),
-          DetailRow(label: 'Cover', value: policy.coverageAmount.format()),
+          DetailRow(label: l10n.policyNumber, value: policy.maskedPolicyNumber),
+          DetailRow(label: l10n.policyCover, value: policy.coverageAmount.format()),
           DetailRow(
-            label: 'Valid until',
-            value: DateFormat('d MMM yyyy').format(policy.endDate),
+            label: l10n.policyValidUntil,
+            value: DateFormat('d MMM yyyy', context.dateLocale)
+                .format(policy.endDate),
           ),
         ],
       ),

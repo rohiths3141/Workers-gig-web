@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../../../../core/localization/l10n.dart';
 import '../../../../shared/widgets/common_widgets.dart';
 
 /// The large circular "service in progress" timer.
@@ -84,7 +85,7 @@ class _ServiceTimerCardState extends State<ServiceTimerCard> {
                       ]),
                     ),
                     const SizedBox(height: AppSpacing.xxs),
-                    Text('Service time',
+                    Text(context.l10n.timerServiceTime,
                         style: AppTypography.bodySmall
                             .copyWith(color: context.inkSecondary)),
                   ],

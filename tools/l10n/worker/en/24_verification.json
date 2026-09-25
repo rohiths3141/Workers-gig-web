@@ -1,0 +1,37 @@
+{
+  "verificationTitle": "Verification",
+  "verificationProgress": "Verified checks",
+  "verificationCount": "{approved} of {total}",
+  "@verificationCount": {
+    "placeholders": {
+      "approved": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "verificationInsurance": "Insurance",
+  "verificationNoCover": "No active cover",
+  "verificationNoCoverBody": "You do not currently have an insurance policy on file with us.",
+  "verifyIdentity": "Identity",
+  "verifyIdentityBody": "A government ID so customers know who is coming to their home.",
+  "verifyAddress": "Address",
+  "verifyAddressBody": "Proof of where you live.",
+  "verifyIti": "ITI certificate",
+  "verifyItiBody": "Your trade certificate from an Industrial Training Institute.",
+  "verifyDiploma": "Diploma",
+  "verifyDiplomaBody": "A recognised technical diploma.",
+  "verifyRpl": "Skill assessment",
+  "verifyRplBody": "Recognition of Prior Learning: your experience assessed and certified.",
+  "verifyBackground": "Background check",
+  "verifyBackgroundBody": "We run this ourselves. You do not need to do anything.",
+  "verifyInsuranceBody": "Cover for accidental damage while you work. Our team adds your policy once it is arranged.",
+  "verifyBank": "Bank account",
+  "verifyBankBody": "Where your withdrawals are paid.",
+  "verificationValidUntil": "Valid until {date}",
+  "verificationStart": "Start",
+  "verificationUpdate": "Update",
+  "policyActive": "ACTIVE",
+  "policyNotActive": "NOT ACTIVE",
+  "policyNumber": "Policy",
+  "policyCover": "Cover",
+  "policyValidUntil": "Valid until"
+}

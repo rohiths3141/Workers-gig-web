@@ -7,9 +7,11 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/wallet.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import 'wallet_controller.dart';
 
 /// The wallet.
@@ -23,17 +25,18 @@ class WalletScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final wallet = ref.watch(walletProvider);
     final breakdowns = ref.watch(earningBreakdownsProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wallet'),
+        title: Text(l10n.navWallet),
         actions: [
           IconButton(
             onPressed: () => context.push(Routes.transactions),
             icon: const Icon(Icons.receipt_long_outlined),
-            tooltip: 'All transactions',
+            tooltip: l10n.walletAllTransactions,
           ),
         ],
       ),
@@ -65,8 +68,7 @@ class WalletScreen extends ConsumerWidget {
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Text(
-                            data.frozenReason ??
-                                'Withdrawals are on hold while we look into something. Contact support for details.',
+                            data.frozenReason ?? l10n.walletFrozen,
                             style: AppTypography.bodyMedium
                                 .copyWith(color: AppColors.warning),
                           ),
@@ -83,7 +85,7 @@ class WalletScreen extends ConsumerWidget {
                       ? () => context.push(Routes.payout)
                       : null,
                   icon: const Icon(Icons.arrow_outward_rounded),
-                  label: const Text('Withdraw'),
+                  label: Text(l10n.walletWithdraw),
                 ),
               ),
               // A greyed-out Withdraw with nothing beside it left the worker
@@ -92,11 +94,8 @@ class WalletScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.sm),
                 Text(
                   data.pendingEarnings.isPositive
-                      ? 'Nothing to withdraw yet. ${data.pendingEarnings.format()} '
-                          'is still being processed and moves to your balance '
-                          'once those jobs are approved.'
-                      : 'Nothing to withdraw yet. Your earnings appear here '
-                          'once a customer approves a finished job.',
+                      ? l10n.walletNothingPending(data.pendingEarnings.format())
+                      : l10n.walletNothingYet,
                   style: AppTypography.bodySmall
                       .copyWith(color: context.inkSecondary),
                 ),
@@ -104,8 +103,8 @@ class WalletScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xl),
 
               SectionHeader(
-                title: 'Recent earnings',
-                actionLabel: 'See all',
+                title: l10n.walletRecentEarnings,
+                actionLabel: l10n.commonSeeAll,
                 action: () => context.push(Routes.transactions),
               ),
 
@@ -118,11 +117,10 @@ class WalletScreen extends ConsumerWidget {
                 ),
                 data: (items) {
                   if (items.isEmpty) {
-                    return const EmptyStateView(
+                    return EmptyStateView(
                       icon: Icons.account_balance_wallet_outlined,
-                      title: 'No earnings yet',
-                      message:
-                          'Your earnings will appear here once a completed job has been paid for.',
+                      title: l10n.walletNoEarnings,
+                      message: l10n.walletNoEarningsBody,
                     );
                   }
 
@@ -152,11 +150,12 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Available to withdraw',
+          Text(l10n.walletAvailable,
               style: AppTypography.label.copyWith(color: context.inkSecondary)),
           const SizedBox(height: AppSpacing.xs),
           Text(wallet.balance.format(),
@@ -170,16 +169,16 @@ class _BalanceCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _Stat(
-                  label: 'Being processed',
+                  label: l10n.walletProcessing,
                   value: wallet.pendingEarnings.format(),
                   // Named precisely: this money exists and is the worker's, it
                   // simply is not withdrawable yet.
-                  hint: 'Released after the holding period',
+                  hint: l10n.walletProcessingHint,
                 ),
               ),
               Expanded(
                 child: _Stat(
-                  label: 'Earned in total',
+                  label: l10n.walletTotalEarned,
                   value: wallet.totalCredited.format(),
                 ),
               ),
@@ -230,6 +229,7 @@ class _EarningCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,11 +237,11 @@ class _EarningCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Text(breakdown.serviceName,
+                child: Text(localizedServiceName(l10n, breakdown.serviceName),
                     style:
                         AppTypography.titleMedium.copyWith(color: context.ink)),
               ),
-              Text(DateFormat('d MMM').format(breakdown.at),
+              Text(DateFormat('d MMM', context.dateLocale).format(breakdown.at),
                   style: AppTypography.bodySmall
                       .copyWith(color: context.inkTertiary)),
             ],
@@ -250,16 +250,16 @@ class _EarningCard extends StatelessWidget {
               style:
                   AppTypography.bodySmall.copyWith(color: context.inkTertiary)),
           const SizedBox(height: AppSpacing.md),
-          _Line(label: 'Job amount', value: breakdown.gross.format()),
+          _Line(label: l10n.jobAmount, value: breakdown.gross.format()),
           if (breakdown.fees.isPositive)
             _Line(
-              label: 'Platform fee',
+              label: l10n.walletTxPlatformFee,
               value: '-${breakdown.fees.format()}',
               color: context.inkSecondary,
             ),
           const Divider(height: AppSpacing.xl),
           _Line(
-            label: 'You earned',
+            label: l10n.jobYouEarned,
             value: breakdown.net.format(),
             color: AppColors.earnings,
             emphasise: true,

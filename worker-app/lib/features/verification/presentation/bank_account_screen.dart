@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import 'verification_controller.dart';
 
@@ -41,17 +42,18 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
   }
 
   Map<String, String> _validate() {
+    final l10n = context.l10n;
     final errors = <String, String>{};
     if (_holder.text.trim().length < 2) {
-      errors['holder'] = 'Enter the name exactly as it appears on the account';
+      errors['holder'] = l10n.bankErrorHolder;
     }
     if (!_accountPattern.hasMatch(_number.text.trim())) {
-      errors['number'] = 'An account number is 9 to 18 digits';
+      errors['number'] = l10n.bankErrorNumber;
     } else if (_confirmNumber.text.trim() != _number.text.trim()) {
-      errors['confirm'] = 'The account numbers do not match';
+      errors['confirm'] = l10n.bankErrorMismatch;
     }
     if (!_ifscPattern.hasMatch(_ifsc.text.trim().toUpperCase())) {
-      errors['ifsc'] = 'Enter the 11-character IFSC, e.g. SBIN0001234';
+      errors['ifsc'] = l10n.bankErrorIfsc;
     }
     return errors;
   }
@@ -83,7 +85,7 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
     result.fold(
       (_) {
         Navigator.of(context).pop();
-        showSuccess(context, 'Bank account sent for verification.');
+        showSuccess(context, context.l10n.bankSent);
       },
       (failure) => showFailure(context, failure.message),
     );
@@ -91,10 +93,11 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final digitsOnly = [FilteringTextInputFormatter.digitsOnly];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Bank account')),
+      appBar: AppBar(title: Text(l10n.verifyBank)),
       body: Column(
         children: [
           Expanded(
@@ -105,7 +108,7 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                   backgroundColor: AppColors.infoSurface,
                   borderColor: AppColors.info.withValues(alpha: 0.3),
                   child: Text(
-                    'Your withdrawals are paid to this account. Our team verifies it before the first payout.',
+                    l10n.bankNotice,
                     style: AppTypography.bodyMedium.copyWith(color: AppColors.info),
                   ),
                 ),
@@ -114,7 +117,7 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                   controller: _holder,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    labelText: 'Account holder name',
+                    labelText: l10n.bankHolder,
                     errorText: _errors['holder'],
                   ),
                 ),
@@ -126,7 +129,7 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                   maxLength: 18,
                   obscureText: true,
                   decoration: InputDecoration(
-                    labelText: 'Account number',
+                    labelText: l10n.bankNumber,
                     errorText: _errors['number'],
                     counterText: '',
                   ),
@@ -138,7 +141,7 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                   inputFormatters: digitsOnly,
                   maxLength: 18,
                   decoration: InputDecoration(
-                    labelText: 'Re-enter account number',
+                    labelText: l10n.bankConfirmNumber,
                     errorText: _errors['confirm'],
                     counterText: '',
                   ),
@@ -149,8 +152,8 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                   textCapitalization: TextCapitalization.characters,
                   maxLength: 11,
                   decoration: InputDecoration(
-                    labelText: 'IFSC code',
-                    hintText: 'e.g. SBIN0001234',
+                    labelText: l10n.bankIfsc,
+                    hintText: l10n.bankIfscHint,
                     errorText: _errors['ifsc'],
                     counterText: '',
                   ),
@@ -159,8 +162,8 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                 TextField(
                   controller: _bankName,
                   textCapitalization: TextCapitalization.words,
-                  decoration: const InputDecoration(
-                    labelText: 'Bank name (optional)',
+                  decoration: InputDecoration(
+                    labelText: l10n.bankName,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.huge),
@@ -192,7 +195,7 @@ class _BankAccountScreenState extends ConsumerState<BankAccountScreen> {
                           valueColor: AlwaysStoppedAnimation(Colors.white),
                         ),
                       )
-                    : const Text('Submit for verification'),
+                    : Text(l10n.bankSubmit),
               ),
             ),
           ),

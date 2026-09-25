@@ -6,11 +6,13 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../core/money/money.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/gig.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import 'gigs_controller.dart';
 
 /// Create or edit one service.
@@ -49,18 +51,18 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
   bool _busy = false;
   bool _loaded = false;
 
-  static const _durations = [
-    (30, '30 minutes'),
-    (45, '45 minutes'),
-    (60, '1 hour'),
-    (120, '2 hours'),
-    (240, '4 hours'),
-    (480, '8 hours (a working day)'),
-    (1440, '24 hours'),
-    (2880, '2 days'),
-    (4320, '3 days'),
-    (10080, '1 week'),
-  ];
+  static List<(int, String)> _durations(AppLocalizations l10n) => [
+        (30, l10n.gigDuration30m),
+        (45, l10n.gigDuration45m),
+        (60, l10n.gigDuration1h),
+        (120, l10n.gigDuration2h),
+        (240, l10n.gigDuration4h),
+        (480, l10n.gigDuration8h),
+        (1440, l10n.gigDuration24h),
+        (2880, l10n.gigDuration2d),
+        (4320, l10n.gigDuration3d),
+        (10080, l10n.gigDuration1w),
+      ];
 
   @override
   void dispose() {
@@ -124,11 +126,10 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
         showSuccess(
           context,
           switch (gig.status) {
-            GigStatus.draft => 'Saved as a draft.',
-            GigStatus.pendingReview =>
-              'Submitted. We will review it and let you know.',
-            GigStatus.active => 'Your service is live.',
-            _ => 'Saved.',
+            GigStatus.draft => context.l10n.gigSavedDraft,
+            GigStatus.pendingReview => context.l10n.gigSubmitted,
+            GigStatus.active => context.l10n.gigLive,
+            _ => context.l10n.gigSaved,
           },
         );
       },
@@ -146,6 +147,7 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final categories = ref.watch(gigCategoriesProvider);
     final existing =
         widget.gigId == null ? null : ref.watch(gigProvider(widget.gigId!));
@@ -157,18 +159,19 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.gigId == null ? 'Add a service' : 'Edit service'),
+        title: Text(widget.gigId == null
+            ? l10n.gigEditorAddTitle
+            : l10n.gigEditorEditTitle),
       ),
       body: AsyncValueView<List<ServiceCategory>>(
         value: categories,
         onRetry: () => ref.invalidate(gigCategoriesProvider),
         onData: (available) {
           if (available.isEmpty) {
-            return const EmptyStateView(
+            return EmptyStateView(
               icon: Icons.workspace_premium_outlined,
-              title: 'No approved trades yet',
-              message:
-                  'Once a trade is approved for you, you can publish services under it. Add a trade from your profile to get started.',
+              title: l10n.gigNoTrades,
+              message: l10n.gigNoTradesBody,
             );
           }
 
@@ -179,7 +182,7 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                   padding: const EdgeInsets.all(AppSpacing.screenPadding),
                   children: [
                     _Field(
-                      label: 'Which trade?',
+                      label: l10n.gigFieldTrade,
                       child: DropdownButtonFormField<String>(
                         initialValue: available.any((c) => c.id == _serviceId)
                             ? _serviceId
@@ -191,7 +194,7 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                           for (final category in available)
                             DropdownMenuItem(
                               value: category.id,
-                              child: Text(category.name),
+                              child: Text(localizedServiceName(l10n, category.name)),
                             ),
                         ],
                         onChanged: (value) => setState(() {
@@ -202,8 +205,8 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                     ),
 
                     _Field(
-                      label: 'What is the service called?',
-                      hint: 'Customers see this. Be specific.',
+                      label: l10n.gigFieldTitle,
+                      hint: l10n.gigFieldTitleHint,
                       child: TextField(
                         controller: _title,
                         textCapitalization: TextCapitalization.sentences,
@@ -214,7 +217,7 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                           }
                         },
                         decoration: InputDecoration(
-                          hintText: 'e.g. Split AC deep cleaning',
+                          hintText: l10n.gigFieldTitleExample,
                           errorText: _errors['title'],
                           errorMaxLines: 2,
                           counterText: '',
@@ -223,23 +226,21 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                     ),
 
                     _Field(
-                      label: 'What does it include?',
-                      hint: 'Optional, but it helps customers choose you.',
+                      label: l10n.gigFieldDescription,
+                      hint: l10n.gigFieldDescriptionHint,
                       child: TextField(
                         controller: _description,
                         maxLines: 4,
                         textCapitalization: TextCapitalization.sentences,
-                        decoration: const InputDecoration(
-                          hintText:
-                              'e.g. Full indoor and outdoor unit clean, filter wash, gas pressure check.',
+                        decoration: InputDecoration(
+                          hintText: l10n.gigFieldDescriptionExample,
                         ),
                       ),
                     ),
 
                     _Field(
-                      label: 'What do you charge?',
-                      hint:
-                          'Each service has its own price. This one does not affect your others.',
+                      label: l10n.gigFieldPrice,
+                      hint: l10n.gigFieldPriceHint,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -276,22 +277,22 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                             child: DropdownButtonFormField<PricingUnit>(
                               initialValue: _pricingUnit,
                               isExpanded: true,
-                              items: const [
+                              items: [
                                 DropdownMenuItem(
                                     value: PricingUnit.perJob,
-                                    child: Text('per job')),
+                                    child: Text(l10n.gigUnitPerJob)),
                                 DropdownMenuItem(
                                     value: PricingUnit.perHour,
-                                    child: Text('per hour')),
+                                    child: Text(l10n.gigUnitPerHour)),
                                 DropdownMenuItem(
                                     value: PricingUnit.perDay,
-                                    child: Text('per day')),
+                                    child: Text(l10n.gigUnitPerDay)),
                                 DropdownMenuItem(
                                     value: PricingUnit.perUnit,
-                                    child: Text('per unit')),
+                                    child: Text(l10n.gigUnitPerUnit)),
                                 DropdownMenuItem(
                                     value: PricingUnit.perSqft,
-                                    child: Text('per sq ft')),
+                                    child: Text(l10n.gigUnitPerSqft)),
                               ],
                               onChanged: (value) => setState(
                                   () => _pricingUnit = value ?? _pricingUnit),
@@ -314,14 +315,14 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                     ),
 
                     _Field(
-                      label: 'How long does it usually take?',
+                      label: l10n.gigFieldDuration,
                       child: DropdownButtonFormField<int>(
                         initialValue: _durationMinutes,
                         isExpanded: true,
                         decoration:
                             InputDecoration(errorText: _errors['duration']),
                         items: [
-                          for (final (minutes, label) in _durations)
+                          for (final (minutes, label) in _durations(l10n))
                             DropdownMenuItem(value: minutes, child: Text(label)),
                         ],
                         onChanged: (value) => setState(() {
@@ -332,16 +333,15 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                     ),
 
                     _Field(
-                      label: 'How far will you travel for this?',
-                      hint:
-                          'Leave as default to use your usual travel distance.',
+                      label: l10n.gigFieldRadius,
+                      hint: l10n.gigFieldRadiusHint,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             _radiusKm == null
-                                ? 'Your usual distance'
-                                : '${_radiusKm!.round()} km',
+                                ? l10n.gigUsualDistance
+                                : l10n.distanceKm('${_radiusKm!.round()}'),
                             style: AppTypography.titleMedium
                                 .copyWith(color: context.ink),
                           ),
@@ -350,14 +350,14 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                             min: 1,
                             max: 50,
                             divisions: 49,
-                            label: '${(_radiusKm ?? 10).round()} km',
+                            label: l10n.distanceKm('${(_radiusKm ?? 10).round()}'),
                             onChanged: (value) =>
                                 setState(() => _radiusKm = value),
                           ),
                           if (_radiusKm != null)
                             TextButton(
                               onPressed: () => setState(() => _radiusKm = null),
-                              child: const Text('Use my usual distance'),
+                              child: Text(l10n.gigUseUsualDistance),
                             ),
                         ],
                       ),
@@ -374,7 +374,7 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                           const SizedBox(width: AppSpacing.md),
                           Expanded(
                             child: Text(
-                              'New and edited services are checked by our team before they go live. We will let you know as soon as it is done.',
+                              l10n.gigReviewNotice,
                               style: AppTypography.bodySmall
                                   .copyWith(color: AppColors.info),
                             ),
@@ -409,8 +409,8 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                         child: OutlinedButton(
                           onPressed:
                               _busy ? null : () => _submit(publish: false),
-                          child: const Text(
-                            'Save draft',
+                          child: Text(
+                            l10n.gigSaveDraft,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -423,7 +423,7 @@ class _GigEditorScreenState extends ConsumerState<GigEditorScreen> {
                       child: SizedBox(
                         height: AppSpacing.primaryActionHeight,
                         child: BusyFilledButton(
-                          label: 'Submit for review',
+                          label: l10n.gigSubmitForReview,
                           busy: _busy,
                           onPressed: () => _submit(publish: true),
                         ),

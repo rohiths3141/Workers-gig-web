@@ -7,10 +7,12 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../app/providers/session_controller.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/gig.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import 'gigs_controller.dart';
 
 /// My services.
@@ -23,24 +25,25 @@ class MyGigsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final gigs = ref.watch(myGigsProvider);
     final worker = ref.watch(currentWorkerProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My services'),
+        title: Text(l10n.gigsTitle),
         actions: [
           IconButton(
             onPressed: () => context.push(Routes.gigEditor),
             icon: const Icon(Icons.add_rounded),
-            tooltip: 'Add a service',
+            tooltip: l10n.gigsAddTooltip,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push(Routes.gigEditor),
         icon: const Icon(Icons.add_rounded),
-        label: const Text('Add service'),
+        label: Text(l10n.gigsAdd),
       ),
       body: AsyncValueView<List<Gig>>(
         value: gigs,
@@ -48,11 +51,10 @@ class MyGigsScreen extends ConsumerWidget {
         loading: const ListSkeleton(itemHeight: 140),
         onData: (items) {
           if (items.isEmpty) {
-            return const EmptyStateView(
+            return EmptyStateView(
               icon: Icons.storefront_outlined,
-              title: 'No services yet',
-              message:
-                  'Add the services you offer. You can add as many as you like, across every trade you are approved for.',
+              title: l10n.gigsEmpty,
+              message: l10n.gigsEmptyBody,
             );
           }
 
@@ -79,9 +81,9 @@ class MyGigsScreen extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         live == 0
-                            ? 'None of your services are live, so customers cannot book you.'
-                            : '$live service${live == 1 ? ' is' : 's are'} live. '
-                                '${worker?.availability.isAvailable ?? false ? 'You are available for work.' : 'You are off duty, so you will not be offered jobs.'}',
+                            ? l10n.gigsNoneLive
+                            : '${l10n.gigsLiveCount(live)} '
+                                '${worker?.availability.isAvailable ?? false ? l10n.gigsAvailable : l10n.gigsOffDuty}',
                         style: AppTypography.bodySmall
                             .copyWith(color: context.inkSecondary),
                       ),
@@ -111,6 +113,7 @@ class _GigCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final isBusy = ref.watch(gigActionsProvider).isLoading;
 
     return AppCard(
@@ -123,7 +126,7 @@ class _GigCard extends ConsumerWidget {
               StatusBadge.forGig(gig.status),
               const Spacer(),
               if (gig.jobsCompleted > 0)
-                Text('${gig.jobsCompleted} done',
+                Text(l10n.gigJobsDone(gig.jobsCompleted),
                     style: AppTypography.bodySmall
                         .copyWith(color: context.inkTertiary)),
             ],
@@ -132,7 +135,7 @@ class _GigCard extends ConsumerWidget {
           Text(gig.title,
               style: AppTypography.titleLarge.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.xxs),
-          Text(gig.serviceName,
+          Text(localizedServiceName(l10n, gig.serviceName),
               style:
                   AppTypography.bodySmall.copyWith(color: context.inkSecondary)),
           const SizedBox(height: AppSpacing.md),
@@ -171,7 +174,7 @@ class _GigCard extends ConsumerWidget {
                 child: OutlinedButton(
                   onPressed:
                       gig.status.isEditable ? () => context.push(Routes.gig(gig.id)) : null,
-                  child: const Text('Edit'),
+                  child: Text(l10n.gigEdit),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -182,10 +185,11 @@ class _GigCard extends ConsumerWidget {
                 child: gig.status.canPause || gig.status.canResume
                     ? OutlinedButton(
                         onPressed: isBusy ? null : () => _toggle(context, ref),
-                        child: Text(gig.status.canPause ? 'Pause' : 'Resume'),
+                        child: Text(
+                            gig.status.canPause ? l10n.gigPause : l10n.gigResume),
                       )
                     : Text(
-                        _inactiveReason(gig.status),
+                        _inactiveReason(l10n, gig.status),
                         textAlign: TextAlign.center,
                         style: AppTypography.bodySmall
                             .copyWith(color: context.inkTertiary),
@@ -199,12 +203,13 @@ class _GigCard extends ConsumerWidget {
   }
 
   /// Why this gig has no pause/resume action, in the worker's words.
-  static String _inactiveReason(GigStatus status) => switch (status) {
-        GigStatus.pendingReview => 'In review',
-        GigStatus.draft => 'Draft — submit it for review',
-        GigStatus.rejected => 'Rejected — edit and resubmit',
-        GigStatus.archived => 'Archived',
-        _ => 'Not live',
+  static String _inactiveReason(AppLocalizations l10n, GigStatus status) =>
+      switch (status) {
+        GigStatus.pendingReview => l10n.gigInReview,
+        GigStatus.draft => l10n.gigDraftHint,
+        GigStatus.rejected => l10n.gigRejectedHint,
+        GigStatus.archived => l10n.gigArchived,
+        _ => l10n.gigNotLive,
       };
 
   Future<void> _toggle(BuildContext context, WidgetRef ref) async {
@@ -217,7 +222,7 @@ class _GigCard extends ConsumerWidget {
       final result = await controller.pause(gig.id);
       if (!context.mounted) return;
       result.fold(
-        (_) => showSuccess(context, 'Paused. You will not be offered these jobs.'),
+        (_) => showSuccess(context, context.l10n.gigPaused),
         (failure) => showFailure(context, failure.message),
       );
       return;
@@ -227,7 +232,7 @@ class _GigCard extends ConsumerWidget {
       final result = await controller.resume(gig.id);
       if (!context.mounted) return;
       result.fold(
-        (_) => showSuccess(context, 'Live again.'),
+        (_) => showSuccess(context, context.l10n.gigLiveAgain),
         (failure) => showFailure(context, failure.message),
       );
     }

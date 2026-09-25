@@ -1,0 +1,15 @@
+{
+  "bankErrorHolder": "Enter the name exactly as it appears on the account",
+  "bankErrorNumber": "An account number is 9 to 18 digits",
+  "bankErrorMismatch": "The account numbers do not match",
+  "bankErrorIfsc": "Enter the 11-character IFSC, e.g. SBIN0001234",
+  "bankSent": "Bank account sent for verification.",
+  "bankNotice": "Your withdrawals are paid to this account. Our team verifies it before the first payout.",
+  "bankHolder": "Account holder name",
+  "bankNumber": "Account number",
+  "bankConfirmNumber": "Re-enter account number",
+  "bankIfsc": "IFSC code",
+  "bankIfscHint": "e.g. SBIN0001234",
+  "bankName": "Bank name (optional)",
+  "bankSubmit": "Submit for verification"
+}

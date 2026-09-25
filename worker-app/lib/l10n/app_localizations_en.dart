@@ -967,4 +967,980 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get jobHistoryLoadFailed => 'The job history could not be loaded.';
+
+  @override
+  String get jobOfferExpired => 'This job is no longer available.';
+
+  @override
+  String get jobOfferNewBadge => 'NEW JOB';
+
+  @override
+  String get jobOfferYouEarn => 'You earn';
+
+  @override
+  String get jobOfferPriceAfterVisit => 'Confirmed after the visit';
+
+  @override
+  String get jobOfferAccept => 'Accept job';
+
+  @override
+  String get activeJobTitle => 'Current job';
+
+  @override
+  String get activeJobEmptyBody =>
+      'When you accept and start a job it will appear here.';
+
+  @override
+  String get evidenceBeforeTitle => 'Before you start';
+
+  @override
+  String get evidenceBeforeBody =>
+      'Photograph the problem before you touch it. This protects you if the customer disputes the work later.';
+
+  @override
+  String get evidenceAfterTitle => 'After you finish';
+
+  @override
+  String get evidenceAfterBody =>
+      'A photo of the finished work is your evidence if the customer disputes it later. Optional, but worth the ten seconds.';
+
+  @override
+  String get jobCustomerHidden => 'Customer details are shared once confirmed';
+
+  @override
+  String get jobCall => 'Call';
+
+  @override
+  String get jobDirections => 'Directions';
+
+  @override
+  String get jobTrackOnMap => 'Track on map';
+
+  @override
+  String get trailAccepted => 'Accepted';
+
+  @override
+  String get trailOnTheWay => 'On the way';
+
+  @override
+  String get trailArrived => 'Arrived';
+
+  @override
+  String get trailArrivalConfirmed => 'Arrival confirmed';
+
+  @override
+  String get trailWorkStarted => 'Work started';
+
+  @override
+  String get trailFinished => 'Finished';
+
+  @override
+  String get jobProgress => 'Progress';
+
+  @override
+  String get jobBeforeFinish => 'Before you can finish';
+
+  @override
+  String get jobActionStartTravel => 'Start travelling';
+
+  @override
+  String get jobActionArrived => 'I have arrived';
+
+  @override
+  String get jobActionEnterCode => 'Enter arrival code';
+
+  @override
+  String get jobActionStartWork => 'Start work';
+
+  @override
+  String get jobActionFinish => 'Finish job';
+
+  @override
+  String get jobArrivalConfirmed => 'Arrival confirmed.';
+
+  @override
+  String get jobFinishTitle => 'Finish this job?';
+
+  @override
+  String get jobFinishBody =>
+      'The customer will be asked to approve the work. You will not be able to add photos afterwards.';
+
+  @override
+  String get jobOnYourWay => 'On your way.';
+
+  @override
+  String get jobMarkedArrived => 'Marked as arrived.';
+
+  @override
+  String get jobWorkStarted => 'Work started.';
+
+  @override
+  String get jobSentForApproval => 'Sent to the customer for approval.';
+
+  @override
+  String get jobUpdated => 'Updated.';
+
+  @override
+  String get jobWaitConfirm =>
+      'Waiting for the customer to confirm the booking.';
+
+  @override
+  String get jobWaitApprove => 'Waiting for the customer to approve your work.';
+
+  @override
+  String get jobWaitPaymentProcessing =>
+      'Approved. Payment is being processed.';
+
+  @override
+  String get jobWaitPayment => 'Waiting for the customer\'s payment.';
+
+  @override
+  String get jobWaitPaid => 'Paid. Your earnings will appear in your wallet.';
+
+  @override
+  String get jobWaitDisputed =>
+      'This job is under review by our team. We will be in touch.';
+
+  @override
+  String get jobWaitNothing => 'Nothing to do right now.';
+
+  @override
+  String get travelRouteUnavailable => 'Route unavailable';
+
+  @override
+  String get travelNoDestination => 'No destination set';
+
+  @override
+  String get travelNoDestinationBody =>
+      'This job has no service location to route to.';
+
+  @override
+  String get travelJobLocation => 'Job location';
+
+  @override
+  String get travelYou => 'You';
+
+  @override
+  String get travelCustomer => 'Customer';
+
+  @override
+  String get travelCalculating => 'Calculating route...';
+
+  @override
+  String distanceMetres(Object metres) {
+    return '$metres m';
+  }
+
+  @override
+  String etaMinutes(Object minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String etaHours(Object hours) {
+    return '$hours hr';
+  }
+
+  @override
+  String get arrivalWrongCode => 'That code is not correct.';
+
+  @override
+  String arrivalWrongCodeAttempts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'That code is not correct. $count attempts left.',
+      one: 'That code is not correct. 1 attempt left.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get arrivalTitle => 'Confirm you have arrived';
+
+  @override
+  String get arrivalBody =>
+      'Ask the customer to read out the code from their app, then type it here.';
+
+  @override
+  String get arrivalLocked =>
+      'Too many incorrect codes. Please contact support to continue this job.';
+
+  @override
+  String get arrivalConfirm => 'Confirm arrival';
+
+  @override
+  String get arrivalNotYet => 'Not yet';
+
+  @override
+  String get rateThanks => 'Thank you for the feedback.';
+
+  @override
+  String get rateTitle => 'How was this customer?';
+
+  @override
+  String get rateBody =>
+      'Your rating is private and helps us look after workers.';
+
+  @override
+  String get rateCommentLabel => 'Anything to add? (optional)';
+
+  @override
+  String get rateSubmit => 'Submit rating';
+
+  @override
+  String get timerServiceTime => 'Service time';
+
+  @override
+  String get materialsAdd => 'Add';
+
+  @override
+  String get materialsLoadFailed => 'Materials could not be loaded.';
+
+  @override
+  String get materialsEmpty =>
+      'If you need parts for this job, add them here and the customer will be asked to approve the cost.';
+
+  @override
+  String get materialStatusWaiting => 'WAITING FOR CUSTOMER';
+
+  @override
+  String get materialStatusApproved => 'APPROVED';
+
+  @override
+  String get materialStatusDeclined => 'DECLINED';
+
+  @override
+  String get materialStatusBought => 'BOUGHT';
+
+  @override
+  String get materialStatusCostRecorded => 'COST RECORDED';
+
+  @override
+  String get materialStatusBilled => 'ON THE BILL';
+
+  @override
+  String get materialStatusCancelled => 'CANCELLED';
+
+  @override
+  String materialQuantityEstimated(Object quantity, Object unit) {
+    return '$quantity $unit · estimated';
+  }
+
+  @override
+  String materialQuantityActual(Object quantity, Object unit) {
+    return '$quantity $unit · actual';
+  }
+
+  @override
+  String get materialRecordCost => 'Record cost';
+
+  @override
+  String materialCustomerSaid(Object reason) {
+    return 'Customer said: $reason';
+  }
+
+  @override
+  String get materialUnitPiece => 'piece';
+
+  @override
+  String get materialWhatNeeded => 'What do you need?';
+
+  @override
+  String get materialEnterQuantity => 'Enter how many';
+
+  @override
+  String get materialEnterCost => 'Enter the expected cost';
+
+  @override
+  String get materialRequestBody =>
+      'The customer will be asked to approve this before you buy it.';
+
+  @override
+  String get materialName => 'Material';
+
+  @override
+  String get materialNameHint => 'e.g. 16A modular switch';
+
+  @override
+  String get materialQuantity => 'Quantity';
+
+  @override
+  String get materialUnit => 'Unit';
+
+  @override
+  String get materialExpectedCost => 'Expected cost';
+
+  @override
+  String get materialAskCustomer => 'Ask the customer';
+
+  @override
+  String get materialEnterPaid => 'Enter the amount you paid';
+
+  @override
+  String get materialCostRecorded => 'Cost recorded.';
+
+  @override
+  String get materialWhatCost => 'What did it cost?';
+
+  @override
+  String get materialReceiptBody =>
+      'Attach the receipt so this can be added to the customer\'s bill.';
+
+  @override
+  String get materialAmountPaid => 'Amount paid';
+
+  @override
+  String get materialReceipt => 'Receipt';
+
+  @override
+  String get materialReceiptRequired => 'A photo of the bill is required.';
+
+  @override
+  String get evidenceDone => 'DONE';
+
+  @override
+  String get evidenceRequired => 'REQUIRED';
+
+  @override
+  String get evidenceCamera => 'Camera';
+
+  @override
+  String get evidenceGallery => 'Gallery';
+
+  @override
+  String get evidenceSaved => 'Saved';
+
+  @override
+  String get uploadWaiting => 'Waiting';
+
+  @override
+  String get uploadPreparing => 'Preparing';
+
+  @override
+  String get uploadStarting => 'Starting upload';
+
+  @override
+  String uploadPercent(Object percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get uploadFinishing => 'Finishing';
+
+  @override
+  String get uploadCancel => 'Cancel upload';
+
+  @override
+  String get uploadNotFinished => 'That upload did not finish.';
+
+  @override
+  String get commonRetry => 'Retry';
+
+  @override
+  String durationMinutes(Object minutes) {
+    return '$minutes min';
+  }
+
+  @override
+  String durationHours(Object hours) {
+    return '$hours hr';
+  }
+
+  @override
+  String durationHoursMinutes(Object hours, Object minutes) {
+    return '$hours hr $minutes min';
+  }
+
+  @override
+  String durationDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String pricePerHour(Object price) {
+    return '$price/hr';
+  }
+
+  @override
+  String pricePerDay(Object price) {
+    return '$price/day';
+  }
+
+  @override
+  String pricePerUnit(Object price) {
+    return '$price/unit';
+  }
+
+  @override
+  String pricePerSqft(Object price) {
+    return '$price/sq ft';
+  }
+
+  @override
+  String get gigsTitle => 'My services';
+
+  @override
+  String get gigsAddTooltip => 'Add a service';
+
+  @override
+  String get gigsAdd => 'Add service';
+
+  @override
+  String get gigsEmpty => 'No services yet';
+
+  @override
+  String get gigsEmptyBody =>
+      'Add the services you offer. You can add as many as you like, across every trade you are approved for.';
+
+  @override
+  String get gigsNoneLive =>
+      'None of your services are live, so customers cannot book you.';
+
+  @override
+  String gigsLiveCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count services are live.',
+      one: '1 service is live.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get gigsAvailable => 'You are available for work.';
+
+  @override
+  String get gigsOffDuty =>
+      'You are off duty, so you will not be offered jobs.';
+
+  @override
+  String gigJobsDone(int count) {
+    return '$count done';
+  }
+
+  @override
+  String get gigEdit => 'Edit';
+
+  @override
+  String get gigPause => 'Pause';
+
+  @override
+  String get gigResume => 'Resume';
+
+  @override
+  String get gigInReview => 'In review';
+
+  @override
+  String get gigDraftHint => 'Draft — submit it for review';
+
+  @override
+  String get gigRejectedHint => 'Rejected — edit and resubmit';
+
+  @override
+  String get gigArchived => 'Archived';
+
+  @override
+  String get gigNotLive => 'Not live';
+
+  @override
+  String get gigPaused => 'Paused. You will not be offered these jobs.';
+
+  @override
+  String get gigLiveAgain => 'Live again.';
+
+  @override
+  String get gigDuration30m => '30 minutes';
+
+  @override
+  String get gigDuration45m => '45 minutes';
+
+  @override
+  String get gigDuration1h => '1 hour';
+
+  @override
+  String get gigDuration2h => '2 hours';
+
+  @override
+  String get gigDuration4h => '4 hours';
+
+  @override
+  String get gigDuration8h => '8 hours (a working day)';
+
+  @override
+  String get gigDuration24h => '24 hours';
+
+  @override
+  String get gigDuration2d => '2 days';
+
+  @override
+  String get gigDuration3d => '3 days';
+
+  @override
+  String get gigDuration1w => '1 week';
+
+  @override
+  String get gigSavedDraft => 'Saved as a draft.';
+
+  @override
+  String get gigSubmitted => 'Submitted. We will review it and let you know.';
+
+  @override
+  String get gigLive => 'Your service is live.';
+
+  @override
+  String get gigSaved => 'Saved.';
+
+  @override
+  String get gigEditorAddTitle => 'Add a service';
+
+  @override
+  String get gigEditorEditTitle => 'Edit service';
+
+  @override
+  String get gigNoTrades => 'No approved trades yet';
+
+  @override
+  String get gigNoTradesBody =>
+      'Once a trade is approved for you, you can publish services under it. Add a trade from your profile to get started.';
+
+  @override
+  String get gigFieldTrade => 'Which trade?';
+
+  @override
+  String get gigFieldTitle => 'What is the service called?';
+
+  @override
+  String get gigFieldTitleHint => 'Customers see this. Be specific.';
+
+  @override
+  String get gigFieldTitleExample => 'e.g. Split AC deep cleaning';
+
+  @override
+  String get gigFieldDescription => 'What does it include?';
+
+  @override
+  String get gigFieldDescriptionHint =>
+      'Optional, but it helps customers choose you.';
+
+  @override
+  String get gigFieldDescriptionExample =>
+      'e.g. Full indoor and outdoor unit clean, filter wash, gas pressure check.';
+
+  @override
+  String get gigFieldPrice => 'What do you charge?';
+
+  @override
+  String get gigFieldPriceHint =>
+      'Each service has its own price. This one does not affect your others.';
+
+  @override
+  String get gigUnitPerJob => 'per job';
+
+  @override
+  String get gigUnitPerHour => 'per hour';
+
+  @override
+  String get gigUnitPerDay => 'per day';
+
+  @override
+  String get gigUnitPerUnit => 'per unit';
+
+  @override
+  String get gigUnitPerSqft => 'per sq ft';
+
+  @override
+  String get gigFieldDuration => 'How long does it usually take?';
+
+  @override
+  String get gigFieldRadius => 'How far will you travel for this?';
+
+  @override
+  String get gigFieldRadiusHint =>
+      'Leave as default to use your usual travel distance.';
+
+  @override
+  String get gigUsualDistance => 'Your usual distance';
+
+  @override
+  String get gigUseUsualDistance => 'Use my usual distance';
+
+  @override
+  String get gigReviewNotice =>
+      'New and edited services are checked by our team before they go live. We will let you know as soon as it is done.';
+
+  @override
+  String get gigSaveDraft => 'Save draft';
+
+  @override
+  String get gigSubmitForReview => 'Submit for review';
+
+  @override
+  String get walletAllTransactions => 'All transactions';
+
+  @override
+  String get walletFrozen =>
+      'Withdrawals are on hold while we look into something. Contact support for details.';
+
+  @override
+  String get walletWithdraw => 'Withdraw';
+
+  @override
+  String walletNothingPending(Object amount) {
+    return 'Nothing to withdraw yet. $amount is still being processed and moves to your balance once those jobs are approved.';
+  }
+
+  @override
+  String get walletNothingYet =>
+      'Nothing to withdraw yet. Your earnings appear here once a customer approves a finished job.';
+
+  @override
+  String get walletRecentEarnings => 'Recent earnings';
+
+  @override
+  String get walletNoEarnings => 'No earnings yet';
+
+  @override
+  String get walletNoEarningsBody =>
+      'Your earnings will appear here once a completed job has been paid for.';
+
+  @override
+  String get walletAvailable => 'Available to withdraw';
+
+  @override
+  String get walletProcessing => 'Being processed';
+
+  @override
+  String get walletProcessingHint => 'Released after the holding period';
+
+  @override
+  String get walletTotalEarned => 'Earned in total';
+
+  @override
+  String get statementTitle => 'Statement';
+
+  @override
+  String get statementTabTransactions => 'Transactions';
+
+  @override
+  String get statementTabWithdrawals => 'Withdrawals';
+
+  @override
+  String get statementEmpty => 'Nothing yet';
+
+  @override
+  String get statementEmptyBody =>
+      'Every payment, fee and withdrawal will be listed here once you start working.';
+
+  @override
+  String statementBalance(Object amount) {
+    return 'Bal $amount';
+  }
+
+  @override
+  String get statementNoWithdrawals => 'No withdrawals yet';
+
+  @override
+  String get statementNoWithdrawalsBody =>
+      'When you withdraw money it will be tracked here.';
+
+  @override
+  String payoutRequestedAt(Object date) {
+    return 'Requested $date';
+  }
+
+  @override
+  String payoutPaidAt(Object date) {
+    return 'Paid $date';
+  }
+
+  @override
+  String get payoutEnterAmount => 'Enter how much you want to withdraw';
+
+  @override
+  String payoutUpTo(Object amount) {
+    return 'You can withdraw up to $amount right now';
+  }
+
+  @override
+  String payoutMinimum(Object amount) {
+    return 'The smallest withdrawal is $amount';
+  }
+
+  @override
+  String payoutRequested(Object amount) {
+    return 'Withdrawal of $amount requested. We will update you as it is processed.';
+  }
+
+  @override
+  String get payoutAvailableNow => 'Available now';
+
+  @override
+  String payoutPendingMore(Object amount) {
+    return '$amount more is still being processed and cannot be withdrawn yet.';
+  }
+
+  @override
+  String get payoutHowMuch => 'How much?';
+
+  @override
+  String get payoutAll => 'All';
+
+  @override
+  String payoutPercent(Object percent) {
+    return '$percent%';
+  }
+
+  @override
+  String get payoutProcessNotice =>
+      'Withdrawals are checked and then sent to your registered bank account. You will see the status update here at every step.';
+
+  @override
+  String get payoutRequest => 'Request withdrawal';
+
+  @override
+  String get bankChecking => 'Checking your bank account…';
+
+  @override
+  String bankPaidTo(Object last4) {
+    return 'Paid to account ending $last4';
+  }
+
+  @override
+  String get bankVerifiedFallback => 'Your verified bank account';
+
+  @override
+  String get bankBeingVerified => 'Bank account being verified';
+
+  @override
+  String get bankBeingVerifiedBody =>
+      'You can withdraw once our team has verified it.';
+
+  @override
+  String get bankNotVerified => 'Bank account not verified';
+
+  @override
+  String get bankNotVerifiedBody => 'Check your details and submit them again.';
+
+  @override
+  String get bankAddTitle => 'Add a bank account';
+
+  @override
+  String get bankAddBody =>
+      'Withdrawals are paid to a bank account our team has verified.';
+
+  @override
+  String get bankAddAction => 'Add bank account';
+
+  @override
+  String get verificationTitle => 'Verification';
+
+  @override
+  String get verificationProgress => 'Verified checks';
+
+  @override
+  String verificationCount(int approved, int total) {
+    return '$approved of $total';
+  }
+
+  @override
+  String get verificationInsurance => 'Insurance';
+
+  @override
+  String get verificationNoCover => 'No active cover';
+
+  @override
+  String get verificationNoCoverBody =>
+      'You do not currently have an insurance policy on file with us.';
+
+  @override
+  String get verifyIdentity => 'Identity';
+
+  @override
+  String get verifyIdentityBody =>
+      'A government ID so customers know who is coming to their home.';
+
+  @override
+  String get verifyAddress => 'Address';
+
+  @override
+  String get verifyAddressBody => 'Proof of where you live.';
+
+  @override
+  String get verifyIti => 'ITI certificate';
+
+  @override
+  String get verifyItiBody =>
+      'Your trade certificate from an Industrial Training Institute.';
+
+  @override
+  String get verifyDiploma => 'Diploma';
+
+  @override
+  String get verifyDiplomaBody => 'A recognised technical diploma.';
+
+  @override
+  String get verifyRpl => 'Skill assessment';
+
+  @override
+  String get verifyRplBody =>
+      'Recognition of Prior Learning: your experience assessed and certified.';
+
+  @override
+  String get verifyBackground => 'Background check';
+
+  @override
+  String get verifyBackgroundBody =>
+      'We run this ourselves. You do not need to do anything.';
+
+  @override
+  String get verifyInsuranceBody =>
+      'Cover for accidental damage while you work. Our team adds your policy once it is arranged.';
+
+  @override
+  String get verifyBank => 'Bank account';
+
+  @override
+  String get verifyBankBody => 'Where your withdrawals are paid.';
+
+  @override
+  String verificationValidUntil(Object date) {
+    return 'Valid until $date';
+  }
+
+  @override
+  String get verificationStart => 'Start';
+
+  @override
+  String get verificationUpdate => 'Update';
+
+  @override
+  String get policyActive => 'ACTIVE';
+
+  @override
+  String get policyNotActive => 'NOT ACTIVE';
+
+  @override
+  String get policyNumber => 'Policy';
+
+  @override
+  String get policyCover => 'Cover';
+
+  @override
+  String get policyValidUntil => 'Valid until';
+
+  @override
+  String get kycStillWaiting =>
+      'Still waiting on DigiLocker. You can check back from here later.';
+
+  @override
+  String get kycTitle => 'Identity check';
+
+  @override
+  String get kycHeadline => 'Confirm who you are';
+
+  @override
+  String get kycIntro =>
+      'Customers let you into their homes, so we verify every worker\'s identity through DigiLocker, the Government of India\'s document platform. Nothing is uploaded — you just approve the request on your own Aadhaar account.';
+
+  @override
+  String get kycPrivacy =>
+      'Your Aadhaar details are confirmed directly with DigiLocker. We store only what proves the check happened — never your photo or a copy of your Aadhaar.';
+
+  @override
+  String get kycVerified => 'Your identity is verified.';
+
+  @override
+  String get kycAwaitingConsent =>
+      'Complete the DigiLocker consent in your browser, then come back here.';
+
+  @override
+  String get kycChecking => 'Checking with DigiLocker…';
+
+  @override
+  String get kycStart => 'Verify with DigiLocker';
+
+  @override
+  String get qualSubmitted => 'Submitted for review.';
+
+  @override
+  String get qualTitle => 'Your qualification';
+
+  @override
+  String get qualIti => 'ITI';
+
+  @override
+  String get qualInstitute => 'Institute';
+
+  @override
+  String get qualInstituteHint => 'e.g. Government ITI, Coimbatore';
+
+  @override
+  String get qualName => 'Qualification';
+
+  @override
+  String get qualNameHint => 'e.g. Electrician';
+
+  @override
+  String get qualSpeciality => 'Speciality (optional)';
+
+  @override
+  String get qualSpecialityHint => 'e.g. Industrial wiring';
+
+  @override
+  String get qualYear => 'Year completed';
+
+  @override
+  String get qualCertificate => 'Your certificate';
+
+  @override
+  String get qualCertificateBody => 'A clear photo or PDF of the certificate.';
+
+  @override
+  String get bankErrorHolder =>
+      'Enter the name exactly as it appears on the account';
+
+  @override
+  String get bankErrorNumber => 'An account number is 9 to 18 digits';
+
+  @override
+  String get bankErrorMismatch => 'The account numbers do not match';
+
+  @override
+  String get bankErrorIfsc => 'Enter the 11-character IFSC, e.g. SBIN0001234';
+
+  @override
+  String get bankSent => 'Bank account sent for verification.';
+
+  @override
+  String get bankNotice =>
+      'Your withdrawals are paid to this account. Our team verifies it before the first payout.';
+
+  @override
+  String get bankHolder => 'Account holder name';
+
+  @override
+  String get bankNumber => 'Account number';
+
+  @override
+  String get bankConfirmNumber => 'Re-enter account number';
+
+  @override
+  String get bankIfsc => 'IFSC code';
+
+  @override
+  String get bankIfscHint => 'e.g. SBIN0001234';
+
+  @override
+  String get bankName => 'Bank name (optional)';
+
+  @override
+  String get bankSubmit => 'Submit for verification';
 }

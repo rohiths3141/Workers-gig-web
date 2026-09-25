@@ -7,7 +7,9 @@ import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_spacing.dart';
 import '../../../../app/theme/app_typography.dart';
 import '../../../../domain/entities/job.dart';
+import '../../../../core/localization/l10n.dart';
 import '../../../../shared/widgets/common_widgets.dart';
+import '../../../../shared/widgets/service_names.dart';
 
 /// An open offer, with a live countdown.
 ///
@@ -56,6 +58,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final offer = widget.offer;
     final remaining = offer.timeRemaining;
     final isExpiring = remaining.inSeconds < 120;
@@ -68,7 +71,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
             const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
-                'This job is no longer available.',
+                l10n.jobOfferExpired,
                 style: AppTypography.bodyMedium
                     .copyWith(color: context.inkSecondary),
               ),
@@ -86,7 +89,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
         children: [
           Row(
             children: [
-              const StatusBadge(label: 'NEW JOB', color: AppColors.primary),
+              StatusBadge(label: l10n.jobOfferNewBadge, color: AppColors.primary),
               const Spacer(),
               Container(
                 padding: const EdgeInsets.symmetric(
@@ -121,7 +124,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
           ),
           const SizedBox(height: AppSpacing.md),
 
-          Text(offer.job.serviceName,
+          Text(localizedServiceName(l10n, offer.job.serviceName),
               style: AppTypography.titleLarge.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.xs),
           Text(
@@ -138,7 +141,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
             children: [
               _Fact(
                 icon: Icons.near_me_outlined,
-                label: '${offer.distanceKm.toStringAsFixed(1)} km away',
+                label: l10n.distanceKmAway(offer.distanceKm.toStringAsFixed(1)),
               ),
               _Fact(
                 icon: Icons.place_outlined,
@@ -147,7 +150,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
               if (offer.job.scheduledAt != null)
                 _Fact(
                   icon: Icons.schedule_rounded,
-                  label: DateFormat('d MMM, h:mm a')
+                  label: DateFormat('d MMM, h:mm a', context.dateLocale)
                       .format(offer.job.scheduledAt!),
                 ),
             ],
@@ -163,14 +166,14 @@ class _JobOfferCardState extends State<JobOfferCard> {
             ),
             child: Row(
               children: [
-                Text('You earn',
+                Text(l10n.jobOfferYouEarn,
                     style: AppTypography.label
                         .copyWith(color: AppColors.earnings)),
                 const Spacer(),
                 // No amount means the price is settled after the visit. Saying
                 // so is better than printing a number that might be wrong.
                 Text(
-                  offer.estimatedEarning?.format() ?? 'Confirmed after the visit',
+                  offer.estimatedEarning?.format() ?? l10n.jobOfferPriceAfterVisit,
                   style: AppTypography.amountLarge
                       .copyWith(color: AppColors.earnings),
                 ),
@@ -188,9 +191,9 @@ class _JobOfferCardState extends State<JobOfferCard> {
                     onPressed: widget.isBusy ? null : widget.onDecline,
                     // The narrower half of the row: without this the label
                     // broke across two lines as "Decli / ne".
-                    child: const FittedBox(
+                    child: FittedBox(
                       fit: BoxFit.scaleDown,
-                      child: Text('Decline'),
+                      child: Text(l10n.jobsDecline),
                     ),
                   ),
                 ),
@@ -211,7 +214,7 @@ class _JobOfferCardState extends State<JobOfferCard> {
                               valueColor: AlwaysStoppedAnimation(Colors.white),
                             ),
                           )
-                        : const Text('Accept job'),
+                        : Text(l10n.jobOfferAccept),
                   ),
                 ),
               ),
@@ -268,7 +271,7 @@ class JobListTile extends StatelessWidget {
                 // The job's name is what the worker is looking for, so it
                 // gets the line.
                 Text(
-                  job.gigTitle ?? job.serviceName,
+                  job.gigTitle ?? localizedServiceName(context.l10n, job.serviceName),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.titleMedium.copyWith(color: context.ink),
@@ -294,8 +297,9 @@ class JobListTile extends StatelessWidget {
                     const SizedBox(width: AppSpacing.xs),
                     Text(
                       job.scheduledAt == null
-                          ? DateFormat('d MMM').format(job.createdAt)
-                          : DateFormat('d MMM, h:mm a').format(job.scheduledAt!),
+                          ? DateFormat('d MMM', context.dateLocale).format(job.createdAt)
+                          : DateFormat('d MMM, h:mm a', context.dateLocale)
+                              .format(job.scheduledAt!),
                       style: AppTypography.bodySmall
                           .copyWith(color: context.inkSecondary),
                     ),

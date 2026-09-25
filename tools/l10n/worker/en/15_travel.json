@@ -1,0 +1,12 @@
+{
+  "travelRouteUnavailable": "Route unavailable",
+  "travelNoDestination": "No destination set",
+  "travelNoDestinationBody": "This job has no service location to route to.",
+  "travelJobLocation": "Job location",
+  "travelYou": "You",
+  "travelCustomer": "Customer",
+  "travelCalculating": "Calculating route...",
+  "distanceMetres": "{metres} m",
+  "etaMinutes": "{minutes} min",
+  "etaHours": "{hours} hr"
+}

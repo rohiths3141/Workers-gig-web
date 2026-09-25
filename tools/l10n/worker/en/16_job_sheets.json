@@ -1,0 +1,20 @@
+{
+  "arrivalWrongCode": "That code is not correct.",
+  "arrivalWrongCodeAttempts": "{count, plural, =1{That code is not correct. 1 attempt left.} other{That code is not correct. {count} attempts left.}}",
+  "@arrivalWrongCodeAttempts": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "arrivalTitle": "Confirm you have arrived",
+  "arrivalBody": "Ask the customer to read out the code from their app, then type it here.",
+  "arrivalLocked": "Too many incorrect codes. Please contact support to continue this job.",
+  "arrivalConfirm": "Confirm arrival",
+  "arrivalNotYet": "Not yet",
+  "rateThanks": "Thank you for the feedback.",
+  "rateTitle": "How was this customer?",
+  "rateBody": "Your rating is private and helps us look after workers.",
+  "rateCommentLabel": "Anything to add? (optional)",
+  "rateSubmit": "Submit rating",
+  "timerServiceTime": "Service time"
+}

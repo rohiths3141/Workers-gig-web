@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/media.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import 'evidence_controller.dart';
@@ -52,7 +53,9 @@ class EvidenceSection extends ConsumerWidget {
               ),
               if (isRequired)
                 StatusBadge(
-                  label: hasAny ? 'DONE' : 'REQUIRED',
+                  label: hasAny
+                      ? context.l10n.evidenceDone
+                      : context.l10n.evidenceRequired,
                   color: hasAny ? AppColors.success : AppColors.warning,
                   icon: hasAny
                       ? Icons.check_circle_outline
@@ -109,7 +112,7 @@ class EvidenceSection extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _capture(context, ref, _Source.camera),
                   icon: const Icon(Icons.photo_camera_outlined),
-                  label: const Text('Camera'),
+                  label: Text(context.l10n.evidenceCamera),
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
@@ -117,7 +120,7 @@ class EvidenceSection extends ConsumerWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => _capture(context, ref, _Source.gallery),
                   icon: const Icon(Icons.photo_library_outlined),
-                  label: const Text('Gallery'),
+                  label: Text(context.l10n.evidenceGallery),
                 ),
               ),
               if (allowVideo) ...[
@@ -188,7 +191,7 @@ class _AssetThumbnail extends StatelessWidget {
             color: AppColors.success,
           ),
           const SizedBox(height: AppSpacing.xxs),
-          Text('Saved',
+          Text(context.l10n.evidenceSaved,
               style: AppTypography.badge.copyWith(color: AppColors.success)),
         ],
       ),
@@ -204,12 +207,13 @@ class _UploadProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final label = switch (task.state) {
-      UploadState.queued => 'Waiting',
-      UploadState.compressing => 'Preparing',
-      UploadState.authorizing => 'Starting upload',
-      UploadState.uploading => '${(task.progress * 100).round()}%',
-      UploadState.confirming => 'Finishing',
+      UploadState.queued => l10n.uploadWaiting,
+      UploadState.compressing => l10n.uploadPreparing,
+      UploadState.authorizing => l10n.uploadStarting,
+      UploadState.uploading => l10n.uploadPercent('${(task.progress * 100).round()}'),
+      UploadState.confirming => l10n.uploadFinishing,
       _ => '',
     };
 
@@ -235,7 +239,7 @@ class _UploadProgress extends StatelessWidget {
               IconButton(
                 onPressed: onCancel,
                 icon: const Icon(Icons.close_rounded, size: 18),
-                tooltip: 'Cancel upload',
+                tooltip: l10n.uploadCancel,
                 visualDensity: VisualDensity.compact,
               ),
             ],
@@ -282,12 +286,12 @@ class _UploadFailed extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              task.failure ?? 'That upload did not finish.',
+              task.failure ?? context.l10n.uploadNotFinished,
               style:
                   AppTypography.bodySmall.copyWith(color: AppColors.danger),
             ),
           ),
-          TextButton(onPressed: onRetry, child: const Text('Retry')),
+          TextButton(onPressed: onRetry, child: Text(context.l10n.commonRetry)),
           IconButton(
             onPressed: onDismiss,
             icon: const Icon(Icons.close_rounded, size: 18),

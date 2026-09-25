@@ -1,0 +1,12 @@
+{
+  "statementTitle": "Statement",
+  "statementTabTransactions": "Transactions",
+  "statementTabWithdrawals": "Withdrawals",
+  "statementEmpty": "Nothing yet",
+  "statementEmptyBody": "Every payment, fee and withdrawal will be listed here once you start working.",
+  "statementBalance": "Bal {amount}",
+  "statementNoWithdrawals": "No withdrawals yet",
+  "statementNoWithdrawalsBody": "When you withdraw money it will be tracked here.",
+  "payoutRequestedAt": "Requested {date}",
+  "payoutPaidAt": "Paid {date}"
+}

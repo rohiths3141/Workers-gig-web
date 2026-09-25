@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/wallet.dart';
 import '../../../domain/repositories/repositories.dart';
 import '../../../shared/widgets/async_value_view.dart';
@@ -36,12 +37,16 @@ class _TransactionsScreenState extends ConsumerState<TransactionsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Statement'),
+        title: Text(l10n.statementTitle),
         bottom: TabBar(
           controller: _tabs,
-          tabs: const [Tab(text: 'Transactions'), Tab(text: 'Withdrawals')],
+          tabs: [
+            Tab(text: l10n.statementTabTransactions),
+            Tab(text: l10n.statementTabWithdrawals),
+          ],
         ),
       ),
       body: TabBarView(
@@ -65,11 +70,10 @@ class _TransactionList extends ConsumerWidget {
       loading: const ListSkeleton(itemHeight: 72),
       onData: (page) {
         if (page.items.isEmpty) {
-          return const EmptyStateView(
+          return EmptyStateView(
             icon: Icons.receipt_long_outlined,
-            title: 'Nothing yet',
-            message:
-                'Every payment, fee and withdrawal will be listed here once you start working.',
+            title: context.l10n.statementEmpty,
+            message: context.l10n.statementEmptyBody,
           );
         }
 
@@ -125,7 +129,8 @@ class _TransactionTile extends StatelessWidget {
                 Text(
                   [
                     if (item.bookingCode != null) item.bookingCode!,
-                    DateFormat('d MMM, h:mm a').format(item.createdAt),
+                    DateFormat('d MMM, h:mm a', context.dateLocale)
+                        .format(item.createdAt),
                   ].join(' · '),
                   style: AppTypography.bodySmall
                       .copyWith(color: context.inkTertiary),
@@ -143,7 +148,9 @@ class _TransactionTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: AppSpacing.xxs),
-              Text('Bal ${item.balanceAfter.formatCompact()}',
+              Text(
+                  context.l10n
+                      .statementBalance(item.balanceAfter.formatCompact()),
                   style: AppTypography.bodySmall
                       .copyWith(color: context.inkTertiary)),
             ],
@@ -167,13 +174,15 @@ class _PayoutList extends ConsumerWidget {
       loading: const ListSkeleton(itemHeight: 80),
       onData: (items) {
         if (items.isEmpty) {
-          return const EmptyStateView(
+          return EmptyStateView(
             icon: Icons.arrow_outward_rounded,
-            title: 'No withdrawals yet',
-            message: 'When you withdraw money it will be tracked here.',
+            title: context.l10n.statementNoWithdrawals,
+            message: context.l10n.statementNoWithdrawalsBody,
           );
         }
 
+        final l10n = context.l10n;
+        final dateFormat = DateFormat('d MMM, h:mm a', context.dateLocale);
         return ListView.separated(
           padding: const EdgeInsets.all(AppSpacing.screenPadding),
           itemCount: items.length,
@@ -207,13 +216,15 @@ class _PayoutList extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Requested ${DateFormat('d MMM, h:mm a').format(payout.requestedAt)}',
+                    l10n.payoutRequestedAt(
+                        dateFormat.format(payout.requestedAt)),
                     style: AppTypography.bodySmall
                         .copyWith(color: context.inkSecondary),
                   ),
                   if (payout.completedAt != null)
                     Text(
-                      'Paid ${DateFormat('d MMM, h:mm a').format(payout.completedAt!)}',
+                      l10n.payoutPaidAt(
+                          dateFormat.format(payout.completedAt!)),
                       style: AppTypography.bodySmall
                           .copyWith(color: AppColors.success),
                     ),

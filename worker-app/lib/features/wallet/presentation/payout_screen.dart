@@ -8,6 +8,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../core/errors/app_failure.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../core/money/money.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/verification.dart';
@@ -49,20 +50,19 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
   }
 
   Future<void> _submit(Wallet wallet, Money minimum) async {
+    final l10n = context.l10n;
     final amount = Money.tryParseMajor(_amount.text);
 
     if (amount == null || !amount.isPositive) {
-      setState(() => _error = 'Enter how much you want to withdraw');
+      setState(() => _error = l10n.payoutEnterAmount);
       return;
     }
     if (amount > wallet.balance) {
-      setState(() => _error =
-          'You can withdraw up to ${wallet.balance.format()} right now');
+      setState(() => _error = l10n.payoutUpTo(wallet.balance.format()));
       return;
     }
     if (minimum.isPositive && amount < minimum) {
-      setState(() =>
-          _error = 'The smallest withdrawal is ${minimum.format()}');
+      setState(() => _error = l10n.payoutMinimum(minimum.format()));
       return;
     }
 
@@ -82,17 +82,18 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
         Navigator.of(context).pop();
         showSuccess(
           context,
-          'Withdrawal of ${payout.amount.format()} requested. We will update you as it is processed.',
+          l10n.payoutRequested(payout.amount.format()),
         );
       },
       (failure) => setState(() => _error = failure is InsufficientFundsFailure
-          ? 'You can withdraw up to ${Money(failure.availableMinor).format()} right now'
+          ? l10n.payoutUpTo(Money(failure.availableMinor).format())
           : failure.message),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final wallet = ref.watch(walletProvider);
     final minimum = ref.watch(minimumPayoutProvider).valueOrNull ??
         const Money.zero();
@@ -104,7 +105,7 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
     final canWithdraw = bankAccount?.isCurrentlyValid ?? false;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Withdraw')),
+      appBar: AppBar(title: Text(l10n.walletWithdraw)),
       body: AsyncValueView<Wallet>(
         value: wallet,
         onRetry: () => ref.invalidate(walletProvider),
@@ -118,7 +119,7 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Available now',
+                        Text(l10n.payoutAvailableNow,
                             style: AppTypography.label
                                 .copyWith(color: context.inkSecondary)),
                         const SizedBox(height: AppSpacing.xs),
@@ -128,7 +129,8 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
                         if (data.pendingEarnings.isPositive) ...[
                           const SizedBox(height: AppSpacing.md),
                           Text(
-                            '${data.pendingEarnings.format()} more is still being processed and cannot be withdrawn yet.',
+                            l10n.payoutPendingMore(
+                                data.pendingEarnings.format()),
                             style: AppTypography.bodySmall
                                 .copyWith(color: context.inkSecondary),
                           ),
@@ -138,7 +140,7 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
                   ),
                   const SizedBox(height: AppSpacing.xl),
 
-                  Text('How much?',
+                  Text(l10n.payoutHowMuch,
                       style: AppTypography.titleMedium
                           .copyWith(color: context.ink)),
                   const SizedBox(height: AppSpacing.md),
@@ -166,8 +168,8 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
                       for (final fraction in [0.25, 0.5, 1.0])
                         ActionChip(
                           label: Text(fraction == 1.0
-                              ? 'All'
-                              : '${(fraction * 100).round()}%'),
+                              ? l10n.payoutAll
+                              : l10n.payoutPercent('${(fraction * 100).round()}')),
                           onPressed: () {
                             final part =
                                 Money((data.balance.minor * fraction).round());
@@ -192,7 +194,7 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
                         const SizedBox(width: AppSpacing.md),
                         Expanded(
                           child: Text(
-                            'Withdrawals are checked and then sent to your registered bank account. You will see the status update here at every step.',
+                            l10n.payoutProcessNotice,
                             style: AppTypography.bodySmall
                                 .copyWith(color: context.inkSecondary),
                           ),
@@ -229,7 +231,7 @@ class _PayoutScreenState extends ConsumerState<PayoutScreen> {
                             valueColor: AlwaysStoppedAnimation(Colors.white),
                           ),
                         )
-                      : const Text('Request withdrawal'),
+                      : Text(l10n.payoutRequest),
                 ),
               ),
             ),
@@ -248,32 +250,33 @@ class _BankAccountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final account = bankAccount;
     final last4 = account?.details['account_last4'] as String?;
     final bankName = account?.details['bank_name'] as String?;
 
     final (String title, String body, bool showAction) = switch (account) {
-      null => ('Checking your bank account…', '', false),
+      null => (l10n.bankChecking, '', false),
       final a when a.isCurrentlyValid => (
-          'Paid to account ending ${last4 ?? '••••'}',
-          bankName ?? 'Your verified bank account',
+          l10n.bankPaidTo(last4 ?? '••••'),
+          bankName ?? l10n.bankVerifiedFallback,
           false,
         ),
       final a when a.status == VerificationStatus.pending ||
           a.status == VerificationStatus.underReview =>
         (
-          'Bank account being verified',
-          'You can withdraw once our team has verified it.',
+          l10n.bankBeingVerified,
+          l10n.bankBeingVerifiedBody,
           false,
         ),
       final a when a.status == VerificationStatus.rejected => (
-          'Bank account not verified',
-          a.rejectionReason ?? 'Check your details and submit them again.',
+          l10n.bankNotVerified,
+          a.rejectionReason ?? l10n.bankNotVerifiedBody,
           true,
         ),
       _ => (
-          'Add a bank account',
-          'Withdrawals are paid to a bank account our team has verified.',
+          l10n.bankAddTitle,
+          l10n.bankAddBody,
           true,
         ),
     };
@@ -301,7 +304,7 @@ class _BankAccountCard extends StatelessWidget {
                   const SizedBox(height: AppSpacing.sm),
                   TextButton(
                     onPressed: () => context.push(Routes.bankAccount),
-                    child: const Text('Add bank account'),
+                    child: Text(l10n.bankAddAction),
                   ),
                 ],
               ],

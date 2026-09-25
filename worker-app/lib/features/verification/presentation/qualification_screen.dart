@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/verification.dart';
 import '../../../shared/widgets/common_widgets.dart';
@@ -76,7 +77,7 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
     result.fold(
       (_) {
         Navigator.of(context).pop();
-        showSuccess(context, 'Submitted for review.');
+        showSuccess(context, context.l10n.qualSubmitted);
       },
       (failure) => showFailure(context, failure.message),
     );
@@ -84,12 +85,13 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     const target = EvidenceTarget(purpose: MediaPurpose.workerQualification);
     final uploaded =
         ref.watch(evidenceAssetsProvider(target)).valueOrNull ?? const [];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Your qualification')),
+      appBar: AppBar(title: Text(l10n.qualTitle)),
       body: Column(
         children: [
           Expanded(
@@ -97,14 +99,14 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
               padding: const EdgeInsets.all(AppSpacing.screenPadding),
               children: [
                 SegmentedButton<VerificationType>(
-                  segments: const [
+                  segments: [
                     ButtonSegment(
                       value: VerificationType.itiCertificate,
-                      label: Text('ITI'),
+                      label: Text(l10n.qualIti),
                     ),
                     ButtonSegment(
                       value: VerificationType.diploma,
-                      label: Text('Diploma'),
+                      label: Text(l10n.verifyDiploma),
                     ),
                   ],
                   selected: {_type},
@@ -117,8 +119,8 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
                   controller: _institution,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    labelText: 'Institute',
-                    hintText: 'e.g. Government ITI, Coimbatore',
+                    labelText: l10n.qualInstitute,
+                    hintText: l10n.qualInstituteHint,
                     errorText: _errors['institution'],
                   ),
                 ),
@@ -127,8 +129,8 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
                   controller: _qualification,
                   textCapitalization: TextCapitalization.words,
                   decoration: InputDecoration(
-                    labelText: 'Qualification',
-                    hintText: 'e.g. Electrician',
+                    labelText: l10n.qualName,
+                    hintText: l10n.qualNameHint,
                     errorText: _errors['qualification'],
                   ),
                 ),
@@ -136,9 +138,9 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
                 TextField(
                   controller: _specialisation,
                   textCapitalization: TextCapitalization.words,
-                  decoration: const InputDecoration(
-                    labelText: 'Speciality (optional)',
-                    hintText: 'e.g. Industrial wiring',
+                  decoration: InputDecoration(
+                    labelText: l10n.qualSpeciality,
+                    hintText: l10n.qualSpecialityHint,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -147,7 +149,7 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
                   keyboardType: TextInputType.number,
                   maxLength: 4,
                   decoration: InputDecoration(
-                    labelText: 'Year completed',
+                    labelText: l10n.qualYear,
                     errorText: _errors['year'],
                     counterText: '',
                   ),
@@ -156,8 +158,8 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
 
                 EvidenceSection(
                   target: target,
-                  title: 'Your certificate',
-                  explanation: 'A clear photo or PDF of the certificate.',
+                  title: l10n.qualCertificate,
+                  explanation: l10n.qualCertificateBody,
                   isRequired: true,
                 ),
                 const SizedBox(height: AppSpacing.huge),
@@ -189,7 +191,7 @@ class _QualificationScreenState extends ConsumerState<QualificationScreen> {
                           valueColor: AlwaysStoppedAnimation(Colors.white),
                         ),
                       )
-                    : const Text('Submit for review'),
+                    : Text(l10n.gigSubmitForReview),
               ),
             ),
           ),

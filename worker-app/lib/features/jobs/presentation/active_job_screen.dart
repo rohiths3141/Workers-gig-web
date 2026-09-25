@@ -7,10 +7,12 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/job.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import '../../evidence/presentation/evidence_controller.dart';
 import '../../evidence/presentation/evidence_section.dart';
 import 'jobs_controller.dart';
@@ -33,16 +35,16 @@ class ActiveJobScreen extends ConsumerWidget {
     final active = ref.watch(activeJobProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Current job')),
+      appBar: AppBar(title: Text(context.l10n.activeJobTitle)),
       body: AsyncValueView<Job?>(
         value: active,
         onRetry: () => ref.invalidate(activeJobProvider),
         onData: (job) {
           if (job == null) {
-            return const EmptyStateView(
+            return EmptyStateView(
               icon: Icons.work_outline_rounded,
-              title: 'No job in progress',
-              message: 'When you accept and start a job it will appear here.',
+              title: context.l10n.jobsEmptyActive,
+              message: context.l10n.activeJobEmptyBody,
             );
           }
           return JobExecutionView(bookingId: job.id);
@@ -105,9 +107,8 @@ class JobExecutionView extends ConsumerWidget {
                       purpose: MediaPurpose.bookingBeforeWork,
                       bookingId: bookingId,
                     ),
-                    title: 'Before you start',
-                    explanation:
-                        'Photograph the problem before you touch it. This protects you if the customer disputes the work later.',
+                    title: context.l10n.evidenceBeforeTitle,
+                    explanation: context.l10n.evidenceBeforeBody,
                     isRequired: false,
                   ),
                   const SizedBox(height: AppSpacing.md),
@@ -121,9 +122,8 @@ class JobExecutionView extends ConsumerWidget {
                       purpose: MediaPurpose.bookingAfterWork,
                       bookingId: bookingId,
                     ),
-                    title: 'After you finish',
-                    explanation:
-                        'A photo of the finished work is your evidence if the customer disputes it later. Optional, but worth the ten seconds.',
+                    title: context.l10n.evidenceAfterTitle,
+                    explanation: context.l10n.evidenceAfterBody,
                     allowVideo: true,
                     isRequired: false,
                   ),
@@ -190,7 +190,7 @@ class _JobHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          Text(job.gigTitle ?? job.serviceName,
+          Text(job.gigTitle ?? localizedServiceName(context.l10n, job.serviceName),
               style: AppTypography.headlineMedium.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.sm),
           Text(job.problemDescription,
@@ -200,7 +200,7 @@ class _JobHeader extends StatelessWidget {
             const SizedBox(height: AppSpacing.lg),
             Row(
               children: [
-                Text('You earn',
+                Text(context.l10n.jobOfferYouEarn,
                     style: AppTypography.label
                         .copyWith(color: context.inkSecondary)),
                 const Spacer(),
@@ -214,7 +214,7 @@ class _JobHeader extends StatelessWidget {
                 padding: const EdgeInsets.only(top: AppSpacing.xs),
                 child: Row(
                   children: [
-                    Text('Materials',
+                    Text(context.l10n.jobMaterials,
                         style: AppTypography.bodySmall
                             .copyWith(color: context.inkTertiary)),
                     const Spacer(),
@@ -252,7 +252,7 @@ class _CustomerCard extends StatelessWidget {
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Text(
-                  job.customerName ?? 'Customer details are shared once confirmed',
+                  job.customerName ?? context.l10n.jobCustomerHidden,
                   style: AppTypography.titleMedium.copyWith(color: context.ink),
                 ),
               ),
@@ -281,8 +281,8 @@ class _CustomerCard extends StatelessWidget {
                   child: OutlinedButton.icon(
                     onPressed: () => _call(job.customerPhone!),
                     icon: const Icon(Icons.call_outlined),
-                    label: const FittedBox(
-                        fit: BoxFit.scaleDown, child: Text('Call')),
+                    label: FittedBox(
+                        fit: BoxFit.scaleDown, child: Text(context.l10n.jobCall)),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
@@ -297,8 +297,9 @@ class _CustomerCard extends StatelessWidget {
                     icon: const Icon(Icons.directions_outlined),
                     // Icon plus label does not fit half a phone width, so the
                     // label used to wrap to "Direction / s".
-                    label: const FittedBox(
-                        fit: BoxFit.scaleDown, child: Text('Directions')),
+                    label: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(context.l10n.jobDirections)),
                   ),
                 ),
               ],
@@ -312,7 +313,7 @@ class _CustomerCard extends StatelessWidget {
                 child: FilledButton.icon(
                   onPressed: () => context.push(Routes.travelMap(job.id)),
                   icon: const Icon(Icons.map_outlined),
-                  label: const Text('Track on map'),
+                  label: Text(context.l10n.jobTrackOnMap),
                 ),
               ),
             ],
@@ -349,20 +350,21 @@ class _ProgressTrail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final steps = <(String, DateTime?)>[
-      ('Accepted', job.acceptedAt),
-      ('On the way', job.travelStartedAt),
-      ('Arrived', job.arrivedAt),
-      ('Arrival confirmed', job.arrivalVerifiedAt),
-      ('Work started', job.workStartedAt),
-      ('Finished', job.completedAt),
+      (l10n.trailAccepted, job.acceptedAt),
+      (l10n.trailOnTheWay, job.travelStartedAt),
+      (l10n.trailArrived, job.arrivedAt),
+      (l10n.trailArrivalConfirmed, job.arrivalVerifiedAt),
+      (l10n.trailWorkStarted, job.workStartedAt),
+      (l10n.trailFinished, job.completedAt),
     ];
 
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Progress',
+          Text(l10n.jobProgress,
               style: AppTypography.titleMedium.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.md),
           for (var i = 0; i < steps.length; i++)
@@ -451,7 +453,7 @@ class _BlockerList extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Before you can finish',
+          Text(context.l10n.jobBeforeFinish,
               style: AppTypography.titleMedium.copyWith(color: AppColors.warning)),
           const SizedBox(height: AppSpacing.sm),
           for (final blocker in readiness.blockers)
@@ -502,13 +504,14 @@ class _PrimaryAction extends ConsumerWidget {
     final needsArrivalCode =
         job.status == BookingStatus.arrived && !job.isArrivalVerified;
 
+    final l10n = context.l10n;
     final label = switch (job.status) {
-      BookingStatus.confirmed => 'Start travelling',
-      BookingStatus.traveling => 'I have arrived',
+      BookingStatus.confirmed => l10n.jobActionStartTravel,
+      BookingStatus.traveling => l10n.jobActionArrived,
       BookingStatus.arrived =>
-        needsArrivalCode ? 'Enter arrival code' : 'Start work',
-      BookingStatus.inProgress => 'Finish job',
-      _ => 'Continue',
+        needsArrivalCode ? l10n.jobActionEnterCode : l10n.jobActionStartWork,
+      BookingStatus.inProgress => l10n.jobActionFinish,
+      _ => l10n.commonContinue,
     };
 
     // Unknown readiness means the check has not answered yet, not that the
@@ -562,7 +565,7 @@ class _PrimaryAction extends ConsumerWidget {
       if (!context.mounted) return;
       if (verified) {
         ref.invalidate(jobProvider(bookingId));
-        showSuccess(context, 'Arrival confirmed.');
+        showSuccess(context, context.l10n.jobArrivalConfirmed);
       }
       return;
     }
@@ -570,10 +573,9 @@ class _PrimaryAction extends ConsumerWidget {
     if (next == BookingStatus.awaitingApproval) {
       final confirmed = await confirmAction(
         context,
-        title: 'Finish this job?',
-        message:
-            'The customer will be asked to approve the work. You will not be able to add photos afterwards.',
-        confirmLabel: 'Finish job',
+        title: context.l10n.jobFinishTitle,
+        message: context.l10n.jobFinishBody,
+        confirmLabel: context.l10n.jobActionFinish,
       );
       if (!confirmed || !context.mounted) return;
     }
@@ -590,12 +592,11 @@ class _PrimaryAction extends ConsumerWidget {
         showSuccess(
           context,
           switch (updated.status) {
-            BookingStatus.traveling => 'On your way.',
-            BookingStatus.arrived => 'Marked as arrived.',
-            BookingStatus.inProgress => 'Work started.',
-            BookingStatus.awaitingApproval =>
-              'Sent to the customer for approval.',
-            _ => 'Updated.',
+            BookingStatus.traveling => context.l10n.jobOnYourWay,
+            BookingStatus.arrived => context.l10n.jobMarkedArrived,
+            BookingStatus.inProgress => context.l10n.jobWorkStarted,
+            BookingStatus.awaitingApproval => context.l10n.jobSentForApproval,
+            _ => context.l10n.jobUpdated,
           },
         );
       },
@@ -611,18 +612,15 @@ class _WaitingFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final message = switch (job.status) {
-      BookingStatus.accepted =>
-        'Waiting for the customer to confirm the booking.',
-      BookingStatus.awaitingApproval =>
-        'Waiting for the customer to approve your work.',
-      BookingStatus.completed =>
-        'Approved. Payment is being processed.',
-      BookingStatus.paymentPending => 'Waiting for the customer\'s payment.',
-      BookingStatus.paid => 'Paid. Your earnings will appear in your wallet.',
-      BookingStatus.disputed =>
-        'This job is under review by our team. We will be in touch.',
-      _ => 'Nothing to do right now.',
+      BookingStatus.accepted => l10n.jobWaitConfirm,
+      BookingStatus.awaitingApproval => l10n.jobWaitApprove,
+      BookingStatus.completed => l10n.jobWaitPaymentProcessing,
+      BookingStatus.paymentPending => l10n.jobWaitPayment,
+      BookingStatus.paid => l10n.jobWaitPaid,
+      BookingStatus.disputed => l10n.jobWaitDisputed,
+      _ => l10n.jobWaitNothing,
     };
 
     return Container(
@@ -649,7 +647,7 @@ class _WaitingFooter extends StatelessWidget {
           if (job.status == BookingStatus.disputed)
             TextButton(
               onPressed: () => context.push(Routes.support),
-              child: const Text('Support'),
+              child: Text(l10n.homeSupport),
             ),
         ],
       ),

@@ -8,6 +8,7 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../core/errors/result.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/verification.dart';
 import '../../../shared/widgets/common_widgets.dart';
@@ -153,8 +154,7 @@ class _KycScreenState extends ConsumerState<KycScreen>
             if (_pollAttempts >= _maxPollAttempts) {
               setState(() {
                 _stage = _Stage.idle;
-                _error =
-                    'Still waiting on DigiLocker. You can check back from here later.';
+                _error = context.l10n.kycStillWaiting;
               });
             } else {
               _poll();
@@ -209,16 +209,17 @@ class _KycScreenState extends ConsumerState<KycScreen>
       }
     });
 
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(title: const Text('Identity check')),
+      appBar: AppBar(title: Text(l10n.kycTitle)),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.screenPadding),
         children: [
-          Text('Confirm who you are',
+          Text(l10n.kycHeadline,
               style: AppTypography.headlineMedium.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'Customers let you into their homes, so we verify every worker\'s identity through DigiLocker, the Government of India\'s document platform. Nothing is uploaded — you just approve the request on your own Aadhaar account.',
+            l10n.kycIntro,
             style: AppTypography.bodyLarge.copyWith(color: context.inkSecondary),
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -240,7 +241,7 @@ class _KycScreenState extends ConsumerState<KycScreen>
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Text(
-                    'Your Aadhaar details are confirmed directly with DigiLocker. We store only what proves the check happened — never your photo or a copy of your Aadhaar.',
+                    l10n.kycPrivacy,
                     style: AppTypography.bodySmall.copyWith(color: context.inkSecondary),
                   ),
                 ),
@@ -253,6 +254,7 @@ class _KycScreenState extends ConsumerState<KycScreen>
   }
 
   Widget _buildStageCard() {
+    final l10n = context.l10n;
     switch (_stage) {
       case _Stage.approved:
         return AppCard(
@@ -261,7 +263,7 @@ class _KycScreenState extends ConsumerState<KycScreen>
             children: [
               const Icon(Icons.check_circle_rounded, color: AppColors.success),
               const SizedBox(width: AppSpacing.md),
-              const Expanded(child: Text('Your identity is verified.')),
+              Expanded(child: Text(l10n.kycVerified)),
             ],
           ),
         );
@@ -280,8 +282,8 @@ class _KycScreenState extends ConsumerState<KycScreen>
               Expanded(
                 child: Text(
                   _stage == _Stage.awaitingConsent
-                      ? 'Complete the DigiLocker consent in your browser, then come back here.'
-                      : 'Checking with DigiLocker…',
+                      ? l10n.kycAwaitingConsent
+                      : l10n.kycChecking,
                 ),
               ),
             ],
@@ -297,7 +299,7 @@ class _KycScreenState extends ConsumerState<KycScreen>
             onPressed: _startVerification,
             icon: const Icon(Icons.verified_user_outlined),
             label: Text(
-              _stage == _Stage.rejected ? 'Try again' : 'Verify with DigiLocker',
+              _stage == _Stage.rejected ? l10n.commonTryAgain : l10n.kycStart,
             ),
           ),
         );

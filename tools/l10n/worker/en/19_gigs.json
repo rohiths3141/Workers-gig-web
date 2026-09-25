@@ -1,0 +1,45 @@
+{
+  "durationMinutes": "{minutes} min",
+  "durationHours": "{hours} hr",
+  "durationHoursMinutes": "{hours} hr {minutes} min",
+  "durationDays": "{count, plural, =1{1 day} other{{count} days}}",
+  "@durationDays": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "pricePerHour": "{price}/hr",
+  "pricePerDay": "{price}/day",
+  "pricePerUnit": "{price}/unit",
+  "pricePerSqft": "{price}/sq ft",
+  "gigsTitle": "My services",
+  "gigsAddTooltip": "Add a service",
+  "gigsAdd": "Add service",
+  "gigsEmpty": "No services yet",
+  "gigsEmptyBody": "Add the services you offer. You can add as many as you like, across every trade you are approved for.",
+  "gigsNoneLive": "None of your services are live, so customers cannot book you.",
+  "gigsLiveCount": "{count, plural, =1{1 service is live.} other{{count} services are live.}}",
+  "@gigsLiveCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "gigsAvailable": "You are available for work.",
+  "gigsOffDuty": "You are off duty, so you will not be offered jobs.",
+  "gigJobsDone": "{count} done",
+  "@gigJobsDone": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "gigEdit": "Edit",
+  "gigPause": "Pause",
+  "gigResume": "Resume",
+  "gigInReview": "In review",
+  "gigDraftHint": "Draft — submit it for review",
+  "gigRejectedHint": "Rejected — edit and resubmit",
+  "gigArchived": "Archived",
+  "gigNotLive": "Not live",
+  "gigPaused": "Paused. You will not be offered these jobs.",
+  "gigLiveAgain": "Live again."
+}

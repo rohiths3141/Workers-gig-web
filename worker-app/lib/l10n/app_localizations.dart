@@ -1809,6 +1809,1716 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The job history could not be loaded.'**
   String get jobHistoryLoadFailed;
+
+  /// No description provided for @jobOfferExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'This job is no longer available.'**
+  String get jobOfferExpired;
+
+  /// No description provided for @jobOfferNewBadge.
+  ///
+  /// In en, this message translates to:
+  /// **'NEW JOB'**
+  String get jobOfferNewBadge;
+
+  /// No description provided for @jobOfferYouEarn.
+  ///
+  /// In en, this message translates to:
+  /// **'You earn'**
+  String get jobOfferYouEarn;
+
+  /// No description provided for @jobOfferPriceAfterVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed after the visit'**
+  String get jobOfferPriceAfterVisit;
+
+  /// No description provided for @jobOfferAccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept job'**
+  String get jobOfferAccept;
+
+  /// No description provided for @activeJobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Current job'**
+  String get activeJobTitle;
+
+  /// No description provided for @activeJobEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When you accept and start a job it will appear here.'**
+  String get activeJobEmptyBody;
+
+  /// No description provided for @evidenceBeforeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you start'**
+  String get evidenceBeforeTitle;
+
+  /// No description provided for @evidenceBeforeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Photograph the problem before you touch it. This protects you if the customer disputes the work later.'**
+  String get evidenceBeforeBody;
+
+  /// No description provided for @evidenceAfterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'After you finish'**
+  String get evidenceAfterTitle;
+
+  /// No description provided for @evidenceAfterBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo of the finished work is your evidence if the customer disputes it later. Optional, but worth the ten seconds.'**
+  String get evidenceAfterBody;
+
+  /// No description provided for @jobCustomerHidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer details are shared once confirmed'**
+  String get jobCustomerHidden;
+
+  /// No description provided for @jobCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Call'**
+  String get jobCall;
+
+  /// No description provided for @jobDirections.
+  ///
+  /// In en, this message translates to:
+  /// **'Directions'**
+  String get jobDirections;
+
+  /// No description provided for @jobTrackOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Track on map'**
+  String get jobTrackOnMap;
+
+  /// No description provided for @trailAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get trailAccepted;
+
+  /// No description provided for @trailOnTheWay.
+  ///
+  /// In en, this message translates to:
+  /// **'On the way'**
+  String get trailOnTheWay;
+
+  /// No description provided for @trailArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrived'**
+  String get trailArrived;
+
+  /// No description provided for @trailArrivalConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival confirmed'**
+  String get trailArrivalConfirmed;
+
+  /// No description provided for @trailWorkStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Work started'**
+  String get trailWorkStarted;
+
+  /// No description provided for @trailFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Finished'**
+  String get trailFinished;
+
+  /// No description provided for @jobProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Progress'**
+  String get jobProgress;
+
+  /// No description provided for @jobBeforeFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Before you can finish'**
+  String get jobBeforeFinish;
+
+  /// No description provided for @jobActionStartTravel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start travelling'**
+  String get jobActionStartTravel;
+
+  /// No description provided for @jobActionArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'I have arrived'**
+  String get jobActionArrived;
+
+  /// No description provided for @jobActionEnterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter arrival code'**
+  String get jobActionEnterCode;
+
+  /// No description provided for @jobActionStartWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Start work'**
+  String get jobActionStartWork;
+
+  /// No description provided for @jobActionFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish job'**
+  String get jobActionFinish;
+
+  /// No description provided for @jobArrivalConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival confirmed.'**
+  String get jobArrivalConfirmed;
+
+  /// No description provided for @jobFinishTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish this job?'**
+  String get jobFinishTitle;
+
+  /// No description provided for @jobFinishBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The customer will be asked to approve the work. You will not be able to add photos afterwards.'**
+  String get jobFinishBody;
+
+  /// No description provided for @jobOnYourWay.
+  ///
+  /// In en, this message translates to:
+  /// **'On your way.'**
+  String get jobOnYourWay;
+
+  /// No description provided for @jobMarkedArrived.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as arrived.'**
+  String get jobMarkedArrived;
+
+  /// No description provided for @jobWorkStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Work started.'**
+  String get jobWorkStarted;
+
+  /// No description provided for @jobSentForApproval.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent to the customer for approval.'**
+  String get jobSentForApproval;
+
+  /// No description provided for @jobUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated.'**
+  String get jobUpdated;
+
+  /// No description provided for @jobWaitConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the customer to confirm the booking.'**
+  String get jobWaitConfirm;
+
+  /// No description provided for @jobWaitApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the customer to approve your work.'**
+  String get jobWaitApprove;
+
+  /// No description provided for @jobWaitPaymentProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Approved. Payment is being processed.'**
+  String get jobWaitPaymentProcessing;
+
+  /// No description provided for @jobWaitPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for the customer\'s payment.'**
+  String get jobWaitPayment;
+
+  /// No description provided for @jobWaitPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid. Your earnings will appear in your wallet.'**
+  String get jobWaitPaid;
+
+  /// No description provided for @jobWaitDisputed.
+  ///
+  /// In en, this message translates to:
+  /// **'This job is under review by our team. We will be in touch.'**
+  String get jobWaitDisputed;
+
+  /// No description provided for @jobWaitNothing.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to do right now.'**
+  String get jobWaitNothing;
+
+  /// No description provided for @travelRouteUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Route unavailable'**
+  String get travelRouteUnavailable;
+
+  /// No description provided for @travelNoDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'No destination set'**
+  String get travelNoDestination;
+
+  /// No description provided for @travelNoDestinationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This job has no service location to route to.'**
+  String get travelNoDestinationBody;
+
+  /// No description provided for @travelJobLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Job location'**
+  String get travelJobLocation;
+
+  /// No description provided for @travelYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get travelYou;
+
+  /// No description provided for @travelCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer'**
+  String get travelCustomer;
+
+  /// No description provided for @travelCalculating.
+  ///
+  /// In en, this message translates to:
+  /// **'Calculating route...'**
+  String get travelCalculating;
+
+  /// No description provided for @distanceMetres.
+  ///
+  /// In en, this message translates to:
+  /// **'{metres} m'**
+  String distanceMetres(Object metres);
+
+  /// No description provided for @etaMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String etaMinutes(Object minutes);
+
+  /// No description provided for @etaHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr'**
+  String etaHours(Object hours);
+
+  /// No description provided for @arrivalWrongCode.
+  ///
+  /// In en, this message translates to:
+  /// **'That code is not correct.'**
+  String get arrivalWrongCode;
+
+  /// No description provided for @arrivalWrongCodeAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{That code is not correct. 1 attempt left.} other{That code is not correct. {count} attempts left.}}'**
+  String arrivalWrongCodeAttempts(int count);
+
+  /// No description provided for @arrivalTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm you have arrived'**
+  String get arrivalTitle;
+
+  /// No description provided for @arrivalBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the customer to read out the code from their app, then type it here.'**
+  String get arrivalBody;
+
+  /// No description provided for @arrivalLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many incorrect codes. Please contact support to continue this job.'**
+  String get arrivalLocked;
+
+  /// No description provided for @arrivalConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm arrival'**
+  String get arrivalConfirm;
+
+  /// No description provided for @arrivalNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet'**
+  String get arrivalNotYet;
+
+  /// No description provided for @rateThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for the feedback.'**
+  String get rateThanks;
+
+  /// No description provided for @rateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How was this customer?'**
+  String get rateTitle;
+
+  /// No description provided for @rateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rating is private and helps us look after workers.'**
+  String get rateBody;
+
+  /// No description provided for @rateCommentLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything to add? (optional)'**
+  String get rateCommentLabel;
+
+  /// No description provided for @rateSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit rating'**
+  String get rateSubmit;
+
+  /// No description provided for @timerServiceTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Service time'**
+  String get timerServiceTime;
+
+  /// No description provided for @materialsAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get materialsAdd;
+
+  /// No description provided for @materialsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Materials could not be loaded.'**
+  String get materialsLoadFailed;
+
+  /// No description provided for @materialsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'If you need parts for this job, add them here and the customer will be asked to approve the cost.'**
+  String get materialsEmpty;
+
+  /// No description provided for @materialStatusWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'WAITING FOR CUSTOMER'**
+  String get materialStatusWaiting;
+
+  /// No description provided for @materialStatusApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'APPROVED'**
+  String get materialStatusApproved;
+
+  /// No description provided for @materialStatusDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'DECLINED'**
+  String get materialStatusDeclined;
+
+  /// No description provided for @materialStatusBought.
+  ///
+  /// In en, this message translates to:
+  /// **'BOUGHT'**
+  String get materialStatusBought;
+
+  /// No description provided for @materialStatusCostRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'COST RECORDED'**
+  String get materialStatusCostRecorded;
+
+  /// No description provided for @materialStatusBilled.
+  ///
+  /// In en, this message translates to:
+  /// **'ON THE BILL'**
+  String get materialStatusBilled;
+
+  /// No description provided for @materialStatusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'CANCELLED'**
+  String get materialStatusCancelled;
+
+  /// No description provided for @materialQuantityEstimated.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} {unit} · estimated'**
+  String materialQuantityEstimated(Object quantity, Object unit);
+
+  /// No description provided for @materialQuantityActual.
+  ///
+  /// In en, this message translates to:
+  /// **'{quantity} {unit} · actual'**
+  String materialQuantityActual(Object quantity, Object unit);
+
+  /// No description provided for @materialRecordCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Record cost'**
+  String get materialRecordCost;
+
+  /// No description provided for @materialCustomerSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer said: {reason}'**
+  String materialCustomerSaid(Object reason);
+
+  /// No description provided for @materialUnitPiece.
+  ///
+  /// In en, this message translates to:
+  /// **'piece'**
+  String get materialUnitPiece;
+
+  /// No description provided for @materialWhatNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you need?'**
+  String get materialWhatNeeded;
+
+  /// No description provided for @materialEnterQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter how many'**
+  String get materialEnterQuantity;
+
+  /// No description provided for @materialEnterCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the expected cost'**
+  String get materialEnterCost;
+
+  /// No description provided for @materialRequestBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The customer will be asked to approve this before you buy it.'**
+  String get materialRequestBody;
+
+  /// No description provided for @materialName.
+  ///
+  /// In en, this message translates to:
+  /// **'Material'**
+  String get materialName;
+
+  /// No description provided for @materialNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 16A modular switch'**
+  String get materialNameHint;
+
+  /// No description provided for @materialQuantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get materialQuantity;
+
+  /// No description provided for @materialUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Unit'**
+  String get materialUnit;
+
+  /// No description provided for @materialExpectedCost.
+  ///
+  /// In en, this message translates to:
+  /// **'Expected cost'**
+  String get materialExpectedCost;
+
+  /// No description provided for @materialAskCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask the customer'**
+  String get materialAskCustomer;
+
+  /// No description provided for @materialEnterPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the amount you paid'**
+  String get materialEnterPaid;
+
+  /// No description provided for @materialCostRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Cost recorded.'**
+  String get materialCostRecorded;
+
+  /// No description provided for @materialWhatCost.
+  ///
+  /// In en, this message translates to:
+  /// **'What did it cost?'**
+  String get materialWhatCost;
+
+  /// No description provided for @materialReceiptBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Attach the receipt so this can be added to the customer\'s bill.'**
+  String get materialReceiptBody;
+
+  /// No description provided for @materialAmountPaid.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount paid'**
+  String get materialAmountPaid;
+
+  /// No description provided for @materialReceipt.
+  ///
+  /// In en, this message translates to:
+  /// **'Receipt'**
+  String get materialReceipt;
+
+  /// No description provided for @materialReceiptRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'A photo of the bill is required.'**
+  String get materialReceiptRequired;
+
+  /// No description provided for @evidenceDone.
+  ///
+  /// In en, this message translates to:
+  /// **'DONE'**
+  String get evidenceDone;
+
+  /// No description provided for @evidenceRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'REQUIRED'**
+  String get evidenceRequired;
+
+  /// No description provided for @evidenceCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get evidenceCamera;
+
+  /// No description provided for @evidenceGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get evidenceGallery;
+
+  /// No description provided for @evidenceSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get evidenceSaved;
+
+  /// No description provided for @uploadWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting'**
+  String get uploadWaiting;
+
+  /// No description provided for @uploadPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing'**
+  String get uploadPreparing;
+
+  /// No description provided for @uploadStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting upload'**
+  String get uploadStarting;
+
+  /// No description provided for @uploadPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String uploadPercent(Object percent);
+
+  /// No description provided for @uploadFinishing.
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing'**
+  String get uploadFinishing;
+
+  /// No description provided for @uploadCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel upload'**
+  String get uploadCancel;
+
+  /// No description provided for @uploadNotFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'That upload did not finish.'**
+  String get uploadNotFinished;
+
+  /// No description provided for @commonRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get commonRetry;
+
+  /// No description provided for @durationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min'**
+  String durationMinutes(Object minutes);
+
+  /// No description provided for @durationHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr'**
+  String durationHours(Object hours);
+
+  /// No description provided for @durationHoursMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{hours} hr {minutes} min'**
+  String durationHoursMinutes(Object hours, Object minutes);
+
+  /// No description provided for @durationDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String durationDays(int count);
+
+  /// No description provided for @pricePerHour.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/hr'**
+  String pricePerHour(Object price);
+
+  /// No description provided for @pricePerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/day'**
+  String pricePerDay(Object price);
+
+  /// No description provided for @pricePerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/unit'**
+  String pricePerUnit(Object price);
+
+  /// No description provided for @pricePerSqft.
+  ///
+  /// In en, this message translates to:
+  /// **'{price}/sq ft'**
+  String pricePerSqft(Object price);
+
+  /// No description provided for @gigsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My services'**
+  String get gigsTitle;
+
+  /// No description provided for @gigsAddTooltip.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a service'**
+  String get gigsAddTooltip;
+
+  /// No description provided for @gigsAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Add service'**
+  String get gigsAdd;
+
+  /// No description provided for @gigsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No services yet'**
+  String get gigsEmpty;
+
+  /// No description provided for @gigsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add the services you offer. You can add as many as you like, across every trade you are approved for.'**
+  String get gigsEmptyBody;
+
+  /// No description provided for @gigsNoneLive.
+  ///
+  /// In en, this message translates to:
+  /// **'None of your services are live, so customers cannot book you.'**
+  String get gigsNoneLive;
+
+  /// No description provided for @gigsLiveCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 service is live.} other{{count} services are live.}}'**
+  String gigsLiveCount(int count);
+
+  /// No description provided for @gigsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'You are available for work.'**
+  String get gigsAvailable;
+
+  /// No description provided for @gigsOffDuty.
+  ///
+  /// In en, this message translates to:
+  /// **'You are off duty, so you will not be offered jobs.'**
+  String get gigsOffDuty;
+
+  /// No description provided for @gigJobsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} done'**
+  String gigJobsDone(int count);
+
+  /// No description provided for @gigEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get gigEdit;
+
+  /// No description provided for @gigPause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get gigPause;
+
+  /// No description provided for @gigResume.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume'**
+  String get gigResume;
+
+  /// No description provided for @gigInReview.
+  ///
+  /// In en, this message translates to:
+  /// **'In review'**
+  String get gigInReview;
+
+  /// No description provided for @gigDraftHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Draft — submit it for review'**
+  String get gigDraftHint;
+
+  /// No description provided for @gigRejectedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected — edit and resubmit'**
+  String get gigRejectedHint;
+
+  /// No description provided for @gigArchived.
+  ///
+  /// In en, this message translates to:
+  /// **'Archived'**
+  String get gigArchived;
+
+  /// No description provided for @gigNotLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Not live'**
+  String get gigNotLive;
+
+  /// No description provided for @gigPaused.
+  ///
+  /// In en, this message translates to:
+  /// **'Paused. You will not be offered these jobs.'**
+  String get gigPaused;
+
+  /// No description provided for @gigLiveAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Live again.'**
+  String get gigLiveAgain;
+
+  /// No description provided for @gigDuration30m.
+  ///
+  /// In en, this message translates to:
+  /// **'30 minutes'**
+  String get gigDuration30m;
+
+  /// No description provided for @gigDuration45m.
+  ///
+  /// In en, this message translates to:
+  /// **'45 minutes'**
+  String get gigDuration45m;
+
+  /// No description provided for @gigDuration1h.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get gigDuration1h;
+
+  /// No description provided for @gigDuration2h.
+  ///
+  /// In en, this message translates to:
+  /// **'2 hours'**
+  String get gigDuration2h;
+
+  /// No description provided for @gigDuration4h.
+  ///
+  /// In en, this message translates to:
+  /// **'4 hours'**
+  String get gigDuration4h;
+
+  /// No description provided for @gigDuration8h.
+  ///
+  /// In en, this message translates to:
+  /// **'8 hours (a working day)'**
+  String get gigDuration8h;
+
+  /// No description provided for @gigDuration24h.
+  ///
+  /// In en, this message translates to:
+  /// **'24 hours'**
+  String get gigDuration24h;
+
+  /// No description provided for @gigDuration2d.
+  ///
+  /// In en, this message translates to:
+  /// **'2 days'**
+  String get gigDuration2d;
+
+  /// No description provided for @gigDuration3d.
+  ///
+  /// In en, this message translates to:
+  /// **'3 days'**
+  String get gigDuration3d;
+
+  /// No description provided for @gigDuration1w.
+  ///
+  /// In en, this message translates to:
+  /// **'1 week'**
+  String get gigDuration1w;
+
+  /// No description provided for @gigSavedDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved as a draft.'**
+  String get gigSavedDraft;
+
+  /// No description provided for @gigSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted. We will review it and let you know.'**
+  String get gigSubmitted;
+
+  /// No description provided for @gigLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Your service is live.'**
+  String get gigLive;
+
+  /// No description provided for @gigSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved.'**
+  String get gigSaved;
+
+  /// No description provided for @gigEditorAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a service'**
+  String get gigEditorAddTitle;
+
+  /// No description provided for @gigEditorEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit service'**
+  String get gigEditorEditTitle;
+
+  /// No description provided for @gigNoTrades.
+  ///
+  /// In en, this message translates to:
+  /// **'No approved trades yet'**
+  String get gigNoTrades;
+
+  /// No description provided for @gigNoTradesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Once a trade is approved for you, you can publish services under it. Add a trade from your profile to get started.'**
+  String get gigNoTradesBody;
+
+  /// No description provided for @gigFieldTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Which trade?'**
+  String get gigFieldTrade;
+
+  /// No description provided for @gigFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What is the service called?'**
+  String get gigFieldTitle;
+
+  /// No description provided for @gigFieldTitleHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers see this. Be specific.'**
+  String get gigFieldTitleHint;
+
+  /// No description provided for @gigFieldTitleExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Split AC deep cleaning'**
+  String get gigFieldTitleExample;
+
+  /// No description provided for @gigFieldDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'What does it include?'**
+  String get gigFieldDescription;
+
+  /// No description provided for @gigFieldDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Optional, but it helps customers choose you.'**
+  String get gigFieldDescriptionHint;
+
+  /// No description provided for @gigFieldDescriptionExample.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Full indoor and outdoor unit clean, filter wash, gas pressure check.'**
+  String get gigFieldDescriptionExample;
+
+  /// No description provided for @gigFieldPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you charge?'**
+  String get gigFieldPrice;
+
+  /// No description provided for @gigFieldPriceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Each service has its own price. This one does not affect your others.'**
+  String get gigFieldPriceHint;
+
+  /// No description provided for @gigUnitPerJob.
+  ///
+  /// In en, this message translates to:
+  /// **'per job'**
+  String get gigUnitPerJob;
+
+  /// No description provided for @gigUnitPerHour.
+  ///
+  /// In en, this message translates to:
+  /// **'per hour'**
+  String get gigUnitPerHour;
+
+  /// No description provided for @gigUnitPerDay.
+  ///
+  /// In en, this message translates to:
+  /// **'per day'**
+  String get gigUnitPerDay;
+
+  /// No description provided for @gigUnitPerUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'per unit'**
+  String get gigUnitPerUnit;
+
+  /// No description provided for @gigUnitPerSqft.
+  ///
+  /// In en, this message translates to:
+  /// **'per sq ft'**
+  String get gigUnitPerSqft;
+
+  /// No description provided for @gigFieldDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'How long does it usually take?'**
+  String get gigFieldDuration;
+
+  /// No description provided for @gigFieldRadius.
+  ///
+  /// In en, this message translates to:
+  /// **'How far will you travel for this?'**
+  String get gigFieldRadius;
+
+  /// No description provided for @gigFieldRadiusHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave as default to use your usual travel distance.'**
+  String get gigFieldRadiusHint;
+
+  /// No description provided for @gigUsualDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Your usual distance'**
+  String get gigUsualDistance;
+
+  /// No description provided for @gigUseUsualDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Use my usual distance'**
+  String get gigUseUsualDistance;
+
+  /// No description provided for @gigReviewNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'New and edited services are checked by our team before they go live. We will let you know as soon as it is done.'**
+  String get gigReviewNotice;
+
+  /// No description provided for @gigSaveDraft.
+  ///
+  /// In en, this message translates to:
+  /// **'Save draft'**
+  String get gigSaveDraft;
+
+  /// No description provided for @gigSubmitForReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for review'**
+  String get gigSubmitForReview;
+
+  /// No description provided for @walletAllTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'All transactions'**
+  String get walletAllTransactions;
+
+  /// No description provided for @walletFrozen.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals are on hold while we look into something. Contact support for details.'**
+  String get walletFrozen;
+
+  /// No description provided for @walletWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get walletWithdraw;
+
+  /// No description provided for @walletNothingPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to withdraw yet. {amount} is still being processed and moves to your balance once those jobs are approved.'**
+  String walletNothingPending(Object amount);
+
+  /// No description provided for @walletNothingYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing to withdraw yet. Your earnings appear here once a customer approves a finished job.'**
+  String get walletNothingYet;
+
+  /// No description provided for @walletRecentEarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent earnings'**
+  String get walletRecentEarnings;
+
+  /// No description provided for @walletNoEarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'No earnings yet'**
+  String get walletNoEarnings;
+
+  /// No description provided for @walletNoEarningsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your earnings will appear here once a completed job has been paid for.'**
+  String get walletNoEarningsBody;
+
+  /// No description provided for @walletAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Available to withdraw'**
+  String get walletAvailable;
+
+  /// No description provided for @walletProcessing.
+  ///
+  /// In en, this message translates to:
+  /// **'Being processed'**
+  String get walletProcessing;
+
+  /// No description provided for @walletProcessingHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Released after the holding period'**
+  String get walletProcessingHint;
+
+  /// No description provided for @walletTotalEarned.
+  ///
+  /// In en, this message translates to:
+  /// **'Earned in total'**
+  String get walletTotalEarned;
+
+  /// No description provided for @statementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statement'**
+  String get statementTitle;
+
+  /// No description provided for @statementTabTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get statementTabTransactions;
+
+  /// No description provided for @statementTabWithdrawals.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals'**
+  String get statementTabWithdrawals;
+
+  /// No description provided for @statementEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing yet'**
+  String get statementEmpty;
+
+  /// No description provided for @statementEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Every payment, fee and withdrawal will be listed here once you start working.'**
+  String get statementEmptyBody;
+
+  /// No description provided for @statementBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Bal {amount}'**
+  String statementBalance(Object amount);
+
+  /// No description provided for @statementNoWithdrawals.
+  ///
+  /// In en, this message translates to:
+  /// **'No withdrawals yet'**
+  String get statementNoWithdrawals;
+
+  /// No description provided for @statementNoWithdrawalsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'When you withdraw money it will be tracked here.'**
+  String get statementNoWithdrawalsBody;
+
+  /// No description provided for @payoutRequestedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested {date}'**
+  String payoutRequestedAt(Object date);
+
+  /// No description provided for @payoutPaidAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {date}'**
+  String payoutPaidAt(Object date);
+
+  /// No description provided for @payoutEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter how much you want to withdraw'**
+  String get payoutEnterAmount;
+
+  /// No description provided for @payoutUpTo.
+  ///
+  /// In en, this message translates to:
+  /// **'You can withdraw up to {amount} right now'**
+  String payoutUpTo(Object amount);
+
+  /// No description provided for @payoutMinimum.
+  ///
+  /// In en, this message translates to:
+  /// **'The smallest withdrawal is {amount}'**
+  String payoutMinimum(Object amount);
+
+  /// No description provided for @payoutRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawal of {amount} requested. We will update you as it is processed.'**
+  String payoutRequested(Object amount);
+
+  /// No description provided for @payoutAvailableNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Available now'**
+  String get payoutAvailableNow;
+
+  /// No description provided for @payoutPendingMore.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} more is still being processed and cannot be withdrawn yet.'**
+  String payoutPendingMore(Object amount);
+
+  /// No description provided for @payoutHowMuch.
+  ///
+  /// In en, this message translates to:
+  /// **'How much?'**
+  String get payoutHowMuch;
+
+  /// No description provided for @payoutAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get payoutAll;
+
+  /// No description provided for @payoutPercent.
+  ///
+  /// In en, this message translates to:
+  /// **'{percent}%'**
+  String payoutPercent(Object percent);
+
+  /// No description provided for @payoutProcessNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals are checked and then sent to your registered bank account. You will see the status update here at every step.'**
+  String get payoutProcessNotice;
+
+  /// No description provided for @payoutRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Request withdrawal'**
+  String get payoutRequest;
+
+  /// No description provided for @bankChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking your bank account…'**
+  String get bankChecking;
+
+  /// No description provided for @bankPaidTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Paid to account ending {last4}'**
+  String bankPaidTo(Object last4);
+
+  /// No description provided for @bankVerifiedFallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Your verified bank account'**
+  String get bankVerifiedFallback;
+
+  /// No description provided for @bankBeingVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account being verified'**
+  String get bankBeingVerified;
+
+  /// No description provided for @bankBeingVerifiedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can withdraw once our team has verified it.'**
+  String get bankBeingVerifiedBody;
+
+  /// No description provided for @bankNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account not verified'**
+  String get bankNotVerified;
+
+  /// No description provided for @bankNotVerifiedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your details and submit them again.'**
+  String get bankNotVerifiedBody;
+
+  /// No description provided for @bankAddTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a bank account'**
+  String get bankAddTitle;
+
+  /// No description provided for @bankAddBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdrawals are paid to a bank account our team has verified.'**
+  String get bankAddBody;
+
+  /// No description provided for @bankAddAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add bank account'**
+  String get bankAddAction;
+
+  /// No description provided for @verificationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification'**
+  String get verificationTitle;
+
+  /// No description provided for @verificationProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified checks'**
+  String get verificationProgress;
+
+  /// No description provided for @verificationCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{approved} of {total}'**
+  String verificationCount(int approved, int total);
+
+  /// No description provided for @verificationInsurance.
+  ///
+  /// In en, this message translates to:
+  /// **'Insurance'**
+  String get verificationInsurance;
+
+  /// No description provided for @verificationNoCover.
+  ///
+  /// In en, this message translates to:
+  /// **'No active cover'**
+  String get verificationNoCover;
+
+  /// No description provided for @verificationNoCoverBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You do not currently have an insurance policy on file with us.'**
+  String get verificationNoCoverBody;
+
+  /// No description provided for @verifyIdentity.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity'**
+  String get verifyIdentity;
+
+  /// No description provided for @verifyIdentityBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A government ID so customers know who is coming to their home.'**
+  String get verifyIdentityBody;
+
+  /// No description provided for @verifyAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get verifyAddress;
+
+  /// No description provided for @verifyAddressBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Proof of where you live.'**
+  String get verifyAddressBody;
+
+  /// No description provided for @verifyIti.
+  ///
+  /// In en, this message translates to:
+  /// **'ITI certificate'**
+  String get verifyIti;
+
+  /// No description provided for @verifyItiBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trade certificate from an Industrial Training Institute.'**
+  String get verifyItiBody;
+
+  /// No description provided for @verifyDiploma.
+  ///
+  /// In en, this message translates to:
+  /// **'Diploma'**
+  String get verifyDiploma;
+
+  /// No description provided for @verifyDiplomaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A recognised technical diploma.'**
+  String get verifyDiplomaBody;
+
+  /// No description provided for @verifyRpl.
+  ///
+  /// In en, this message translates to:
+  /// **'Skill assessment'**
+  String get verifyRpl;
+
+  /// No description provided for @verifyRplBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Recognition of Prior Learning: your experience assessed and certified.'**
+  String get verifyRplBody;
+
+  /// No description provided for @verifyBackground.
+  ///
+  /// In en, this message translates to:
+  /// **'Background check'**
+  String get verifyBackground;
+
+  /// No description provided for @verifyBackgroundBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We run this ourselves. You do not need to do anything.'**
+  String get verifyBackgroundBody;
+
+  /// No description provided for @verifyInsuranceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover for accidental damage while you work. Our team adds your policy once it is arranged.'**
+  String get verifyInsuranceBody;
+
+  /// No description provided for @verifyBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account'**
+  String get verifyBank;
+
+  /// No description provided for @verifyBankBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Where your withdrawals are paid.'**
+  String get verifyBankBody;
+
+  /// No description provided for @verificationValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until {date}'**
+  String verificationValidUntil(Object date);
+
+  /// No description provided for @verificationStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get verificationStart;
+
+  /// No description provided for @verificationUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get verificationUpdate;
+
+  /// No description provided for @policyActive.
+  ///
+  /// In en, this message translates to:
+  /// **'ACTIVE'**
+  String get policyActive;
+
+  /// No description provided for @policyNotActive.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT ACTIVE'**
+  String get policyNotActive;
+
+  /// No description provided for @policyNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Policy'**
+  String get policyNumber;
+
+  /// No description provided for @policyCover.
+  ///
+  /// In en, this message translates to:
+  /// **'Cover'**
+  String get policyCover;
+
+  /// No description provided for @policyValidUntil.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid until'**
+  String get policyValidUntil;
+
+  /// No description provided for @kycStillWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Still waiting on DigiLocker. You can check back from here later.'**
+  String get kycStillWaiting;
+
+  /// No description provided for @kycTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Identity check'**
+  String get kycTitle;
+
+  /// No description provided for @kycHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm who you are'**
+  String get kycHeadline;
+
+  /// No description provided for @kycIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers let you into their homes, so we verify every worker\'s identity through DigiLocker, the Government of India\'s document platform. Nothing is uploaded — you just approve the request on your own Aadhaar account.'**
+  String get kycIntro;
+
+  /// No description provided for @kycPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Aadhaar details are confirmed directly with DigiLocker. We store only what proves the check happened — never your photo or a copy of your Aadhaar.'**
+  String get kycPrivacy;
+
+  /// No description provided for @kycVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Your identity is verified.'**
+  String get kycVerified;
+
+  /// No description provided for @kycAwaitingConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete the DigiLocker consent in your browser, then come back here.'**
+  String get kycAwaitingConsent;
+
+  /// No description provided for @kycChecking.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking with DigiLocker…'**
+  String get kycChecking;
+
+  /// No description provided for @kycStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify with DigiLocker'**
+  String get kycStart;
+
+  /// No description provided for @qualSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted for review.'**
+  String get qualSubmitted;
+
+  /// No description provided for @qualTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your qualification'**
+  String get qualTitle;
+
+  /// No description provided for @qualIti.
+  ///
+  /// In en, this message translates to:
+  /// **'ITI'**
+  String get qualIti;
+
+  /// No description provided for @qualInstitute.
+  ///
+  /// In en, this message translates to:
+  /// **'Institute'**
+  String get qualInstitute;
+
+  /// No description provided for @qualInstituteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Government ITI, Coimbatore'**
+  String get qualInstituteHint;
+
+  /// No description provided for @qualName.
+  ///
+  /// In en, this message translates to:
+  /// **'Qualification'**
+  String get qualName;
+
+  /// No description provided for @qualNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Electrician'**
+  String get qualNameHint;
+
+  /// No description provided for @qualSpeciality.
+  ///
+  /// In en, this message translates to:
+  /// **'Speciality (optional)'**
+  String get qualSpeciality;
+
+  /// No description provided for @qualSpecialityHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Industrial wiring'**
+  String get qualSpecialityHint;
+
+  /// No description provided for @qualYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Year completed'**
+  String get qualYear;
+
+  /// No description provided for @qualCertificate.
+  ///
+  /// In en, this message translates to:
+  /// **'Your certificate'**
+  String get qualCertificate;
+
+  /// No description provided for @qualCertificateBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A clear photo or PDF of the certificate.'**
+  String get qualCertificateBody;
+
+  /// No description provided for @bankErrorHolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the name exactly as it appears on the account'**
+  String get bankErrorHolder;
+
+  /// No description provided for @bankErrorNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'An account number is 9 to 18 digits'**
+  String get bankErrorNumber;
+
+  /// No description provided for @bankErrorMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The account numbers do not match'**
+  String get bankErrorMismatch;
+
+  /// No description provided for @bankErrorIfsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 11-character IFSC, e.g. SBIN0001234'**
+  String get bankErrorIfsc;
+
+  /// No description provided for @bankSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account sent for verification.'**
+  String get bankSent;
+
+  /// No description provided for @bankNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your withdrawals are paid to this account. Our team verifies it before the first payout.'**
+  String get bankNotice;
+
+  /// No description provided for @bankHolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Account holder name'**
+  String get bankHolder;
+
+  /// No description provided for @bankNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account number'**
+  String get bankNumber;
+
+  /// No description provided for @bankConfirmNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-enter account number'**
+  String get bankConfirmNumber;
+
+  /// No description provided for @bankIfsc.
+  ///
+  /// In en, this message translates to:
+  /// **'IFSC code'**
+  String get bankIfsc;
+
+  /// No description provided for @bankIfscHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. SBIN0001234'**
+  String get bankIfscHint;
+
+  /// No description provided for @bankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank name (optional)'**
+  String get bankName;
+
+  /// No description provided for @bankSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit for verification'**
+  String get bankSubmit;
 }
 
 class _AppLocalizationsDelegate

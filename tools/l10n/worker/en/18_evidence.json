@@ -1,0 +1,15 @@
+{
+  "evidenceDone": "DONE",
+  "evidenceRequired": "REQUIRED",
+  "evidenceCamera": "Camera",
+  "evidenceGallery": "Gallery",
+  "evidenceSaved": "Saved",
+  "uploadWaiting": "Waiting",
+  "uploadPreparing": "Preparing",
+  "uploadStarting": "Starting upload",
+  "uploadPercent": "{percent}%",
+  "uploadFinishing": "Finishing",
+  "uploadCancel": "Cancel upload",
+  "uploadNotFinished": "That upload did not finish.",
+  "commonRetry": "Retry"
+}
