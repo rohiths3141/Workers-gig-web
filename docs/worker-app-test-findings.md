@@ -223,3 +223,19 @@ New tests: `test/data/worker_id_cache_test.dart`,
 tests pass, up from 195.** Each of the four regression suites was run against
 the unfixed code first and fails there — a test that passes both ways is not a
 regression test.
+
+## Round 8 — travel route never drawn (25 Sep)
+
+Reported from the device: after accepting a job, the travel map shows the
+customer's pin but no route to it. Three separate causes, all on the path
+travel map → `compute-route` edge function → Google Routes API.
+
+| # | Severity | Area | Finding | Status |
+|---|----------|------|---------|--------|
+| 58 | **Blocker** | Routes key | The live `GOOGLE_ROUTES_API_KEY` secret is the **same key** as the apps' `MAPS_API_KEY` (SHA-256 of the two match). Google refuses it for Routes: a direct `computeRoutes` call answers `403 PERMISSION_DENIED`, and the deployed function passes that through as `502 ROUTE_UNAVAILABLE`. The key's API restrictions also exclude Geocoding and Directions. | **Open — Google Cloud console, not code.** Needs its own server key: Routes API enabled on the project, key restricted to *Routes API* only, no application restriction (edge functions have no fixed IP). Then `supabase secrets set GOOGLE_ROUTES_API_KEY=…`. |
+| 59 | **High** | Edge function auth | `compute-route` was the only function the worker app calls that still had gateway `verify_jwt` on. The app sends a Firebase ID token, which Supabase honours for the Data API, Storage and Realtime but not for the Edge Functions gateway — the reason the KYC functions already run with it off. | Fixed (needs deploy): `verify_jwt = false` for `compute-route`, and the function verifies the Firebase token itself (signature against Google's keys, issuer, audience, expiry). An anonymous caller still cannot spend the quota. |
+| 60 | Medium | Travel map | The route was only requested from the GPS *stream*, never from the initial fix, and the stream only emits after 10 m of movement — a worker standing still at the start got no route. A failed call was also retried on every 10 m tick, and there was no way to retry by hand. | Fixed: route requested from the first fix and again once the job loads; 30 s back-off after a failure; a Retry button; the camera frames the whole route above the bottom card when it first arrives. |
+
+New test: `test/core/polyline_codec_test.dart` (the decoder had none). `flutter
+analyze` clean, **294 tests pass**. Not yet verified on a device — that waits
+on #58.

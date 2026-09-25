@@ -46,6 +46,11 @@ verify_jwt = false
 [functions.kyc-provider]
 verify_jwt = false
 
+# Called by the worker app with a Firebase ID token, which the gateway's
+# verify_jwt does not accept. The function verifies it against Google's keys.
+[functions.compute-route]
+verify_jwt = false
+
 # Called by trigger_notification_webhook() via pg_net with a shared secret in
 # the Authorization header, not a Supabase-issued JWT — the function verifies
 # that secret itself.

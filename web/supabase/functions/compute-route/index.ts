@@ -9,11 +9,64 @@
 //
 // Callers are expected to throttle themselves (initial route + recompute on
 // meaningful deviation/staleness only) — this function does not rate-limit,
-// it only requires a valid Supabase session so an anonymous caller cannot
-// burn the quota.
+// it only requires a signed-in caller so an anonymous one cannot burn the
+// quota.
+//
+// The worker app authenticates with a Firebase ID token, not a Supabase-issued
+// one. Supabase honours Firebase tokens for the Data API, Storage and Realtime
+// — not for the Edge Functions gateway's verify_jwt, which is why the KYC
+// functions the worker app calls already run with it off. So does this one
+// (config.toml): the token is verified here instead — signature, issuer,
+// audience and expiry — against Google's published signing keys.
+
+import { createRemoteJWKSet, jwtVerify } from "https://esm.sh/jose@5.9.6";
 
 const ROUTES_API_URL =
   "https://routes.googleapis.com/directions/v2:computeRoutes";
+
+const FIREBASE_JWKS = createRemoteJWKSet(
+  new URL(
+    "https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com",
+  ),
+);
+
+/**
+ * The Firebase project the ID tokens must be minted for. FIREBASE_PROJECT_ID
+ * wins when set; otherwise it comes from the service account send-notifications
+ * already needs, so no new secret is required to deploy this.
+ */
+function firebaseProjectId(): string | null {
+  const explicit = Deno.env.get("FIREBASE_PROJECT_ID");
+  if (explicit) return explicit;
+  try {
+    const account = JSON.parse(
+      Deno.env.get("FIREBASE_SERVICE_ACCOUNT_JSON") ?? "",
+    );
+    return typeof account.project_id === "string" ? account.project_id : null;
+  } catch {
+    return null;
+  }
+}
+
+async function isValidFirebaseToken(
+  authHeader: string,
+  projectId: string,
+): Promise<boolean> {
+  const token = authHeader.replace(/^Bearer\s+/i, "");
+  try {
+    const { payload } = await jwtVerify(token, FIREBASE_JWKS, {
+      algorithms: ["RS256"],
+      issuer: `https://securetoken.google.com/${projectId}`,
+      audience: projectId,
+      // Phones with a slightly fast clock mint tokens whose iat is ahead of
+      // ours (customer finding C2) — allow a minute either way.
+      clockTolerance: 60,
+    });
+    return typeof payload.sub === "string" && payload.sub.length > 0;
+  } catch {
+    return false;
+  }
+}
 
 interface LatLngInput {
   latitude: number;
@@ -45,22 +98,24 @@ Deno.serve(async (req) => {
     });
   }
 
-  // Supabase's gateway already required a valid Authorization header to reach
-  // here (verify_jwt stays on for this function, unlike the KYC functions —
-  // this one has no Firebase-vs-Supabase mismatch to work around).
+  const apiKey = Deno.env.get("GOOGLE_ROUTES_API_KEY");
+  const projectId = firebaseProjectId();
+  if (!apiKey || !projectId) {
+    return new Response(
+      JSON.stringify({
+        error: !apiKey
+          ? "SERVER_MISCONFIGURED: route API key not set"
+          : "SERVER_MISCONFIGURED: Firebase project id not set",
+      }),
+      { status: 500 },
+    );
+  }
+
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader) {
+  if (!authHeader || !(await isValidFirebaseToken(authHeader, projectId))) {
     return new Response(JSON.stringify({ error: "UNAUTHORIZED" }), {
       status: 401,
     });
-  }
-
-  const apiKey = Deno.env.get("GOOGLE_ROUTES_API_KEY");
-  if (!apiKey) {
-    return new Response(
-      JSON.stringify({ error: "SERVER_MISCONFIGURED: route API key not set" }),
-      { status: 500 },
-    );
   }
 
   let body: RequestBody;

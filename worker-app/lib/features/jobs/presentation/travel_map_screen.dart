@@ -39,22 +39,39 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
   static const _routeStaleAfter = Duration(minutes: 5);
   static const _routeDeviationMetres = 500;
 
+  /// After a failed route call, GPS ticks wait this long before trying again,
+  /// so a server outage is not retried every 10 m the worker moves.
+  static const _routeRetryAfter = Duration(seconds: 30);
+
+  final _cardKey = GlobalKey();
+
   StreamSubscription<Position>? _positionSub;
+  GoogleMapController? _mapController;
   LatLng? _worker;
   RouteInfo? _route;
   DateTime? _routeComputedAt;
+  DateTime? _routeFailedAt;
   bool _routeLoading = false;
+  bool _cameraFittedToRoute = false;
+  double _cardHeight = 0;
   String? _routeError;
 
   @override
   void initState() {
     super.initState();
+    // The GPS fix can land before the job has loaded; route as soon as both
+    // are known rather than waiting for the worker to move.
+    ref.listenManual<AsyncValue<Job>>(jobProvider(widget.bookingId), (_, next) {
+      final worker = _worker;
+      if (worker != null && next.hasValue) _maybeRecomputeRoute(worker);
+    });
     _startPositioning();
   }
 
   @override
   void dispose() {
     _positionSub?.cancel();
+    _mapController?.dispose();
     super.dispose();
   }
 
@@ -71,7 +88,11 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
 
     final initial = await Geolocator.getCurrentPosition();
     if (!mounted) return;
-    setState(() => _worker = LatLng(initial.latitude, initial.longitude));
+    final worker = LatLng(initial.latitude, initial.longitude);
+    setState(() => _worker = worker);
+    // The position stream only emits once the worker has moved, so a worker
+    // standing still would otherwise never get a route.
+    _maybeRecomputeRoute(worker);
 
     _positionSub = Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -91,6 +112,11 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
   void _maybeRecomputeRoute(LatLng worker) {
     final job = ref.read(jobProvider(widget.bookingId)).valueOrNull;
     if (job?.latitude == null || job?.longitude == null) return;
+
+    if (_routeFailedAt != null &&
+        DateTime.now().difference(_routeFailedAt!) < _routeRetryAfter) {
+      return;
+    }
 
     final stale = _routeComputedAt == null ||
         DateTime.now().difference(_routeComputedAt!) > _routeStaleAfter;
@@ -126,16 +152,66 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
 
     if (!mounted) return;
     result.fold(
-      (route) => setState(() {
-        _route = route;
-        _routeComputedAt = DateTime.now();
-        _routeLoading = false;
-      }),
+      (route) {
+        setState(() {
+          _route = route;
+          _routeComputedAt = DateTime.now();
+          _routeFailedAt = null;
+          _routeLoading = false;
+        });
+        if (!_cameraFittedToRoute) _fitCameraToRoute();
+      },
       (failure) => setState(() {
         _routeError = context.l10n.travelRouteUnavailable;
+        _routeFailedAt = DateTime.now();
         _routeLoading = false;
       }),
     );
+  }
+
+  void _retryRoute() {
+    final worker = _worker;
+    final job = ref.read(jobProvider(widget.bookingId)).valueOrNull;
+    if (worker == null || job?.latitude == null || job?.longitude == null) return;
+    _computeRoute(worker, job!);
+  }
+
+  /// Frames the whole route once, when it first arrives. Later recomputes
+  /// leave the camera alone so they never fight the worker's own panning.
+  Future<void> _fitCameraToRoute() async {
+    final controller = _mapController;
+    final points = _route?.points ?? const [];
+    if (controller == null || points.isEmpty) return;
+    _cameraFittedToRoute = true;
+
+    var (south, west) = points.first;
+    var (north, east) = points.first;
+    for (final (lat, lng) in points) {
+      if (lat < south) south = lat;
+      if (lat > north) north = lat;
+      if (lng < west) west = lng;
+      if (lng > east) east = lng;
+    }
+
+    try {
+      await controller.animateCamera(CameraUpdate.newLatLngBounds(
+        LatLngBounds(southwest: LatLng(south, west), northeast: LatLng(north, east)),
+        AppSpacing.xl,
+      ));
+    } catch (_) {
+      // The map can refuse bounds before it has been laid out; the route is
+      // still drawn, just not framed.
+      _cameraFittedToRoute = false;
+    }
+  }
+
+  /// Keeps the map's padding equal to the bottom card, so the camera frames
+  /// the route in the part of the map the worker can actually see.
+  void _measureCard() {
+    final height = _cardKey.currentContext?.size?.height;
+    if (height != null && height != _cardHeight) {
+      setState(() => _cardHeight = height);
+    }
   }
 
   @override
@@ -162,11 +238,22 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
 
     final destination = LatLng(job.latitude!, job.longitude!);
     final worker = _worker;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _measureCard();
+    });
 
     return Stack(
       children: [
         GoogleMap(
           initialCameraPosition: CameraPosition(target: destination, zoom: 13),
+          padding: EdgeInsets.only(
+            top: MediaQuery.of(context).padding.top,
+            bottom: _cardHeight,
+          ),
+          onMapCreated: (controller) {
+            _mapController = controller;
+            if (_route != null && !_cameraFittedToRoute) _fitCameraToRoute();
+          },
           myLocationButtonEnabled: false,
           zoomControlsEnabled: false,
           markers: {
@@ -209,10 +296,12 @@ class _TravelMapScreenState extends ConsumerState<TravelMapScreen> {
           right: 0,
           bottom: 0,
           child: _BottomCard(
+            key: _cardKey,
             job: job,
             route: _route,
             isLoading: _routeLoading,
             error: _routeError,
+            onRetry: _routeLoading || worker == null ? null : _retryRoute,
           ),
         ),
       ],
@@ -250,12 +339,15 @@ class _BottomCard extends ConsumerWidget {
     required this.route,
     required this.isLoading,
     required this.error,
+    required this.onRetry,
+    super.key,
   });
 
   final Job job;
   final RouteInfo? route;
   final bool isLoading;
   final String? error;
+  final VoidCallback? onRetry;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -287,7 +379,16 @@ class _BottomCard extends ConsumerWidget {
               style: AppTypography.bodySmall.copyWith(color: context.inkSecondary)),
           const SizedBox(height: AppSpacing.md),
           if (error != null)
-            Text(error!, style: AppTypography.bodySmall.copyWith(color: AppColors.danger))
+            Row(
+              children: [
+                Expanded(
+                  child: Text(error!,
+                      style: AppTypography.bodySmall.copyWith(color: AppColors.danger)),
+                ),
+                if (onRetry != null)
+                  TextButton(onPressed: onRetry, child: Text(l10n.commonRetry)),
+              ],
+            )
           else if (isLoading && route == null)
             Text(l10n.travelCalculating,
                 style: AppTypography.bodySmall.copyWith(color: context.inkSecondary))
