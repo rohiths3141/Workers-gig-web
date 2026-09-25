@@ -4,7 +4,7 @@
 
 | Concern | Technology | Where it lives |
 | --- | --- | --- |
-| Authentication (phone OTP, Google) | Firebase Authentication | Firebase project |
+| Authentication (phone OTP; admin panel also Google and email/password) | Firebase Authentication | Firebase project |
 | Identity reference | Firebase UID | `public.profiles.firebase_uid` |
 | Files (photos, video, KYC, certificates, receipts, evidence) | Firebase Storage | `firebase/storage.rules` (deny-all) |
 | File references + access rules | Postgres | `public.media_assets`, `public.media_purpose_rules` |
@@ -24,7 +24,7 @@ Flutter app ── Firebase ID token ──> PostgREST
                                      request.jwt.claims.sub = Firebase UID
                                      public.firebase_uid() resolves it (issuer must be securetoken.google.com)
 
-Admin browser ── Google / phone OTP ──> Firebase ── ID token ──> POST /api/auth/session
+Admin browser ── email+password / Google / phone OTP ──> Firebase ── ID token ──> POST /api/auth/session
                  server: Admin SDK verifyIdToken(checkRevoked)
                  sets httpOnly session cookie + httpOnly ID-token cookie
                  every request: verify session cookie, forward ID token to Supabase as bearer

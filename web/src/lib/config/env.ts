@@ -191,6 +191,15 @@ const serverEnvSchema = z.object({
     keyId: optionalString,
     keySecret: optionalString,
   }),
+  /**
+   * Prototype demo login, printed on the sign-in page for anyone to use. Both
+   * must be set for it to appear. The account itself is created with
+   * `node scripts/create-demo-admin.mjs`. Leave unset wherever the data is real.
+   */
+  demoAdmin: z.object({
+    email: optionalString,
+    password: optionalString,
+  }),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;
@@ -232,6 +241,10 @@ function readServerEnv(): ServerEnv {
       keyId: process.env.RAZORPAY_KEY_ID || undefined,
       keySecret: process.env.RAZORPAY_KEY_SECRET || undefined,
     },
+    demoAdmin: {
+      email: process.env.DEMO_ADMIN_EMAIL || undefined,
+      password: process.env.DEMO_ADMIN_PASSWORD || undefined,
+    },
   };
 
   const parsed = serverEnvSchema.safeParse(raw);
@@ -251,6 +264,12 @@ let cachedServerEnv: ServerEnv | null = null;
 export function serverEnv(): ServerEnv {
   cachedServerEnv ??= readServerEnv();
   return cachedServerEnv;
+}
+
+/** The prototype demo login to show on the sign-in page, or null when not configured. */
+export function demoAdminLogin(): { email: string; password: string } | null {
+  const { email, password } = serverEnv().demoAdmin;
+  return email && password ? { email, password } : null;
 }
 
 /** True only in a real production deployment. Gates development affordances. */

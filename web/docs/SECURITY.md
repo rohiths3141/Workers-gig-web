@@ -14,6 +14,8 @@
 | Self-approval of verification | `decide_verification()` refuses when reviewer UID equals worker UID. |
 | Audit tampering | Trigger refuses UPDATE/DELETE on `audit_logs` and `wallet_transactions` for every role. |
 | Reading another user's KYC document | Storage rules deny all client access; media opened by id only; purpose-rule permission check; path prefix enforced by trigger; access audited; 5-minute URLs. |
+| Admin password guessed or reused | Firebase holds and checks passwords (never sent to this server) and rate-limits attempts (`auth/too-many-requests`). Email enumeration protection makes an unknown email look the same as a wrong password, and the reset form gives the same answer for every address. A password gets a Firebase account only; admin access still needs an active `admin_users` row for that UID. |
+| Prototype demo login published on `/login` | Shown only while `DEMO_ADMIN_EMAIL` and `DEMO_ADMIN_PASSWORD` are set. It is a separate account marked with a `demo: true` Firebase claim, so the script can't take over or reset a real person's account. `SUPER_ADMIN` is refused. Leave it unset wherever the data is real. |
 | Open redirect after login | `safeRedirect()` accepts only admin-relative paths. |
 | PostgREST filter injection via search | `sanitiseSearchTerm()` strips filter syntax; enum filters narrowed with `asEnumValue()`. |
 | Mass data extraction | Page size capped at 100; server-side pagination everywhere. |

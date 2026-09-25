@@ -5,7 +5,7 @@ import { ShieldCheck } from 'lucide-react';
 
 import { LoginForm } from '@/app/login/login-form';
 import { getAdminSession } from '@/lib/auth/admin-session';
-import { publicEnv } from '@/lib/config/env';
+import { demoAdminLogin, publicEnv } from '@/lib/config/env';
 import { safeRedirect } from '@/lib/auth/safe-redirect';
 import { adminRoutes, publicRoutes } from '@/lib/config/routes';
 
@@ -57,11 +57,11 @@ export default async function LoginPage({
               Sign in to the admin panel
             </h1>
             <p className="mt-1.5 text-sm text-ink-600">
-              Use the Google account or mobile number registered to your administrator profile.
+              Use the email, Google account or mobile number registered to your administrator profile.
             </p>
 
             <div className="mt-6">
-              <LoginForm redirectTo={safeRedirect(params.next)} />
+              <LoginForm redirectTo={safeRedirect(params.next)} demoLogin={demoAdminLogin()} />
             </div>
           </div>
 

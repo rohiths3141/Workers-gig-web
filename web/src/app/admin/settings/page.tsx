@@ -14,6 +14,12 @@ import { AdminRole } from '@/types/domain';
 export const metadata: Metadata = { title: 'Settings' };
 export const dynamic = 'force-dynamic';
 
+const SIGN_IN_PROVIDER_LABELS: Record<string, string> = {
+  password: 'Email and password',
+  'google.com': 'Google',
+  phone: 'Phone OTP',
+};
+
 /**
  * Settings.
  *
@@ -66,10 +72,10 @@ export default async function SettingsPage() {
             <CardHeader title="Security" />
             <CardBody className="space-y-3 text-sm text-ink-700">
               <FieldGrid columns={2}>
-                <Field label="Sign-in provider" value={session.user.signInProvider === 'google.com' ? 'Google' : session.user.signInProvider === 'phone' ? 'Phone OTP' : (session.user.signInProvider ?? '—')} />
+                <Field label="Sign-in provider" value={session.user.signInProvider ? (SIGN_IN_PROVIDER_LABELS[session.user.signInProvider] ?? session.user.signInProvider) : '—'} />
                 <Field label="Session started" value={formatDateTime(new Date(session.user.authTime * 1000))} />
               </FieldGrid>
-              <p className="text-xs text-ink-500">Sessions are httpOnly cookies verified on every request. Signing out revokes your sessions on all devices. There is no password on this platform.</p>
+              <p className="text-xs text-ink-500">Sessions are httpOnly cookies verified on every request. Signing out revokes your sessions on all devices. Passwords are held by Firebase and never reach this server.</p>
             </CardBody>
           </Card>
         </div>

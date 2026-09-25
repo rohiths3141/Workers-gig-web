@@ -43,6 +43,7 @@ You'll fill `.env.local` in the steps below. Never commit it.
 **Build → Authentication → Get started → Sign-in method**:
 - Enable **Google** (set a support email).
 - Enable **Phone**.
+- Enable **Email/Password** for admin sign-in. Leave **Email link (passwordless sign-in)** off.
 
 For development, add a test number so you don't use SMS quota: **Phone → Phone numbers for testing**, e.g. `+91 99999 00000` with code `123456`.
 
@@ -113,6 +114,39 @@ There is deliberately no way to become an admin from the UI, so the first one is
 2. Copy your **User UID** from **Firebase → Authentication → Users**.
 3. Open `supabase/seed/bootstrap_super_admin.sql`, replace the three `REPLACE_WITH_…` values, and run it in the SQL Editor.
 4. Sign in again. You'll land on the admin dashboard.
+
+To sign in with an email and password rather than Google or a phone number, either:
+
+- **New account:** in **Firebase → Authentication → Users → Add user**, enter the email and a password, and use that user's UID in step 3. Or
+- **Existing admin:** give the account a password with the script below. The account keeps its UID, so its `admin_users` row still matches, and Google or phone sign-in keeps working.
+
+```bash
+node scripts/set-admin-password.mjs admin@example.com
+```
+
+The script only accepts the email of an **active** row in `admin_users`. It asks for the password twice with the input hidden. Run it in PowerShell, Command Prompt or Windows Terminal. In Git Bash, prefix it with `winpty`. It writes an `admin.password_set` row to `audit_logs`.
+
+A forgotten password can be reset from **Forgot password?** on the sign-in page. Firebase emails the link and hosts the page where the new password is set.
+
+### 2.4.1 Prototype demo login (optional)
+To show a shared login on the sign-in page for demos and reviewers, add these lines to `.env.local`:
+
+```
+DEMO_ADMIN_EMAIL=demo-admin@example.com
+DEMO_ADMIN_PASSWORD=<choose one, 8+ characters>
+```
+
+Then create the account and restart `npm run dev`:
+
+```bash
+node scripts/create-demo-admin.mjs
+```
+
+The sign-in page then shows the email and password with a **Fill in demo login** button. The account is a separate `ADMIN` (set `DEMO_ADMIN_ROLE` to change it; `SUPER_ADMIN` is refused). The email doesn't need to be a real inbox.
+
+- **Anyone who opens the site can sign in with it.** Only set these where the data is test data. To show it on Vercel, add both variables there and redeploy; remove them to hide it again.
+- If a visitor changes the password, re-run the script. It resets the password from `.env.local`.
+- Signing out revokes that account's sessions on every device. If two people use the demo login at once, one signing out signs the other out too.
 
 ### 2.5 Optional: sample data (development only)
 Paste this line first, then the whole of `supabase/seed/dev_seed.sql`, and run both together:
@@ -185,6 +219,8 @@ NEXT_PUBLIC_ADMIN_PATH_PREFIX=/admin
 | App fails to start with "Invalid public environment configuration" | A `NEXT_PUBLIC_*` value is missing | Fill every variable listed in the error |
 | Google popup: `auth/unauthorized-domain` | Domain not authorized in Firebase | Step 5 |
 | Sign-in succeeds but says "not an administrator" | No `admin_users` row for your UID | Step 2.4 |
+| "That email and password do not match" | Wrong password, or the account has no password yet (e.g. it was created with Google) | Step 2.4: `scripts/set-admin-password.mjs`, or **Forgot password?** |
+| "This sign-in method is not enabled" | Email/Password provider is off | Step 1.2 |
 | Admin, but every page is empty or you're sent back to login | Third-Party Auth not configured, or wrong Firebase project ID | Step 2.2 |
 | "Your account is still being set up" | Claim was added but a fresh token wasn't picked up yet | Sign in again |
 | SQL Editor: `relation "…" does not exist` | Files run out of order, or only part of the script was highlighted | Run `0001`→`0012` in order with nothing highlighted, or use `supabase db push` |

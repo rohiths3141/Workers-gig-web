@@ -3,6 +3,8 @@
 import {
   GoogleAuthProvider,
   RecaptchaVerifier,
+  sendPasswordResetEmail,
+  signInWithEmailAndPassword,
   signInWithPhoneNumber,
   signInWithPopup,
   signOut,
@@ -16,9 +18,10 @@ import { apiRoutes } from '@/lib/config/routes';
 /**
  * Sign-in.
  *
- * Two methods, and only two: phone OTP and Google. There is no password
- * anywhere on this platform, which removes password reuse, credential stuffing
- * and reset-flow takeover from the threat model entirely.
+ * Three methods: email and password, Google, and phone OTP. Passwords are held
+ * and checked by Firebase only — this server never receives one, and Firebase
+ * rate-limits guessing. Password accounts are for administrators; the mobile
+ * apps offer no password sign-in.
  *
  * Every path ends the same way: Firebase returns an ID token, the token is
  * posted to the server, and the server — not the browser — decides what the
@@ -40,9 +43,24 @@ export class SignInError extends Error {
  *
  * Deliberately vague where being specific would help an attacker: an OTP that
  * is wrong and an OTP that has expired both say what to do next without
- * confirming whether the number is registered.
+ * confirming whether the number is registered, and an unknown email reads the
+ * same as a wrong password.
  */
+const WRONG_EMAIL_OR_PASSWORD = 'That email and password do not match. Check them and try again.';
+
 const MESSAGES: Record<string, string> = {
+  'auth/invalid-email': 'Enter a valid email address.',
+  'auth/missing-email': 'Enter your email address.',
+  'auth/missing-password': 'Enter your password.',
+  // With email enumeration protection on, Firebase reports both an unknown
+  // email and a wrong password as invalid-credential. The older codes are
+  // mapped the same way in case that protection is ever turned off.
+  'auth/invalid-credential': WRONG_EMAIL_OR_PASSWORD,
+  'auth/invalid-login-credentials': WRONG_EMAIL_OR_PASSWORD,
+  'auth/wrong-password': WRONG_EMAIL_OR_PASSWORD,
+  'auth/user-not-found': WRONG_EMAIL_OR_PASSWORD,
+  'auth/operation-not-allowed':
+    'This sign-in method is not enabled. Contact the platform administrator.',
   'auth/invalid-phone-number': 'Enter a valid mobile number including the country code.',
   'auth/missing-phone-number': 'Enter your mobile number.',
   'auth/quota-exceeded': 'Too many codes requested right now. Please try again later.',
@@ -70,6 +88,36 @@ function toSignInError(error: unknown): SignInError {
     code,
     MESSAGES[code] ?? 'Sign-in could not be completed. Please try again.',
   );
+}
+
+/* ==========================================================================
+   Email and password
+   ========================================================================== */
+
+export async function signInWithEmail(email: string, password: string): Promise<User> {
+  try {
+    const credential = await signInWithEmailAndPassword(firebaseAuth(), email, password);
+    return credential.user;
+  } catch (error) {
+    throw toSignInError(error);
+  }
+}
+
+/**
+ * Email a link to set a new password. Firebase hosts the page the link opens,
+ * so no password passes through this site.
+ *
+ * Resolves whether or not an account uses that address, so the form cannot be
+ * used to discover which emails are registered.
+ */
+export async function sendPasswordReset(email: string): Promise<void> {
+  try {
+    await sendPasswordResetEmail(firebaseAuth(), email);
+  } catch (error) {
+    const signInError = toSignInError(error);
+    if (signInError.code === 'auth/user-not-found') return;
+    throw signInError;
+  }
 }
 
 /* ==========================================================================

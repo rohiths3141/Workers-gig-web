@@ -5,9 +5,11 @@
 -- very first one has to be created directly in the database. Run this once per
 -- environment (development, staging, production).
 --
--- 1. Sign in to the admin panel once with the Google account or phone number
---    that should become the first administrator. The sign-in is refused (not an
---    admin yet), but it creates that person's row in public.profiles.
+-- 1. Sign in to the admin panel once with the Google account, phone number or
+--    email and password that should become the first administrator. (For email
+--    and password, create the user first in Firebase Console > Authentication >
+--    Users > Add user.) The sign-in is refused (not an admin yet), but it
+--    creates that person's row in public.profiles.
 -- 2. Copy their Firebase UID from Firebase Console > Authentication > Users.
 -- 3. Replace the three values below and run this script in the SQL editor.
 -- 4. Sign in again. You now land on the dashboard.
