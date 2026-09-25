@@ -6,8 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../l10n/app_localizations.dart';
 
-/// The languages this app ships: English and the 22 languages of the Eighth
-/// Schedule of the Constitution.
+/// The languages this app ships: English and ten of India's most widely
+/// spoken languages.
 ///
 /// Every one of them carries every string in the app — the l10n completeness
 /// test fails the build otherwise — so a customer who picks their language
@@ -18,34 +18,17 @@ import '../../l10n/app_localizations.dart';
 enum AppLocale {
   english('en', 'English', 'English'),
   hindi('hi', 'हिन्दी', 'Hindi'),
-  assamese('as', 'অসমীয়া', 'Assamese'),
   bengali('bn', 'বাংলা', 'Bengali'),
-  bodo('brx', 'बड़ो', 'Bodo', widgetFallback: 'hi'),
-  dogri('doi', 'डोगरी', 'Dogri', widgetFallback: 'hi'),
   gujarati('gu', 'ગુજરાતી', 'Gujarati'),
   kannada('kn', 'ಕನ್ನಡ', 'Kannada'),
-  kashmiri('ks', 'کٲشُر', 'Kashmiri', widgetFallback: 'ur'),
-  konkani('kok', 'कोंकणी', 'Konkani', widgetFallback: 'mr'),
-  maithili('mai', 'मैथिली', 'Maithili', widgetFallback: 'hi'),
   malayalam('ml', 'മലയാളം', 'Malayalam'),
-  manipuri('mni', 'ꯃꯩꯇꯩꯂꯣꯟ', 'Manipuri', widgetFallback: 'en'),
   marathi('mr', 'मराठी', 'Marathi'),
-  nepali('ne', 'नेपाली', 'Nepali'),
   odia('or', 'ଓଡ଼ିଆ', 'Odia'),
-  punjabi('pa', 'ਪੰਜਾਬੀ', 'Punjabi'),
-  sanskrit('sa', 'संस्कृतम्', 'Sanskrit', widgetFallback: 'hi'),
-  santali('sat', 'ᱥᱟᱱᱛᱟᱲᱤ', 'Santali', widgetFallback: 'en'),
-  sindhi('sd', 'سنڌي', 'Sindhi', widgetFallback: 'ur'),
   tamil('ta', 'தமிழ்', 'Tamil'),
   telugu('te', 'తెలుగు', 'Telugu'),
   urdu('ur', 'اردو', 'Urdu');
 
-  const AppLocale(
-    this.code,
-    this.nativeName,
-    this.englishName, {
-    this.widgetFallback,
-  });
+  const AppLocale(this.code, this.nativeName, this.englishName);
 
   final String code;
 
@@ -53,13 +36,6 @@ enum AppLocale {
   /// someone who cannot read English can still find their language.
   final String nativeName;
   final String englishName;
-
-  /// Flutter ships its own widget strings (date picker, text selection menu,
-  /// tooltips) and text direction for 13 of the 22 languages. For the other
-  /// nine this names the language those widgets borrow instead: one the reader
-  /// is likely to also read, in the same direction — Urdu for the Perso-Arabic
-  /// scripts, Hindi or Marathi for Devanagari.
-  final String? widgetFallback;
 
   Locale get locale => Locale(code);
 
@@ -80,12 +56,6 @@ enum AppLocale {
 
   static List<Locale> get supportedLocales =>
       AppLocale.values.map((l) => l.locale).toList(growable: false);
-
-  /// Locale codes whose Flutter widget strings come from another language.
-  static final Map<String, String> widgetFallbacks = {
-    for (final l in AppLocale.values)
-      if (l.widgetFallback != null) l.code: l.widgetFallback!,
-  };
 }
 
 /// The strings for the language on screen, for code that has no
