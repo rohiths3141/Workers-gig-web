@@ -1,0 +1,41 @@
+{
+  "commonContinue": "Continue",
+  "commonSaving": "Saving…",
+  "welcomePromiseWorkTitle": "Get suitable work",
+  "welcomePromiseWorkBody": "Jobs near you, matched to the trades you actually offer.",
+  "welcomePromiseSkillsTitle": "Prove your skills",
+  "welcomePromiseSkillsBody": "Your ITI and diploma certificates, verified once and shown to every customer.",
+  "welcomePromiseTrackTitle": "Track every job",
+  "welcomePromiseTrackBody": "From accepting a job to finishing it, with photo records at each step.",
+  "welcomePromisePaidTitle": "Get paid securely",
+  "welcomePromisePaidBody": "Every rupee recorded, with a clear statement and withdrawals on your terms.",
+  "welcomeHeadline": "Work that finds you",
+  "welcomeSubtitle": "Wervexa connects skilled professionals with customers who need them.",
+  "welcomeGetStarted": "Get started",
+  "welcomeCodeNotice": "We will send a one-time code to your mobile number.",
+  "phoneTitle": "What is your mobile number?",
+  "phoneSubtitle": "We will send you a one-time code to confirm it is you.",
+  "phoneSendCode": "Send code",
+  "phoneSending": "Sending…",
+  "authNewCodeSent": "We sent a new code.",
+  "otpTitle": "Enter the code",
+  "otpSentTo": "We sent a 6-digit code to {phone}.",
+  "otpResendIn": "{seconds, plural, =1{You can ask for a new code in 1 second} other{You can ask for a new code in {seconds} seconds}}",
+  "@otpResendIn": {
+    "placeholders": {
+      "seconds": {"type": "int"}
+    }
+  },
+  "otpSendNew": "Send a new code",
+  "otpVerify": "Verify",
+  "otpVerifying": "Verifying…",
+  "registerNameRequired": "Please enter your full name",
+  "registerEmailInvalid": "Please enter a valid email address",
+  "registerTitle": "What should we call you?",
+  "registerSubtitle": "This is the name customers will see.",
+  "registerNameLabel": "Full name",
+  "registerNameHint": "Arun Kumar",
+  "registerEmailLabel": "Email (optional)",
+  "registerEmailHelper": "For receipts and statements.",
+  "registerVerifiedPhone": "Verified: {phone}"
+}

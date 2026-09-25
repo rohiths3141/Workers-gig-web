@@ -1,0 +1,9 @@
+{
+  "assistantTitle": "Service Assistant",
+  "assistantSubtitle": "Finds the right trade for your problem",
+  "assistantStartOver": "Start over",
+  "assistantMatchedOn": "Matched on: {terms}",
+  "assistantFindWorkers": "Find workers",
+  "assistantPostRequest": "Post a request",
+  "assistantInputHint": "Describe the problem..."
+}

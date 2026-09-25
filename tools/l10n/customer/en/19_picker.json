@@ -1,0 +1,12 @@
+{
+  "pickerEnterAddress": "Please enter or confirm the address for this pin",
+  "pickerTitle": "Select Service Address",
+  "pickerGettingLocation": "Getting your location...",
+  "pickerPermissionDenied": "Location permission denied — move the map manually to pick your address.",
+  "pickerConfirmPin": "Confirm Service Pin Position",
+  "pickerAddressLabel": "House / Flat / Street Name",
+  "pickerAddressHint": "e.g. #102, Green Avenue, Indiranagar",
+  "pickerLandmarkLabel": "Landmark (Optional)",
+  "pickerLandmarkHint": "e.g. Near HDFC Bank ATM",
+  "pickerConfirm": "Confirm Location & Proceed"
+}

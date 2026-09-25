@@ -1,0 +1,11 @@
+{
+  "commonEdit": "Edit",
+  "commonDelete": "Delete",
+  "addressesAdd": "Add New Address",
+  "addressesEmpty": "You haven't saved any addresses yet",
+  "addressesEmptyMessage": "Add a service address to book faster next time.",
+  "addressesDefaultBadge": "DEFAULT",
+  "addressesSetDefault": "Set as default",
+  "addressesLoadFailed": "Could not load addresses.",
+  "addressesLabelSheet": "Label this address"
+}

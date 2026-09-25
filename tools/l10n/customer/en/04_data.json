@@ -1,0 +1,8 @@
+{
+  "authPhoneTenDigits": "Enter a 10-digit mobile number.",
+  "authCodeSendTimeout": "We could not send the code. Check your network and try again.",
+  "authEnterReceivedCode": "Enter the code you received.",
+  "authSignInIncomplete": "Sign-in did not complete. Please try again.",
+  "authSignInToContinue": "Please sign in to continue.",
+  "paymentsNotConfigured": "Payments are not configured for this build yet."
+}

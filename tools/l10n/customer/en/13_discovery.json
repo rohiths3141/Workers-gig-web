@@ -1,0 +1,16 @@
+{
+  "discoveryTitle": "Available Professionals",
+  "discoveryMissingDetails": "Missing service or location details.",
+  "discoveryLocalExperts": "Available Local Experts",
+  "discoveryWithin": "Within",
+  "discoveryNoProviders": "No providers available nearby",
+  "discoveryTryLargerRadius": "Try a larger search radius or check back later.",
+  "discoveryLoadFailed": "Could not load nearby providers.",
+  "discoveryServicesForJob": "{count, plural, =1{1 service for this job} other{{count} services for this job}}",
+  "@discoveryServicesForJob": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "discoveryBook": "Book"
+}

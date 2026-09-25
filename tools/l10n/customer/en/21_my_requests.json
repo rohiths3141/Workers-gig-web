@@ -1,0 +1,10 @@
+{
+  "commonLoadFailedDetail": "Failed to load: {detail}",
+  "myRequestsTitle": "My Service Requests",
+  "myRequestsTabAll": "All",
+  "myRequestsNew": "New Request",
+  "myRequestsNoActive": "No active requests",
+  "myRequestsNoCompleted": "No completed requests",
+  "myRequestsNone": "No service requests yet",
+  "myRequestsEmptyMessage": "Post a requirement and let workers come to you."
+}

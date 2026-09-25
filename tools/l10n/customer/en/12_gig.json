@@ -1,0 +1,17 @@
+{
+  "gigUnknownProfessional": "Unknown professional",
+  "gigNewProfessional": "New professional",
+  "gigRatingWithCount": "{rating} ({count, plural, =1{1 review} other{{count} reviews}})",
+  "@gigRatingWithCount": {
+    "placeholders": {
+      "rating": {"type": "String"},
+      "count": {"type": "int"}
+    }
+  },
+  "gigPricing": "Pricing",
+  "gigServiceRate": "Service Rate",
+  "gigFinalAmountNote": "The final amount is confirmed by your professional and shown on your booking once created.",
+  "gigKycVerified": "KYC Verified",
+  "gigBackgroundVerified": "Background Verified",
+  "gigBookNow": "Book Now →"
+}

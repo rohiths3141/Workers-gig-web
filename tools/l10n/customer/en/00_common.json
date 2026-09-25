@@ -1,0 +1,27 @@
+{
+  "commonRetry": "Retry",
+  "commonTryAgain": "Try again",
+  "commonSignOut": "Sign out",
+  "assistantFabLabel": "Ask AI",
+  "navHome": "Home",
+  "navExplore": "Explore",
+  "navBookings": "Bookings",
+  "navAlerts": "Alerts",
+  "navProfile": "Profile",
+  "configErrorTitle": "App not configured",
+  "configErrorBody": "This build is missing {keys}. Run with:\n\n{command}\n\nso the app can reach the real backend.",
+  "@configErrorBody": {
+    "placeholders": {
+      "keys": {"type": "String"},
+      "command": {"type": "String"}
+    }
+  },
+  "sessionProfileLoadFailedRetry": "We could not load your profile. Please try again.",
+  "sessionProfileLoadFailed": "We could not load your profile",
+  "sessionCheckClock": "Check your phone's clock",
+  "splashTagline": "Home services, done right.",
+  "timelineBookingConfirmed": "Booking Confirmed",
+  "timelineProviderOnTheWay": "Provider on the way",
+  "timelineServiceInProgress": "Service in Progress",
+  "timelineCompleted": "Completed"
+}

@@ -1,0 +1,18 @@
+{
+  "categoryServiceDetails": "Service Details",
+  "categoryTagline": "Book verified, background-checked local experts with upfront pricing & service guarantee.",
+  "categoryWhatHelp": "What do you need help with?",
+  "categoryDescribeElse": "Describe something else",
+  "categoryLoadFailed": "Could not load this service.",
+  "notificationsTitle": "Notifications & Alerts",
+  "notificationsEmpty": "You're all caught up",
+  "notificationsLoadFailed": "Could not load notifications.",
+  "timeJustNow": "Just now",
+  "timeMinutesAgo": "{minutes}m ago",
+  "timeHoursAgo": "{hours}h ago",
+  "timeYesterday": "Yesterday",
+  "completedTitle": "Service Completed!",
+  "completedThanks": "Thanks for using our services.",
+  "completedViewBookings": "View Bookings",
+  "completedBackHome": "Back to Home"
+}

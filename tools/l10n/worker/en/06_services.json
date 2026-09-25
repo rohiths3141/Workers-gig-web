@@ -1,0 +1,11 @@
+{
+  "serviceElectrical": "Electrical",
+  "servicePlumbing": "Plumbing",
+  "serviceAcService": "AC Service",
+  "serviceApplianceRepair": "Appliance Repair",
+  "serviceCarpentry": "Carpentry",
+  "servicePainting": "Painting",
+  "serviceCleaning": "Cleaning",
+  "servicePestControl": "Pest Control",
+  "serviceOtherHome": "Other Home Services"
+}

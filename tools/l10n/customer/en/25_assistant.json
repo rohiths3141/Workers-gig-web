@@ -1,0 +1,24 @@
+{
+  "assistantOpening": "Tell me what's wrong, in your own words — and I'll find the right professional for it.",
+  "assistantCatalogueFailed": "{reason} I need the service list to answer that.",
+  "assistantCatalogueError": "Something went wrong loading the service list.",
+  "assistantGreeting": "Hello. What do you need help with at home? A leaking tap, an AC that stopped cooling, a switch that sparks — whatever it is, describe it however you like.",
+  "assistantTooVague": "I can help — I just need to know what the problem is. What is not working?",
+  "assistantMultipleJobs": "That sounds like {count} separate jobs — they need different trades. Here is each one:",
+  "@assistantMultipleJobs": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "assistantAmbiguous": "I want to get this right — that could go to more than one trade. Which is closer?",
+  "assistantUnmatched": "I could not place that against the services on the platform. Pick the closest one and I will take your description across — or post it as a request and let professionals come to you.",
+  "assistantConfidentWithProblem": "That sounds like {service} — most likely \"{problem}\".",
+  "@assistantConfidentWithProblem": {
+    "placeholders": {
+      "service": {"type": "String"},
+      "problem": {"type": "String"}
+    }
+  },
+  "assistantConfident": "That sounds like a job for {service}.",
+  "assistantChosen": "{service} it is. Your description goes across as you wrote it."
+}

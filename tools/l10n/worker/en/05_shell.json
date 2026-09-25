@@ -1,0 +1,8 @@
+{
+  "navHome": "Home",
+  "navJobs": "Jobs",
+  "navWallet": "Wallet",
+  "navProfile": "Profile",
+  "sessionProfileLoadFailedRetry": "We could not load your profile. Please try again.",
+  "commonSignOut": "Sign out"
+}

@@ -1,0 +1,34 @@
+{
+  "commonBack": "Back",
+  "paymentCouldNotOpen": "Could not open the payment screen. Please try again.",
+  "paymentReceived": "Payment received. Your booking has been sent to the professional.",
+  "paymentNotConfirmed": "We could not confirm this payment: {reason}. If money was deducted, contact support with reference {reference}.",
+  "@paymentNotConfirmed": {
+    "placeholders": {
+      "reason": {"type": "String"},
+      "reference": {"type": "String"}
+    }
+  },
+  "paymentNotCompleted": "Payment was not completed.",
+  "paymentExternalWalletUnsupported": "Selected an external wallet ({wallet}) — not yet supported.",
+  "paymentTitle": "Payment",
+  "paymentStatusUnknown": "We could not check whether this booking has already been paid for. Please try again rather than paying twice.",
+  "paymentBookingLoadFailed": "Could not load this booking.",
+  "paymentComplete": "Payment complete",
+  "paymentPaidFor": "{amount} paid for {service}.",
+  "@paymentPaidFor": {
+    "placeholders": {
+      "amount": {"type": "String"},
+      "service": {"type": "String"}
+    }
+  },
+  "paymentViewBooking": "View booking",
+  "paymentBookingSummary": "Booking Summary",
+  "paymentProvider": "Provider",
+  "paymentService": "Service",
+  "paymentDate": "Date",
+  "paymentTime": "Time",
+  "paymentAddress": "Address",
+  "paymentTotal": "Total",
+  "paymentHeldSecurely": "Your payment is held securely and released to the professional only after you approve the work. If the booking is cancelled before work starts, you get a refund."
+}

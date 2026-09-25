@@ -1,0 +1,17 @@
+{
+  "commonGrantPermission": "Grant Permission",
+  "commonView": "View",
+  "exploreTitle": "Explore & Discover Gigs",
+  "exploreListView": "List View",
+  "exploreMapView": "Map View",
+  "exploreSearchHint": "Search services, workers or skills...",
+  "exploreLocationOffTitle": "Location services are off",
+  "exploreLocationOffMessage": "Turn on location to discover professionals near you.",
+  "exploreLocationPermissionTitle": "Location permission needed",
+  "exploreLocationPermissionMessage": "We use your location to find professionals nearby.",
+  "exploreChooseService": "Choose a service to explore",
+  "exploreChooseServiceMessage": "Select a category above to see nearby professionals.",
+  "exploreNoProfessionals": "No professionals are available for this service nearby",
+  "exploreLoadFailed": "Could not load professionals.",
+  "exploreByWorker": "By {name}"
+}

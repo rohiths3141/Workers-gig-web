@@ -1,0 +1,13 @@
+{
+  "commonChange": "Change",
+  "bookMissingDetails": "Missing booking details — please start again.",
+  "bookSlotPassed": "That time has passed. We moved you to the next available slot — check it and confirm again.",
+  "bookFailed": "Booking failed: {reason}",
+  "bookNoAddress": "No address selected",
+  "bookTitle": "Book a Service",
+  "bookSelectDate": "Select Date",
+  "bookSelectTime": "Select Time",
+  "bookSpecialInstructions": "Special Instructions (Optional)",
+  "bookSpecialInstructionsHint": "e.g. Focus on kitchen and bathroom...",
+  "bookConfirm": "Confirm Booking →"
+}

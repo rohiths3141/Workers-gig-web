@@ -1,0 +1,14 @@
+{
+  "settingsTitle": "Settings",
+  "settingsLanguage": "Language",
+  "settingsAbout": "About",
+  "settingsTerms": "Terms of service",
+  "settingsPrivacy": "Privacy policy",
+  "settingsHelp": "Help and support",
+  "settingsDeleteAccount": "Delete my account",
+  "settingsSignOutTitle": "Sign out?",
+  "settingsSignOutBody": "You will need your phone number and a code to sign back in.",
+  "settingsDeleteTitle": "Delete your account",
+  "settingsDeleteBody": "Deleting an account affects your job history, your earnings records and any open payments, so it is handled by our support team rather than automatically.\n\nRaise a support request and we will confirm once it is done.",
+  "settingsContactSupport": "Contact support"
+}

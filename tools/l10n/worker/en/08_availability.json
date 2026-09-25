@@ -1,0 +1,14 @@
+{
+  "availabilityAvailable": "Available",
+  "availabilityAvailableBody": "You can receive new jobs.",
+  "availabilityOnJob": "On a job",
+  "availabilityOnJobBody": "You will not be offered new work until this job is done.",
+  "availabilityOff": "Off",
+  "availabilityOffBody": "You will not receive new jobs.",
+  "availabilityFinishJob": "Finish your current job to become available again.",
+  "availabilityGoOff": "Go off duty",
+  "availabilityGoOn": "Go available",
+  "availabilityBeforeJobs": "Before you can receive jobs",
+  "availabilityNowOn": "You are available for work.",
+  "availabilityNowOff": "You are off duty."
+}

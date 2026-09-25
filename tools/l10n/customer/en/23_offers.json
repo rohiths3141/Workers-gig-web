@@ -1,0 +1,26 @@
+{
+  "commonCancel": "Cancel",
+  "offersTitle": "Offers Received",
+  "offersEmptyMessage": "Workers are reviewing your request. You'll be notified when someone responds.",
+  "offersPending": "Pending Offers",
+  "offersPast": "Past Offers",
+  "offersJobsCount": "{count, plural, =1{1 job} other{{count} jobs}}",
+  "@offersJobsCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "offersInsured": "Insured",
+  "offersDecline": "Decline",
+  "offersAcceptOffer": "Accept Offer",
+  "offersAcceptDialogTitle": "Accept this offer?",
+  "offersAcceptDialogBody": "A booking will be created with {worker} at {price}. All other offers will be closed.",
+  "@offersAcceptDialogBody": {
+    "placeholders": {
+      "worker": {"type": "String"},
+      "price": {"type": "String"}
+    }
+  },
+  "offersAccept": "Accept",
+  "offersBookingCreated": "Booking {code} created!"
+}

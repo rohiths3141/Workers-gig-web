@@ -1,0 +1,21 @@
+{
+  "workerStatusSetupIncomplete": "Setup incomplete",
+  "workerStatusUnderReview": "Under review",
+  "workerStatusInactive": "Inactive",
+  "workerStatusRestricted": "Restricted",
+  "workerStatusSuspended": "Suspended",
+  "homeAccount": "Account",
+  "homeWorkStatus": "Work status",
+  "availabilityOffDuty": "Off duty",
+  "earningsThisWeek": "This week",
+  "earningsThisMonth": "This month",
+  "jobNextWaitConfirm": "Waiting for the customer to confirm",
+  "jobNextStartTravel": "Start travelling",
+  "jobNextMarkArrived": "Mark yourself as arrived",
+  "jobNextStartWork": "Start the work",
+  "jobNextAskCode": "Ask the customer for the arrival code",
+  "jobNextFinish": "Finish and add photos",
+  "jobNextWaitApprove": "Waiting for the customer to approve",
+  "jobNextOpen": "Open job",
+  "jobTimeTbc": "Time to be confirmed"
+}

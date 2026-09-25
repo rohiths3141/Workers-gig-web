@@ -1,0 +1,37 @@
+{
+  "requestDetailTitle": "Request Details",
+  "requestDetailBudget": "Budget",
+  "requestDetailSchedule": "Schedule",
+  "requestDetailLocation": "Location",
+  "requestDetailNotes": "Notes",
+  "requestDetailCancel": "Cancel Request",
+  "requestDetailOffersReceived": "{count, plural, =0{No offers yet} =1{1 offer received} other{{count} offers received}}",
+  "@requestDetailOffersReceived": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "requestDetailTapToCompare": "Tap to view and compare",
+  "requestDetailWorkersSoon": "Workers will start responding soon",
+  "requestCancelDialogTitle": "Cancel this request?",
+  "requestCancelDialogBody": "All pending offers will be closed. This cannot be undone.",
+  "requestCancelKeep": "Keep it",
+  "requestCancelConfirm": "Cancel request",
+  "requestCancelled": "Request cancelled",
+  "requestExpiresInDaysHours": "Expires in {days}d {hours}h",
+  "@requestExpiresInDaysHours": {
+    "placeholders": {
+      "days": {"type": "int"},
+      "hours": {"type": "int"}
+    }
+  },
+  "requestExpiresInHoursMinutes": "Expires in {hours}h {minutes}m",
+  "@requestExpiresInHoursMinutes": {
+    "placeholders": {
+      "hours": {"type": "int"},
+      "minutes": {"type": "int"}
+    }
+  },
+  "requestExpiresInMinutes": "Expires in {minutes}m",
+  "requestExpiresSoon": "Expires soon"
+}

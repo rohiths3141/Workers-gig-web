@@ -1,0 +1,20 @@
+{
+  "activeBookingTitle": "Live Booking & Worker Tracking",
+  "activeBookingLoadFailed": "Failed to load this booking.",
+  "activeBookingMapUnavailable": "Live map unavailable for this booking.",
+  "activeBookingViewDetails": "View Booking Details",
+  "activeBookingServiceLocation": "Service location",
+  "activeBookingYourProfessional": "Your professional",
+  "activeBookingLive": "Live",
+  "activeBookingLastKnown": "Last known location",
+  "activeBookingPhoneNotShared": "Phone not shared yet",
+  "activeBookingCallProfessional": "Call professional",
+  "activeBookingMaterials": "Materials",
+  "activeBookingViewDetailsShort": "View Details",
+  "locationConnecting": "Connecting to live location...",
+  "locationLiveUnavailable": "Live location temporarily unavailable",
+  "locationLiveActive": "Live location active",
+  "locationUpdating": "Updating...",
+  "locationUnavailable": "Location temporarily unavailable",
+  "activeBookingShareStartCode": "Worker Arrived! Share Start Code:"
+}

@@ -1,0 +1,27 @@
+{
+  "commonSeeAll": "See all",
+  "distanceKm": "{km} km",
+  "homeRightNow": "Right now",
+  "homeNewWork": "New work",
+  "homeJobsWaiting": "{count, plural, =1{1 job waiting for your answer} other{{count} jobs waiting for your answer}}",
+  "@homeJobsWaiting": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "homeComingUp": "Coming up",
+  "homeEarnings": "Earnings",
+  "homeMyServices": "My services",
+  "homeVerification": "Verification",
+  "homeSupport": "Support",
+  "homeRequests": "Requests",
+  "homeMyOffers": "My offers",
+  "homeAddService": "Add a service",
+  "homeAddServiceBody": "Customers can only book you for services you have published.",
+  "homeNotReady": "Not quite ready",
+  "homeNotReadyBody": "Finish these steps and you can start receiving jobs.",
+  "homeGoodMorning": "Good morning",
+  "homeGoodAfternoon": "Good afternoon",
+  "homeGoodEvening": "Good evening",
+  "homeNotifications": "Notifications"
+}

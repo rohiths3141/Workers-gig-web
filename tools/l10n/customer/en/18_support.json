@@ -1,0 +1,23 @@
+{
+  "supportTitle": "Help & Support",
+  "supportNewTicket": "New Ticket",
+  "supportEmpty": "No support tickets yet",
+  "supportEmptyMessage": "Need help with a booking or the app? Raise a ticket and our team will respond.",
+  "supportLoadFailed": "Could not load your support tickets.",
+  "supportStatusOpen": "Open",
+  "supportStatusInProgress": "In progress",
+  "supportStatusWaitingForYou": "Waiting for you",
+  "supportStatusResolved": "Resolved",
+  "supportStatusClosed": "Closed",
+  "supportNewTicketTitle": "New Support Ticket",
+  "supportCategory": "Category",
+  "supportSubject": "Subject",
+  "supportDescribeIssue": "Describe the issue",
+  "supportFillSubjectMessage": "Please fill in a subject and message.",
+  "supportSubmitTicket": "Submit Ticket",
+  "supportTicketTitle": "Support Ticket",
+  "supportNoMessages": "No messages yet",
+  "supportMessagesLoadFailed": "Could not load messages.",
+  "supportTypeMessage": "Type a message...",
+  "supportSend": "Send"
+}

@@ -1,0 +1,15 @@
+{
+  "bookingsTitle": "My Service Bookings",
+  "bookingsTabActive": "Active",
+  "bookingsTabCompleted": "Completed",
+  "bookingsTabCancelled": "Cancelled",
+  "bookingsLoadFailed": "Could not load your bookings.",
+  "bookingsEmpty": "No bookings yet",
+  "bookingsFindService": "Find a Service",
+  "bookingsWaitingForProfessional": "Waiting for professional",
+  "bookingsCode": "Booking Code: #{code}",
+  "bookingsPayNow": "Pay now",
+  "bookingsApproveWork": "Approve work",
+  "bookingsTrackLive": "Track Live",
+  "bookingsDetails": "Details"
+}

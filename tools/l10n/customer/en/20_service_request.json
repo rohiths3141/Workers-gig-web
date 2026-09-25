@@ -1,0 +1,16 @@
+{
+  "requestSelectLocation": "Please select a service location",
+  "requestTitle": "Request {service}",
+  "requestServiceAddress": "Service Address",
+  "requestDetectingLocation": "Detecting your location…",
+  "requestTapToPickLocation": "Tap to pick service location",
+  "requestDescribeIssue": "Describe the Issue / Task",
+  "requestDescribeHint": "e.g. Living room main ceiling light switch is sparking when turned on.",
+  "requestDescribeMin": "Please describe the problem in at least 10 characters",
+  "requestAttachPhotos": "Attach Photos of Problem (Optional)",
+  "requestAddPhoto": "Add a photo",
+  "requestWhen": "When do you need the service?",
+  "requestInstant": "⚡ Instant (30 min)",
+  "requestScheduleLater": "📅 Schedule later",
+  "requestFindWorkers": "Find Available Workers"
+}

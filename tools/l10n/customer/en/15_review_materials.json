@@ -1,0 +1,28 @@
+{
+  "commonErrorDetail": "Error: {detail}",
+  "reviewTitle": "Rate Your Experience",
+  "reviewHeading": "Great Service!",
+  "reviewQuestion": "How was your experience with your professional?",
+  "reviewStars": "{count, plural, =1{1 star} other{{count} stars}}",
+  "@reviewStars": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "reviewCommentHint": "Tell us about your experience...",
+  "reviewSubmit": "Submit Review →",
+  "materialsTitle": "Material / Parts Requests",
+  "materialsEmpty": "No material requests submitted for this booking",
+  "materialsQuantityEstimated": "{quantity} · estimated",
+  "materialsQuantityActual": "{quantity} · actual",
+  "materialsReject": "Reject",
+  "materialsApprove": "Approve",
+  "materialStatusRequested": "Requested",
+  "materialStatusCustomerReview": "Awaiting your review",
+  "materialStatusApproved": "Approved",
+  "materialStatusRejected": "Rejected",
+  "materialStatusPurchased": "Purchased",
+  "materialStatusCostRecorded": "Cost recorded",
+  "materialStatusBilled": "Billed",
+  "materialStatusCancelled": "Cancelled"
+}

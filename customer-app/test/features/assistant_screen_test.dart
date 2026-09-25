@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:wervexa_customer/app/providers/providers.dart';
 import 'package:wervexa_customer/core/errors/result.dart';
+import 'package:wervexa_customer/core/localization/l10n.dart';
 import 'package:wervexa_customer/domain/entities/service_category.dart';
 import 'package:wervexa_customer/domain/entities/service_problem.dart';
 import 'package:wervexa_customer/domain/repositories/repositories.dart';
@@ -25,7 +26,11 @@ void main() {
           catalogue ?? _StubCatalogue(),
         ),
       ],
-      child: const MaterialApp(home: AssistantScreen()),
+      child: MaterialApp(
+        localizationsDelegates: appLocalizationsDelegates,
+        supportedLocales: AppLocale.supportedLocales,
+        home: const AssistantScreen(),
+      ),
     );
   }
 

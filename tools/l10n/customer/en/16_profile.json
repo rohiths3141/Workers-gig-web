@@ -1,0 +1,17 @@
+{
+  "commonSaveChanges": "Save Changes",
+  "profileTitle": "My Profile & Account",
+  "profileFallbackName": "Customer Profile",
+  "profileLanguage": "Language",
+  "profileAddresses": "Saved Service Addresses",
+  "profileAddressesSubtitle": "Manage home, office & secondary addresses",
+  "profileHistory": "Past Service History",
+  "profileHistorySubtitle": "View receipts & past bookings",
+  "profileSupport": "Help & Customer Support",
+  "profileSupportSubtitle": "Raise a ticket, track replies from our team",
+  "editProfileSaved": "Profile updated successfully",
+  "editProfileTitle": "Edit Profile",
+  "editProfileFullName": "Full Name",
+  "editProfileNameEmpty": "Name cannot be empty",
+  "editProfileEmail": "Email Address"
+}
