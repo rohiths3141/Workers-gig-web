@@ -2,6 +2,7 @@ import 'server-only';
 
 import type { AdminSession } from '@/lib/auth/admin-session';
 import { logger } from '@/lib/logging/logger';
+import { startOfPlatformDay } from '@/lib/utils/format';
 import { ACTIVE_BOOKING_STATUSES } from '@/types/domain';
 
 /**
@@ -20,26 +21,23 @@ import { ACTIVE_BOOKING_STATUSES } from '@/types/domain';
  *
  * Queries run through the operator's own RLS-scoped client, so a count can
  * never include rows they are not entitled to see.
+ *
+ * This module only counts. How each number is labelled, grouped and linked is
+ * the dashboard page's business, and the page looks metrics up by `key` — the
+ * order of `metrics` is whichever query finished first.
  */
 
 export interface DashboardMetric {
   key: string;
+  /** Used to name the metric if it fails to load. */
   label: string;
   value: number;
-  hint?: string;
-  tone?: 'neutral' | 'warning' | 'danger' | 'success';
-  href?: string;
 }
 
 export interface DashboardStats {
   metrics: DashboardMetric[];
   /** Metrics that could not be loaded, so the UI can say so honestly. */
   failed: string[];
-}
-
-function startOfToday(): string {
-  const now = new Date();
-  return new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
 }
 
 export async function loadDashboardStats(session: AdminSession): Promise<DashboardStats> {
@@ -54,7 +52,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
     key: string,
     label: string,
     build: () => PromiseLike<{ count: number | null; error: { message: string } | null }>,
-    options: Pick<DashboardMetric, 'hint' | 'tone' | 'href'> = {},
   ) => {
     try {
       const { count: value, error } = await build();
@@ -65,7 +62,7 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
         return;
       }
 
-      metrics.push({ key, label, value: value ?? 0, ...options });
+      metrics.push({ key, label, value: value ?? 0 });
     } catch (error) {
       logger.error('Dashboard metric threw', {
         key,
@@ -75,7 +72,8 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
     }
   };
 
-  const today = startOfToday();
+  // Midnight in India, not on the (UTC) server.
+  const today = startOfPlatformDay();
   const tasks: Array<Promise<void>> = [];
 
   // ---- People ----------------------------------------------------------
@@ -92,7 +90,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('workers')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'ACTIVE'),
-        { hint: 'Eligible to receive jobs', tone: 'success' },
       ),
       count(
         'workers.pending',
@@ -102,7 +99,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('workers')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'VERIFICATION_PENDING'),
-        { tone: 'warning' },
       ),
     );
   }
@@ -132,7 +128,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('worker_verifications')
             .select('*', { count: 'exact', head: true })
             .in('status', ['PENDING', 'UNDER_REVIEW', 'MORE_INFO_REQUIRED']),
-        { hint: 'Cases awaiting a decision', tone: 'warning' },
       ),
       count(
         'verification.expired',
@@ -142,7 +137,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('worker_verifications')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'EXPIRED'),
-        { hint: 'Need renewal before the worker is eligible again', tone: 'danger' },
       ),
     );
   }
@@ -158,7 +152,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('bookings')
             .select('*', { count: 'exact', head: true })
             .in('status', [...ACTIVE_BOOKING_STATUSES]),
-        { hint: 'Accepted through to awaiting approval' },
       ),
       count('bookings.today', 'Jobs created today', () =>
         db
@@ -174,7 +167,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('bookings')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'REQUESTED'),
-        { hint: 'Requested but not yet accepted', tone: 'warning' },
       ),
       count(
         'bookings.disputed',
@@ -184,7 +176,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('bookings')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'DISPUTED'),
-        { tone: 'danger' },
       ),
     );
   }
@@ -200,7 +191,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('payments')
             .select('*', { count: 'exact', head: true })
             .in('status', ['PENDING', 'PROCESSING']),
-        { tone: 'warning' },
       ),
       count(
         'payments.failed',
@@ -210,7 +200,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('payments')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'FAILED'),
-        { tone: 'danger' },
       ),
     );
   }
@@ -225,7 +214,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('payouts')
             .select('*', { count: 'exact', head: true })
             .eq('status', 'REQUESTED'),
-        { hint: 'Awaiting an approval decision', tone: 'warning' },
       ),
     );
   }
@@ -241,7 +229,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('claims')
             .select('*', { count: 'exact', head: true })
             .in('status', ['SUBMITTED', 'UNDER_REVIEW', 'MORE_INFORMATION_REQUIRED']),
-        { tone: 'danger' },
       ),
     );
   }
@@ -256,7 +243,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .from('support_tickets')
             .select('*', { count: 'exact', head: true })
             .in('status', ['OPEN', 'IN_PROGRESS', 'WAITING_FOR_USER']),
-        { tone: 'warning' },
       ),
       count(
         'support.unassigned',
@@ -267,7 +253,6 @@ export async function loadDashboardStats(session: AdminSession): Promise<Dashboa
             .select('*', { count: 'exact', head: true })
             .is('assigned_admin_id', null)
             .in('status', ['OPEN', 'IN_PROGRESS']),
-        { tone: 'warning' },
       ),
     );
   }

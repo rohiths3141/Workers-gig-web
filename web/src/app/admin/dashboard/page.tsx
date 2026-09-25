@@ -1,9 +1,29 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Inbox } from 'lucide-react';
+import {
+  ArrowRight,
+  Briefcase,
+  CalendarX,
+  CircleDollarSign,
+  ClipboardList,
+  HandCoins,
+  Hourglass,
+  Inbox,
+  LifeBuoy,
+  Scale,
+  ShieldAlert,
+  ShieldCheck,
+  Users,
+} from 'lucide-react';
 
-import { PageHeader, StatCard } from '@/components/admin/page-parts';
+import {
+  AttentionPanel,
+  KpiCard,
+  type AttentionItem,
+  type Kpi,
+} from '@/components/admin/dashboard-overview';
+import { PageHeader } from '@/components/admin/page-parts';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Card, CardHeader } from '@/components/ui/card';
 import { CellStack, DataTable, type Column } from '@/components/ui/data-table';
@@ -11,7 +31,12 @@ import { Alert, EmptyState, Skeleton } from '@/components/ui/feedback';
 import { guardPage } from '@/lib/auth/page-guard';
 import { adminRoutes } from '@/lib/config/routes';
 import { loadDashboardStats } from '@/features/dashboard/server/dashboard-stats';
-import { formatNumber, formatRelativeTime } from '@/lib/utils/format';
+import {
+  formatNumber,
+  formatRelativeTime,
+  platformHour,
+  PLATFORM_TIME_ZONE,
+} from '@/lib/utils/format';
 import type { AdminSession } from '@/lib/auth/admin-session';
 import type { BookingRow, WorkerVerificationRow } from '@/types/database.types';
 
@@ -19,12 +44,16 @@ export const metadata: Metadata = { title: 'Dashboard' };
 export const dynamic = 'force-dynamic';
 
 /**
- * Operational dashboard.
+ * Operational dashboard, in three bands:
  *
- * Every tile answers a question an operator would otherwise have to go looking
- * for: what needs a decision, what is stuck, what failed. There are no
- * decorative charts, and no metric appears unless there is a real count behind
- * it that this operator is permitted to see.
+ *   1. At a glance — one card per area (jobs, workers, customers, payments),
+ *      each a headline figure with the figures that explain it.
+ *   2. Needs attention — only the queues that have something in them, most
+ *      urgent first; empty queues collapse into one "all clear" line.
+ *   3. The oldest verification cases and stuck jobs, row by row.
+ *
+ * Every number links to the list it counts. No metric appears unless there is
+ * a real count behind it that this operator is permitted to see.
  */
 export default async function DashboardPage() {
   const { session } = await guardPage('services.read', adminRoutes.dashboard());
@@ -33,14 +62,14 @@ export default async function DashboardPage() {
     <>
       <PageHeader
         title={`Good ${timeOfDay()}, ${session.fullName.split(' ')[0]}`}
-        description="Everything currently waiting on an operator, and the state of jobs in flight."
+        description={`${todayLabel()} · What is waiting on you, and how the platform is doing.`}
       />
 
-      <Suspense fallback={<MetricsSkeleton />}>
-        <Metrics session={session} />
+      <Suspense fallback={<OverviewSkeleton />}>
+        <Overview session={session} />
       </Suspense>
 
-      <div className="mt-6 grid gap-5 xl:grid-cols-2">
+      <div className="mt-5 grid gap-5 xl:grid-cols-2">
         {session.permissions.includes('verification.read') && (
           <Suspense fallback={<PanelSkeleton title="Verification queue" />}>
             <VerificationQueuePanel session={session} />
@@ -58,10 +87,10 @@ export default async function DashboardPage() {
 }
 
 /* ==========================================================================
-   Metrics
+   At a glance + needs attention
    ========================================================================== */
 
-async function Metrics({ session }: { session: AdminSession }) {
+async function Overview({ session }: { session: AdminSession }) {
   const { metrics, failed } = await loadDashboardStats(session);
 
   if (metrics.length === 0 && failed.length === 0) {
@@ -76,6 +105,10 @@ async function Metrics({ session }: { session: AdminSession }) {
     );
   }
 
+  const value = new Map(metrics.map((metric) => [metric.key, metric.value]));
+  const kpis = buildKpis(value);
+  const attention = buildAttention(value);
+
   return (
     <>
       {failed.length > 0 && (
@@ -85,20 +118,174 @@ async function Metrics({ session }: { session: AdminSession }) {
         </Alert>
       )}
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {metrics.map((metric) => (
-          <StatCard
-            key={metric.key}
-            label={metric.label}
-            value={formatNumber(metric.value)}
-            hint={metric.hint}
-            tone={metric.value === 0 ? 'neutral' : metric.tone}
-            href={metric.href}
-          />
-        ))}
-      </div>
+      {kpis.length > 0 && (
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+          {kpis.map((kpi) => (
+            <KpiCard key={kpi.key} kpi={kpi} />
+          ))}
+        </div>
+      )}
+
+      {attention.length > 0 && (
+        <div className="mt-5">
+          <AttentionPanel items={attention} />
+        </div>
+      )}
     </>
   );
+}
+
+/** The headline cards. An area is left out when its main count is unavailable. */
+function buildKpis(value: Map<string, number>): Kpi[] {
+  const kpis: Kpi[] = [];
+
+  const activeJobs = value.get('bookings.active');
+  if (activeJobs !== undefined) {
+    const today = value.get('bookings.today');
+    kpis.push({
+      key: 'jobs',
+      label: 'Active jobs',
+      icon: ClipboardList,
+      href: adminRoutes.bookings(),
+      value: activeJobs,
+      detail: today !== undefined ? `${formatNumber(today)} created today` : undefined,
+    });
+  }
+
+  const activeWorkers = value.get('workers.active');
+  if (activeWorkers !== undefined) {
+    const total = value.get('workers.total');
+    const pending = value.get('workers.pending');
+    kpis.push({
+      key: 'workers',
+      label: 'Active workers',
+      icon: Briefcase,
+      href: `${adminRoutes.workers()}?status=ACTIVE`,
+      value: activeWorkers,
+      suffix: total !== undefined ? `of ${formatNumber(total)}` : undefined,
+      ratio: total ? activeWorkers / total : undefined,
+      detail:
+        pending !== undefined ? `${formatNumber(pending)} awaiting verification` : undefined,
+    });
+  }
+
+  const activeCustomers = value.get('customers.active');
+  if (activeCustomers !== undefined) {
+    kpis.push({
+      key: 'customers',
+      label: 'Active customers',
+      icon: Users,
+      href: `${adminRoutes.customers()}?status=ACTIVE`,
+      value: activeCustomers,
+      detail: 'Accounts in good standing',
+    });
+  }
+
+  const paymentsInProgress = value.get('payments.pending');
+  if (paymentsInProgress !== undefined) {
+    kpis.push({
+      key: 'payments',
+      label: 'Payments in progress',
+      icon: CircleDollarSign,
+      href: adminRoutes.payments(),
+      value: paymentsInProgress,
+      detail: 'Pending or processing',
+    });
+  }
+
+  return kpis;
+}
+
+/**
+ * Every queue that can need an operator. Warning: work to get through. Danger:
+ * something failed or is contested.
+ */
+const ATTENTION: ReadonlyArray<Omit<AttentionItem, 'count'>> = [
+  {
+    key: 'bookings.unmatched',
+    label: 'Jobs waiting for a worker',
+    hint: 'Requested, and nobody has accepted yet',
+    icon: Hourglass,
+    href: `${adminRoutes.bookings()}?status=REQUESTED`,
+    clearLabel: 'No jobs waiting for a worker',
+    tone: 'warning',
+  },
+  {
+    key: 'verification.queue',
+    label: 'Verification cases to decide',
+    hint: 'Identity, qualification and background checks',
+    icon: ShieldCheck,
+    href: adminRoutes.verification(),
+    clearLabel: 'Verification queue empty',
+    tone: 'warning',
+  },
+  {
+    key: 'payouts.pending',
+    label: 'Payouts to approve',
+    hint: 'Workers asking to withdraw their earnings',
+    icon: HandCoins,
+    href: adminRoutes.payouts(),
+    clearLabel: 'No payouts to approve',
+    tone: 'warning',
+  },
+  {
+    key: 'support.open',
+    label: 'Open support tickets',
+    icon: LifeBuoy,
+    href: adminRoutes.support(),
+    clearLabel: 'No open tickets',
+    tone: 'warning',
+  },
+  {
+    key: 'bookings.disputed',
+    label: 'Disputed jobs',
+    hint: 'A customer or worker has raised a dispute',
+    icon: Scale,
+    href: `${adminRoutes.bookings()}?status=DISPUTED`,
+    clearLabel: 'No disputed jobs',
+    tone: 'danger',
+  },
+  {
+    key: 'payments.failed',
+    label: 'Failed payments',
+    hint: 'Customer payments that did not go through',
+    icon: CircleDollarSign,
+    href: `${adminRoutes.payments()}?status=FAILED`,
+    clearLabel: 'No failed payments',
+    tone: 'danger',
+  },
+  {
+    key: 'claims.open',
+    label: 'Open damage claims',
+    hint: 'Waiting for a review decision',
+    icon: ShieldAlert,
+    href: adminRoutes.claims(),
+    clearLabel: 'No open claims',
+    tone: 'danger',
+  },
+  {
+    key: 'verification.expired',
+    label: 'Expired verifications',
+    hint: 'The worker must renew before taking jobs',
+    icon: CalendarX,
+    href: `${adminRoutes.verification()}?tab=expired`,
+    clearLabel: 'No expired verifications',
+    tone: 'danger',
+  },
+];
+
+function buildAttention(value: Map<string, number>): AttentionItem[] {
+  const unassigned = value.get('support.unassigned');
+
+  return ATTENTION.flatMap((item) => {
+    const count = value.get(item.key);
+    if (count === undefined) return [];
+
+    if (item.key === 'support.open' && unassigned !== undefined) {
+      return [{ ...item, count, hint: `${formatNumber(unassigned)} not yet assigned` }];
+    }
+    return [{ ...item, count }];
+  });
 }
 
 /* ==========================================================================
@@ -286,17 +473,28 @@ async function AttentionBookingsPanel({ session }: { session: AdminSession }) {
    Helpers
    ========================================================================== */
 
-function MetricsSkeleton() {
+function OverviewSkeleton() {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      {Array.from({ length: 8 }).map((_, index) => (
-        <div key={index} className="rounded-xl border border-ink-200 bg-white p-4">
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="mt-3 h-7 w-16" />
-          <Skeleton className="mt-2 h-3 w-32" />
+    <>
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, index) => (
+          <div key={index} className="rounded-xl border border-ink-200 bg-white p-4 sm:p-5">
+            <Skeleton className="size-9 rounded-lg" />
+            <Skeleton className="mt-4 h-3.5 w-24" />
+            <Skeleton className="mt-2 h-8 w-16" />
+            <Skeleton className="mt-3 h-3 w-32" />
+          </div>
+        ))}
+      </div>
+      <Card className="mt-5">
+        <CardHeader title="Needs attention" />
+        <div className="grid gap-3 p-4 md:grid-cols-2">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <Skeleton key={index} className="h-18 w-full" />
+          ))}
         </div>
-      ))}
-    </div>
+      </Card>
+    </>
   );
 }
 
@@ -313,11 +511,22 @@ function PanelSkeleton({ title }: { title: string }) {
   );
 }
 
+/** Greeting period in Indian time; the server clock is UTC. */
 function timeOfDay(): string {
-  const hour = new Date().getHours();
+  const hour = platformHour();
   if (hour < 12) return 'morning';
   if (hour < 17) return 'afternoon';
   return 'evening';
+}
+
+/** e.g. "Thursday, 25 September", in Indian time. */
+function todayLabel(): string {
+  return new Intl.DateTimeFormat('en-IN', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: PLATFORM_TIME_ZONE,
+  }).format(new Date());
 }
 
 const VERIFICATION_LABELS: Record<string, string> = {

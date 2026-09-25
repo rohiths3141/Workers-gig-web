@@ -8,6 +8,36 @@
 
 const DEFAULT_LOCALE = 'en-IN';
 
+/**
+ * The platform operates in India. "Today" and greetings follow Indian time, not
+ * the server clock, which is UTC on Vercel.
+ */
+export const PLATFORM_TIME_ZONE = 'Asia/Kolkata';
+
+/** Hour of the day, 0–23, in the platform's time zone. */
+export function platformHour(now: Date = new Date()): number {
+  return Number(
+    new Intl.DateTimeFormat('en-GB', {
+      hour: 'numeric',
+      hourCycle: 'h23',
+      timeZone: PLATFORM_TIME_ZONE,
+    }).format(now),
+  );
+}
+
+/** ISO timestamp of the most recent midnight in the platform's time zone. */
+export function startOfPlatformDay(now: Date = new Date()): string {
+  // en-CA formats as YYYY-MM-DD. India has no daylight saving, so the offset
+  // for that calendar date is always +05:30.
+  const day = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    timeZone: PLATFORM_TIME_ZONE,
+  }).format(now);
+  return new Date(`${day}T00:00:00+05:30`).toISOString();
+}
+
 /** Format integer minor units as currency. `null` renders as an em dash. */
 export function formatMoney(
   amountMinor: number | null | undefined,
