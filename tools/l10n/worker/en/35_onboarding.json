@@ -1,0 +1,38 @@
+{
+  "onboardingTitle": "Set up your profile",
+  "onboardingHelp": "Help",
+  "onboardingHello": "Hello, {name}",
+  "onboardingIntro": "A few things and you are ready to start getting work.",
+  "onboardingSetup": "Setup",
+  "onboardingStepCount": "{done} of {total}",
+  "@onboardingStepCount": {
+    "placeholders": {
+      "done": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "onboardingBasicBody": "Your city and PIN code, so we can find work near you.",
+  "onboardingTradeBody": "The trade you mainly work in.",
+  "onboardingSkillsDoneBody": "Your main trade counts as one. Open this to add every other trade you work in.",
+  "onboardingSkillsBody": "Add every trade you work in. You are not limited to one.",
+  "onboardingAreaBody": "How far you are willing to travel for a job.",
+  "onboardingKycBody": "A government ID. Customers are letting you into their homes.",
+  "onboardingReviewNotice": "Once you have finished these, our team checks your documents. You can carry on setting up your services while you wait.",
+  "onboardingTradesLoadFailed": "Trades could not be loaded. Try again.",
+  "onboardingMainTrade": "What is your main trade?",
+  "onboardingMainTradeBody": "You can add more trades afterwards.",
+  "onboardingTradeSet": "{trade} set as your main trade.",
+  "onboardingTravelTitle": "How far will you travel?",
+  "onboardingTravelBody": "We will only offer you jobs within this distance of where you are right now.",
+  "onboardingTravelCentre": "We use your current location as the centre point. You can change this any time from your profile.",
+  "onboardingLocationOff": "Turn on location access to set your work area.",
+  "commonSave": "Save",
+  "notificationsStayOff": "Notifications stay off. You can turn them on in your phone settings.",
+  "notificationsPrimerTitle": "Get told when a job comes in",
+  "notificationsPrimerBody": "Job offers expire. A notification is how you hear about one while the app is closed — nothing else is sent.",
+  "notificationsTurnOn": "Turn on notifications",
+  "commonNotNow": "Not now",
+  "onboardingCityRequired": "Please enter your city",
+  "onboardingGenderRequired": "Please select your gender",
+  "onboardingWhereBased": "Where are you based?"
+}

@@ -1,0 +1,10 @@
+{
+  "requestsTitle": "Customer requests",
+  "requestsRefresh": "Refresh",
+  "requestsLocationNeeded": "Location needed",
+  "requestsLocationBody": "We use your location to find customer requests near you.",
+  "requestsGrantLocation": "Grant Location Access",
+  "requestsEmpty": "No matching requests nearby",
+  "requestsEmptyBody": "New customer requests will appear here\nwhen they match your services.",
+  "requestsViewOffer": "View & Offer →"
+}

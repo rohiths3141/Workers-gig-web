@@ -141,7 +141,8 @@ class _NotificationTile extends StatelessWidget {
                         .copyWith(color: context.inkSecondary)),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
-                  DateFormat('d MMM, h:mm a').format(notification.createdAt),
+                  DateFormat('d MMM, h:mm a', context.dateLocale)
+                      .format(notification.createdAt),
                   style: AppTypography.bodySmall
                       .copyWith(color: context.inkTertiary),
                 ),

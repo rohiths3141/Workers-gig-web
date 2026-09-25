@@ -9,9 +9,11 @@ import '../../../app/providers/session_controller.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/gig.dart';
 import '../../../domain/entities/worker.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import 'profile_controller.dart';
 
 /// Editing the profile.
@@ -69,7 +71,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     // Empty is allowed here (the field is optional after onboarding), but a
     // partial PIN code is not: it silently breaks job matching.
     if (pincode.isNotEmpty && !RegExp(r'^[1-9][0-9]{5}$').hasMatch(pincode)) {
-      setState(() => _pincodeError = 'Enter a valid 6-digit PIN code');
+      setState(() => _pincodeError = context.l10n.profilePinInvalid);
       return;
     }
     setState(() {
@@ -93,7 +95,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     result.fold(
       (_) {
         Navigator.of(context).pop();
-        showSuccess(context, 'Profile updated.');
+        showSuccess(context, context.l10n.profileUpdated);
       },
       (failure) => showFailure(context, failure.message),
     );
@@ -116,13 +118,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     setState(() => _busy = false);
 
     result.fold(
-      (_) => showSuccess(context, 'Photo updated.'),
+      (_) => showSuccess(context, context.l10n.profilePhotoUpdated),
       (failure) => showFailure(context, failure.message),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final worker = ref.watch(currentWorkerProvider);
     final skills = ref.watch(skillsProvider);
     final services = ref.watch(allServicesProvider);
@@ -133,7 +136,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     _hydrate(worker);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit profile')),
+      appBar: AppBar(title: Text(l10n.profileEdit)),
       body: Column(
         children: [
           Expanded(
@@ -151,7 +154,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       TextButton.icon(
                         onPressed: _busy ? null : _changePhoto,
                         icon: const Icon(Icons.photo_camera_outlined, size: 20),
-                        label: const Text('Change photo'),
+                        label: Text(l10n.profileChangePhoto),
                       ),
                     ],
                   ),
@@ -163,11 +166,11 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      DetailRow(label: 'Name', value: worker.fullName),
-                      DetailRow(label: 'Phone', value: worker.phone),
+                      DetailRow(label: l10n.profileName, value: worker.fullName),
+                      DetailRow(label: l10n.profilePhone, value: worker.phone),
                       const SizedBox(height: AppSpacing.sm),
                       Text(
-                        'Your name and number are linked to your identity check. Contact support if either needs to change.',
+                        l10n.profileLockedNotice,
                         style: AppTypography.bodySmall
                             .copyWith(color: context.inkTertiary),
                       ),
@@ -176,7 +179,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 ),
                 const SizedBox(height: AppSpacing.xl),
 
-                Text('About you',
+                Text(l10n.profileAbout,
                     style:
                         AppTypography.titleMedium.copyWith(color: context.ink)),
                 const SizedBox(height: AppSpacing.md),
@@ -185,9 +188,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   maxLines: 4,
                   maxLength: 400,
                   textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(
-                    hintText:
-                        'Tell customers about your experience and what you are good at.',
+                  decoration: InputDecoration(
+                    hintText: l10n.profileBioHint,
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
@@ -196,21 +198,21 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                   keyboardType: TextInputType.number,
                   maxLength: 2,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: const InputDecoration(
-                    labelText: 'Years of experience',
+                  decoration: InputDecoration(
+                    labelText: l10n.profileYearsExperience,
                     counterText: '',
                   ),
                 ),
                 const SizedBox(height: AppSpacing.xl),
 
-                Text('Where you are based',
+                Text(l10n.profileBased,
                     style:
                         AppTypography.titleMedium.copyWith(color: context.ink)),
                 const SizedBox(height: AppSpacing.md),
                 TextField(
                   controller: _address,
                   textCapitalization: TextCapitalization.words,
-                  decoration: const InputDecoration(labelText: 'Address'),
+                  decoration: InputDecoration(labelText: l10n.profileAddress),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Row(
@@ -219,7 +221,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                       child: TextField(
                         controller: _city,
                         textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(labelText: 'City'),
+                        decoration: InputDecoration(labelText: l10n.profileCity),
                       ),
                     ),
                     const SizedBox(width: AppSpacing.md),
@@ -230,7 +232,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                         maxLength: 6,
                         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                         decoration: InputDecoration(
-                          labelText: 'PIN code',
+                          labelText: l10n.profilePin,
                           counterText: '',
                           errorText: _pincodeError,
                         ),
@@ -242,17 +244,17 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
                 // Set during onboarding and then unreachable: a worker who
                 // picked the wrong chip had no way to correct it.
-                Text('Gender',
+                Text(l10n.profileGender,
                     style: AppTypography.label
                         .copyWith(color: context.inkSecondary)),
                 const SizedBox(height: AppSpacing.sm),
                 Wrap(
                   spacing: AppSpacing.sm,
                   children: [
-                    for (final option in const [
-                      ('MALE', 'Male'),
-                      ('FEMALE', 'Female'),
-                      ('OTHER', 'Other'),
+                    for (final option in [
+                      ('MALE', l10n.genderMale),
+                      ('FEMALE', l10n.genderFemale),
+                      ('OTHER', l10n.genderOther),
                     ])
                       ChoiceChip(
                         label: Text(option.$2),
@@ -267,12 +269,12 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 // Multiple trades, added one at a time, each needing approval.
                 // This is what makes multiple gigs possible: the worker's trade
                 // list is a set, never a single value.
-                Text('Your trades',
+                Text(l10n.profileTrades,
                     style:
                         AppTypography.titleMedium.copyWith(color: context.ink)),
                 const SizedBox(height: AppSpacing.xxs),
                 Text(
-                  'You can work in as many trades as you are approved for.',
+                  l10n.profileTradesBody,
                   style: AppTypography.bodySmall
                       .copyWith(color: context.inkSecondary),
                 ),
@@ -281,7 +283,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 skills.when(
                   loading: () => const LinearProgressIndicator(),
                   error: (_, __) => Text(
-                    'Your trades could not be loaded.',
+                    l10n.profileTradesLoadFailed,
                     style: AppTypography.bodySmall
                         .copyWith(color: AppColors.danger),
                   ),
@@ -296,13 +298,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             child: Row(
                               children: [
                                 Expanded(
-                                  child: Text(skill.serviceName,
+                                  child: Text(localizedServiceName(l10n, skill.serviceName),
                                       style: AppTypography.bodyLarge
                                           .copyWith(color: context.ink)),
                                 ),
                                 StatusBadge(
-                                  label:
-                                      skill.isApproved ? 'APPROVED' : 'PENDING',
+                                  label: skill.isApproved
+                                      ? l10n.materialStatusApproved
+                                      : l10n.tradePending,
                                   color: skill.isApproved
                                       ? AppColors.success
                                       : AppColors.warning,
@@ -326,7 +329,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                             onPressed: () =>
                                 _addTrade(context, ref, available),
                             icon: const Icon(Icons.add_rounded),
-                            label: const Text('Add a trade'),
+                            label: Text(l10n.profileAddTrade),
                           );
                         },
                         orElse: () => const SizedBox.shrink(),
@@ -353,9 +356,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
               height: AppSpacing.primaryActionHeight,
               width: double.infinity,
               child: BusyFilledButton(
-                label: 'Save changes',
+                label: l10n.profileSave,
                 busy: _busy,
-                busyLabel: 'Saving…',
+                busyLabel: l10n.commonSaving,
                 onPressed: _save,
               ),
             ),
@@ -377,19 +380,19 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
           shrinkWrap: true,
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
-            Text('Add a trade',
+            Text(sheetContext.l10n.profileAddTrade,
                 style: AppTypography.titleLarge
                     .copyWith(color: sheetContext.ink)),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'We may ask for proof of your skills before approving it.',
+              sheetContext.l10n.profileAddTradeBody,
               style: AppTypography.bodySmall
                   .copyWith(color: sheetContext.inkSecondary),
             ),
             const SizedBox(height: AppSpacing.lg),
             for (final service in available)
               ListTile(
-                title: Text(service.name),
+                title: Text(localizedServiceName(sheetContext.l10n, service.name)),
                 subtitle: Text(service.shortDescription),
                 onTap: () => Navigator.of(sheetContext).pop(service),
               ),
@@ -407,7 +410,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
     result.fold(
       (_) => showSuccess(
         context,
-        'Requested. We will let you know once it is approved.',
+        context.l10n.profileTradeRequested,
       ),
       (failure) => showFailure(context, failure.message),
     );

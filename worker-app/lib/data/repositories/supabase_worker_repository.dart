@@ -71,7 +71,7 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
       filterValue: uid,
     ).asyncMap((rows) async {
       if (rows.isEmpty) {
-        throw const NotFoundFailure(message: 'Your profile could not be loaded.');
+        throw NotFoundFailure(message: AppStrings.current.profileLoadFailed);
       }
       final row = rows.first;
       // The avatar is not a column on workers, so mapping the Realtime row

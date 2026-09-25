@@ -13,6 +13,7 @@ import 'active_job_screen.dart';
 import 'jobs_controller.dart';
 import 'widgets/rate_customer_sheet.dart';
 import '../../../core/localization/l10n.dart';
+import '../../../shared/widgets/service_names.dart';
 
 /// One job.
 ///
@@ -61,7 +62,7 @@ class _JobRecord extends ConsumerWidget {
             children: [
               StatusBadge.forBooking(job.status),
               const SizedBox(height: AppSpacing.md),
-              Text(job.gigTitle ?? job.serviceName,
+              Text(job.gigTitle ?? localizedServiceName(context.l10n, job.serviceName),
                   style: AppTypography.headlineMedium
                       .copyWith(color: context.ink)),
               const SizedBox(height: AppSpacing.sm),
@@ -188,7 +189,8 @@ class _JobRecord extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          DateFormat('d MMM, h:mm a').format(event.createdAt),
+                          DateFormat('d MMM, h:mm a', context.dateLocale)
+                              .format(event.createdAt),
                           style: AppTypography.bodySmall
                               .copyWith(color: context.inkTertiary),
                         ),

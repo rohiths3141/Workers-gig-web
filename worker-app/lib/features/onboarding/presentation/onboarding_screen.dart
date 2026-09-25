@@ -10,8 +10,10 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/gig.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/service_names.dart';
 import '../../profile/presentation/profile_controller.dart';
 
 /// Onboarding.
@@ -32,15 +34,16 @@ class OnboardingScreen extends ConsumerWidget {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final l10n = context.l10n;
     final progress = session.progress;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Set up your profile'),
+        title: Text(l10n.onboardingTitle),
         actions: [
           TextButton(
             onPressed: () => context.push(Routes.support),
-            child: const Text('Help'),
+            child: Text(l10n.onboardingHelp),
           ),
           const SizedBox(width: AppSpacing.sm),
         ],
@@ -52,21 +55,21 @@ class OnboardingScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Hello, ${session.worker.shortName}',
+                Text(l10n.onboardingHello(session.worker.shortName),
                     style: AppTypography.headlineMedium
                         .copyWith(color: context.ink)),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'A few things and you are ready to start getting work.',
+                  l10n.onboardingIntro,
                   style: AppTypography.bodyLarge
                       .copyWith(color: context.inkSecondary),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 LabelledProgress(
-                  label: 'Setup',
+                  label: l10n.onboardingSetup,
                   value: progress.fraction,
-                  trailing:
-                      '${progress.completedSteps} of ${OnboardingProgress.totalSteps}',
+                  trailing: l10n.onboardingStepCount(
+                      progress.completedSteps, OnboardingProgress.totalSteps),
                 ),
               ],
             ),
@@ -77,14 +80,14 @@ class OnboardingScreen extends ConsumerWidget {
             step: OnboardingStep.basicProfile,
             isDone: progress.hasBasicProfile,
             isNext: progress.nextStep == OnboardingStep.basicProfile,
-            description: 'Your city and PIN code, so we can find work near you.',
+            description: l10n.onboardingBasicBody,
             onTap: () => _basicProfile(context),
           ),
           _Step(
             step: OnboardingStep.trade,
             isDone: progress.hasTrade,
             isNext: progress.nextStep == OnboardingStep.trade,
-            description: 'The trade you mainly work in.',
+            description: l10n.onboardingTradeBody,
             onTap: () => _chooseTrade(context, ref),
           ),
           _Step(
@@ -96,24 +99,22 @@ class OnboardingScreen extends ConsumerWidget {
             // main trade adds it as a skill, so this step can tick itself —
             // the copy then has to say there is still something worth opening.
             description: progress.hasSkills
-                ? 'Your main trade counts as one. Open this to add every other '
-                    'trade you work in.'
-                : 'Add every trade you work in. You are not limited to one.',
+                ? l10n.onboardingSkillsDoneBody
+                : l10n.onboardingSkillsBody,
             onTap: () => context.push(Routes.editProfile),
           ),
           _Step(
             step: OnboardingStep.serviceArea,
             isDone: progress.hasServiceArea,
             isNext: progress.nextStep == OnboardingStep.serviceArea,
-            description: 'How far you are willing to travel for a job.',
+            description: l10n.onboardingAreaBody,
             onTap: () => _serviceArea(context, ref),
           ),
           _Step(
             step: OnboardingStep.kyc,
             isDone: progress.hasSubmittedKyc,
             isNext: progress.nextStep == OnboardingStep.kyc,
-            description:
-                'A government ID. Customers are letting you into their homes.',
+            description: l10n.onboardingKycBody,
             onTap: () => context.push(Routes.kyc),
           ),
 
@@ -129,7 +130,7 @@ class OnboardingScreen extends ConsumerWidget {
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Text(
-                    'Once you have finished these, our team checks your documents. You can carry on setting up your services while you wait.',
+                    l10n.onboardingReviewNotice,
                     style: AppTypography.bodySmall
                         .copyWith(color: context.inkSecondary),
                   ),
@@ -171,13 +172,13 @@ class OnboardingScreen extends ConsumerWidget {
       services = await ref.read(allServicesProvider.future);
     } catch (_) {
       if (context.mounted) {
-        showFailure(context, 'Trades could not be loaded. Try again.');
+        showFailure(context, context.l10n.onboardingTradesLoadFailed);
       }
       return;
     }
     if (services.isEmpty) {
       if (context.mounted) {
-        showFailure(context, 'Trades could not be loaded. Try again.');
+        showFailure(context, context.l10n.onboardingTradesLoadFailed);
       }
       return;
     }
@@ -190,19 +191,19 @@ class OnboardingScreen extends ConsumerWidget {
           shrinkWrap: true,
           padding: const EdgeInsets.all(AppSpacing.lg),
           children: [
-            Text('What is your main trade?',
+            Text(sheetContext.l10n.onboardingMainTrade,
                 style: AppTypography.titleLarge
                     .copyWith(color: sheetContext.ink)),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'You can add more trades afterwards.',
+              sheetContext.l10n.onboardingMainTradeBody,
               style: AppTypography.bodySmall
                   .copyWith(color: sheetContext.inkSecondary),
             ),
             const SizedBox(height: AppSpacing.lg),
             for (final service in services)
               ListTile(
-                title: Text(service.name),
+                title: Text(localizedServiceName(sheetContext.l10n, service.name)),
                 subtitle: Text(service.shortDescription),
                 onTap: () => Navigator.of(sheetContext).pop(service),
               ),
@@ -219,7 +220,10 @@ class OnboardingScreen extends ConsumerWidget {
 
     if (!context.mounted) return;
     result.fold(
-      (_) => showSuccess(context, '${chosen.name} set as your main trade.'),
+      (_) => showSuccess(
+          context,
+          context.l10n.onboardingTradeSet(
+              localizedServiceName(context.l10n, chosen.name))),
       (failure) => showFailure(context, failure.message),
     );
   }
@@ -241,18 +245,17 @@ class OnboardingScreen extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('How far will you travel?',
+                Text(builderContext.l10n.onboardingTravelTitle,
                     style: AppTypography.headlineMedium
                         .copyWith(color: builderContext.ink)),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'We will only offer you jobs within this distance of where '
-                  'you are right now.',
+                  builderContext.l10n.onboardingTravelBody,
                   style: AppTypography.bodyMedium
                       .copyWith(color: builderContext.inkSecondary),
                 ),
                 const SizedBox(height: AppSpacing.xl),
-                Text('${radius.round()} km',
+                Text(builderContext.l10n.distanceKm('${radius.round()}'),
                     style: AppTypography.numericHero
                         .copyWith(color: AppColors.primary)),
                 Slider(
@@ -267,10 +270,10 @@ class OnboardingScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text('1 km',
+                    Text(builderContext.l10n.distanceKm('1'),
                         style: AppTypography.bodySmall
                             .copyWith(color: builderContext.inkTertiary)),
-                    Text('50 km',
+                    Text(builderContext.l10n.distanceKm('50'),
                         style: AppTypography.bodySmall
                             .copyWith(color: builderContext.inkTertiary)),
                   ],
@@ -283,8 +286,7 @@ class OnboardingScreen extends ConsumerWidget {
                 ],
                 const SizedBox(height: AppSpacing.lg),
                 Text(
-                  'We use your current location as the centre point. You can '
-                  'change this any time from your profile.',
+                  builderContext.l10n.onboardingTravelCentre,
                   style: AppTypography.bodySmall
                       .copyWith(color: builderContext.inkTertiary),
                 ),
@@ -302,8 +304,7 @@ class OnboardingScreen extends ConsumerWidget {
                           if (position == null) {
                             setSheetState(() {
                               isSaving = false;
-                              error = 'Turn on location access to set your '
-                                  'work area.';
+                              error = builderContext.l10n.onboardingLocationOff;
                             });
                             return;
                           }
@@ -331,7 +332,7 @@ class OnboardingScreen extends ConsumerWidget {
                           height: 20,
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
-                      : const Text('Save'),
+                      : Text(builderContext.l10n.commonSave),
                 ),
               ],
             ),
@@ -415,7 +416,7 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
     if (!granted) {
       showFailure(
         context,
-        'Notifications stay off. You can turn them on in your phone settings.',
+        context.l10n.notificationsStayOff,
       );
     }
   }
@@ -423,6 +424,7 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
   @override
   Widget build(BuildContext context) {
     if (!_needed) return const SizedBox.shrink();
+    final l10n = context.l10n;
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.xl),
@@ -437,7 +439,7 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
                     size: 20, color: context.ink),
                 const SizedBox(width: AppSpacing.md),
                 Expanded(
-                  child: Text('Get told when a job comes in',
+                  child: Text(l10n.notificationsPrimerTitle,
                       style:
                           AppTypography.titleMedium.copyWith(color: context.ink)),
                 ),
@@ -445,8 +447,7 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
             ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              'Job offers expire. A notification is how you hear about one '
-              'while the app is closed — nothing else is sent.',
+              l10n.notificationsPrimerBody,
               style:
                   AppTypography.bodySmall.copyWith(color: context.inkSecondary),
             ),
@@ -454,7 +455,7 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
             Row(
               children: [
                 BusyFilledButton(
-                  label: 'Turn on notifications',
+                  label: l10n.notificationsTurnOn,
                   busy: _busy,
                   onPressed: _enable,
                 ),
@@ -462,7 +463,7 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
                 TextButton(
                   onPressed:
                       _busy ? null : () => setState(() => _needed = false),
-                  child: const Text('Not now'),
+                  child: Text(l10n.commonNotNow),
                 ),
               ],
             ),
@@ -566,13 +567,14 @@ class _BasicProfileSheetState extends ConsumerState<_BasicProfileSheet> {
   Future<void> _save() async {
     final city = _city.text.trim();
     final pincode = _pincode.text.trim();
+    final l10n = context.l10n;
     setState(() {
-      _cityError = city.length < 2 ? 'Please enter your city' : null;
+      _cityError = city.length < 2 ? l10n.onboardingCityRequired : null;
       // Indian PIN codes are six digits and never start with 0.
       _pincodeError = RegExp(r'^[1-9][0-9]{5}$').hasMatch(pincode)
           ? null
-          : 'Enter a valid 6-digit PIN code';
-      _genderError = _gender == null ? 'Please select your gender' : null;
+          : l10n.profilePinInvalid;
+      _genderError = _gender == null ? l10n.onboardingGenderRequired : null;
     });
     if (_cityError != null || _pincodeError != null || _genderError != null) {
       return;
@@ -601,6 +603,7 @@ class _BasicProfileSheetState extends ConsumerState<_BasicProfileSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Padding(
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SafeArea(
@@ -610,7 +613,7 @@ class _BasicProfileSheetState extends ConsumerState<_BasicProfileSheet> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Where are you based?',
+              Text(l10n.onboardingWhereBased,
                   style: AppTypography.headlineMedium.copyWith(color: context.ink)),
               const SizedBox(height: AppSpacing.xl),
               TextField(
@@ -621,7 +624,7 @@ class _BasicProfileSheetState extends ConsumerState<_BasicProfileSheet> {
                   if (_cityError != null) setState(() => _cityError = null);
                 },
                 decoration:
-                    InputDecoration(labelText: 'City', errorText: _cityError),
+                    InputDecoration(labelText: l10n.profileCity, errorText: _cityError),
               ),
               const SizedBox(height: AppSpacing.md),
               TextField(
@@ -633,22 +636,22 @@ class _BasicProfileSheetState extends ConsumerState<_BasicProfileSheet> {
                   if (_pincodeError != null) setState(() => _pincodeError = null);
                 },
                 decoration: InputDecoration(
-                  labelText: 'PIN code',
+                  labelText: l10n.profilePin,
                   counterText: '',
                   errorText: _pincodeError,
                 ),
               ),
               const SizedBox(height: AppSpacing.lg),
-              Text('Gender',
+              Text(l10n.profileGender,
                   style: AppTypography.label.copyWith(color: context.inkSecondary)),
               const SizedBox(height: AppSpacing.sm),
               Wrap(
                 spacing: AppSpacing.sm,
                 children: [
-                  for (final option in const [
-                    ('MALE', 'Male'),
-                    ('FEMALE', 'Female'),
-                    ('OTHER', 'Other'),
+                  for (final option in [
+                    ('MALE', l10n.genderMale),
+                    ('FEMALE', l10n.genderFemale),
+                    ('OTHER', l10n.genderOther),
                   ])
                     ChoiceChip(
                       label: Text(option.$2),
@@ -667,9 +670,9 @@ class _BasicProfileSheetState extends ConsumerState<_BasicProfileSheet> {
               ],
               const SizedBox(height: AppSpacing.xl),
               BusyFilledButton(
-                label: 'Save',
+                label: l10n.commonSave,
                 busy: _isSaving,
-                busyLabel: 'Saving…',
+                busyLabel: l10n.commonSaving,
                 onPressed: _save,
               ),
             ],

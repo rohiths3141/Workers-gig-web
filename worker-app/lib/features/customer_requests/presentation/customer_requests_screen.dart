@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/providers/providers.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/customer_service_request.dart';
+import '../../../shared/widgets/service_names.dart';
 
 /// Discovery feed showing nearby customer service requests that match
 /// the worker's registered services.
@@ -98,10 +100,11 @@ class _CustomerRequestsScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Customer requests'),
+        title: Text(context.l10n.requestsTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: context.l10n.requestsRefresh,
             onPressed: _loadRequests,
           ),
         ],
@@ -111,6 +114,7 @@ class _CustomerRequestsScreenState
   }
 
   Widget _buildBody() {
+    final l10n = context.l10n;
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -124,20 +128,20 @@ class _CustomerRequestsScreenState
               Icon(Icons.location_off_outlined,
                   size: 64, color: AppColors.inkTertiary),
               const SizedBox(height: 12),
-              const Text(
-                'Location needed',
+              Text(
+                l10n.requestsLocationNeeded,
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 4),
               Text(
-                'We use your location to find customer requests near you.',
+                l10n.requestsLocationBody,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppColors.inkSecondary),
               ),
               const SizedBox(height: 16),
               FilledButton(
                 onPressed: _loadRequests,
-                child: const Text('Grant Location Access'),
+                child: Text(l10n.requestsGrantLocation),
               ),
             ],
           ),
@@ -155,7 +159,7 @@ class _CustomerRequestsScreenState
               const SizedBox(height: 12),
               FilledButton(
                 onPressed: _loadRequests,
-                child: const Text('Retry'),
+                child: Text(l10n.commonRetry),
               ),
             ],
           ),
@@ -170,13 +174,13 @@ class _CustomerRequestsScreenState
             Icon(Icons.inbox_outlined,
                 size: 64, color: AppColors.inkTertiary),
             const SizedBox(height: 12),
-            const Text(
-              'No matching requests nearby',
+            Text(
+              l10n.requestsEmpty,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 4),
             Text(
-              'New customer requests will appear here\nwhen they match your services.',
+              l10n.requestsEmptyBody,
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.inkSecondary),
             ),
@@ -204,6 +208,7 @@ class _RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return GestureDetector(
       onTap: () => context.push(
         '/customer-requests/${request.id}',
@@ -275,7 +280,8 @@ class _RequestCard extends StatelessWidget {
               spacing: 8,
               runSpacing: 6,
               children: [
-                _chip(Icons.category_rounded, request.categoryName),
+                _chip(Icons.category_rounded,
+                    localizedServiceName(l10n, request.categoryName)),
                 _chip(Icons.schedule, request.scheduleLabel),
                 if (request.distanceLabel.isNotEmpty)
                   _chip(Icons.location_on, request.distanceLabel),
@@ -293,7 +299,7 @@ class _RequestCard extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  'View & Offer →',
+                  l10n.requestsViewOffer,
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,

@@ -1,0 +1,7 @@
+{
+  "offersEmptyBody": "Offers you submit on customer requests\nwill appear here.",
+  "offerWithdraw": "Withdraw",
+  "offerWithdrawTitle": "Withdraw offer?",
+  "offerWithdrawBody": "The customer will no longer see this offer.",
+  "offerWithdrawn": "Offer withdrawn"
+}

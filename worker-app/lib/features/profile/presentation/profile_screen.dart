@@ -7,6 +7,7 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/support.dart';
 import '../../../domain/entities/worker.dart';
 import '../../../shared/widgets/common_widgets.dart';
@@ -18,6 +19,7 @@ class ProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final worker = ref.watch(currentWorkerProvider);
     final rating = ref.watch(ratingSummaryProvider).valueOrNull;
 
@@ -27,12 +29,12 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: Text(l10n.navProfile),
         actions: [
           IconButton(
             onPressed: () => context.push(Routes.settings),
             icon: const Icon(Icons.settings_outlined),
-            tooltip: 'Settings',
+            tooltip: l10n.settingsTitle,
           ),
         ],
       ),
@@ -49,12 +51,12 @@ class ProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   LabelledProgress(
-                    label: 'Profile completeness',
+                    label: l10n.profileCompleteness,
                     value: worker.profileCompletion,
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
-                    'A complete profile helps customers choose you.',
+                    l10n.profileCompletenessBody,
                     style: AppTypography.bodySmall
                         .copyWith(color: context.inkSecondary),
                   ),
@@ -69,14 +71,14 @@ class ProfileScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _Stat(
-                    label: 'Jobs done',
+                    label: l10n.profileJobsDone,
                     value: '${worker.jobsCompleted}',
                   ),
                 ),
                 Container(width: 1, height: 36, color: context.border),
                 Expanded(
                   child: _Stat(
-                    label: 'Rating',
+                    label: l10n.profileRating,
                     // Unrated is "—", never 0.0. Zero reads as terrible; the
                     // truth is simply that nobody has rated them yet.
                     value: rating?.hasRatings ?? false
@@ -87,10 +89,10 @@ class ProfileScreen extends ConsumerWidget {
                 Container(width: 1, height: 36, color: context.border),
                 Expanded(
                   child: _Stat(
-                    label: 'Experience',
+                    label: l10n.profileExperience,
                     value: worker.experienceYears == 0
                         ? '—'
-                        : '${worker.experienceYears} yr',
+                        : l10n.profileExperienceYears('${worker.experienceYears}'),
                   ),
                 ),
               ],
@@ -102,17 +104,17 @@ class ProfileScreen extends ConsumerWidget {
             items: [
               _MenuItem(
                 icon: Icons.person_outline_rounded,
-                label: 'Edit profile',
+                label: l10n.profileEdit,
                 onTap: () => context.push(Routes.editProfile),
               ),
               _MenuItem(
                 icon: Icons.storefront_outlined,
-                label: 'My services',
+                label: l10n.gigsTitle,
                 onTap: () => context.push(Routes.gigs),
               ),
               _MenuItem(
                 icon: Icons.verified_outlined,
-                label: 'Verification',
+                label: l10n.verificationTitle,
                 onTap: () => context.push(Routes.verification),
               ),
             ],
@@ -123,17 +125,17 @@ class ProfileScreen extends ConsumerWidget {
             items: [
               _MenuItem(
                 icon: Icons.notifications_none_rounded,
-                label: 'Notifications',
+                label: l10n.homeNotifications,
                 onTap: () => context.push(Routes.notifications),
               ),
               _MenuItem(
                 icon: Icons.support_agent_rounded,
-                label: 'Help and support',
+                label: l10n.settingsHelp,
                 onTap: () => context.push(Routes.support),
               ),
               _MenuItem(
                 icon: Icons.settings_outlined,
-                label: 'Settings',
+                label: l10n.settingsTitle,
                 onTap: () => context.push(Routes.settings),
               ),
             ],
@@ -186,14 +188,14 @@ class _ProfileHeader extends StatelessWidget {
                 const SizedBox(height: AppSpacing.sm),
                 // Only shown when the server says the worker is verified.
                 if (worker.isKycVerified && worker.isBackgroundVerified)
-                  const StatusBadge(
-                    label: 'VERIFIED',
+                  StatusBadge(
+                    label: context.l10n.profileVerified,
                     color: AppColors.success,
                     icon: Icons.verified_rounded,
                   )
                 else
-                  const StatusBadge(
-                    label: 'NOT VERIFIED',
+                  StatusBadge(
+                    label: context.l10n.profileNotVerified,
                     color: AppColors.warning,
                     icon: Icons.info_outline_rounded,
                   ),

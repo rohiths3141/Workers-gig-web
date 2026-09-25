@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/providers/providers.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/customer_service_request.dart';
+import '../../../shared/widgets/service_names.dart';
 
 /// Detail screen for a customer service request with an offer form.
 class CustomerRequestDetailScreen extends ConsumerStatefulWidget {
@@ -88,8 +90,8 @@ class _CustomerRequestDetailScreenState
   Future<void> _submitOffer() async {
     final price = double.tryParse(_priceController.text);
     if (price == null || price <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Enter a valid price'),
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(context.l10n.requestEnterPrice),
       ));
       return;
     }
@@ -117,7 +119,7 @@ class _CustomerRequestDetailScreenState
           _showOfferForm = false;
         });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('Offer submitted at ${offer.priceLabel}!'),
+          content: Text(context.l10n.requestOfferSubmitted(offer.priceLabel)),
           backgroundColor: AppColors.success,
         ));
       },
@@ -133,7 +135,7 @@ class _CustomerRequestDetailScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Request Details')),
+      appBar: AppBar(title: Text(context.l10n.requestDetailsTitle)),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
           : _error != null
@@ -148,6 +150,7 @@ class _CustomerRequestDetailScreenState
   }
 
   Widget _buildContent() {
+    final l10n = context.l10n;
     final r = _request!;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(20),
@@ -173,7 +176,7 @@ class _CustomerRequestDetailScreenState
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  r.status.isOpen ? 'Open' : r.status.wire,
+                  r.status.isOpen ? l10n.requestStatusOpen : r.status.wire,
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
@@ -208,16 +211,17 @@ class _CustomerRequestDetailScreenState
             ),
             child: Column(
               children: [
-                _row(Icons.category_rounded, 'Category', r.categoryName),
-                _row(Icons.currency_rupee, 'Budget', r.budgetLabel),
-                _row(Icons.schedule, 'Schedule', r.scheduleLabel),
+                _row(Icons.category_rounded, l10n.requestCategory,
+                    localizedServiceName(l10n, r.categoryName)),
+                _row(Icons.currency_rupee, l10n.requestBudget, r.budgetLabel),
+                _row(Icons.schedule, l10n.requestSchedule, r.scheduleLabel),
                 if (r.distanceLabel.isNotEmpty)
-                  _row(Icons.location_on, 'Distance', r.distanceLabel),
+                  _row(Icons.location_on, l10n.requestDistance, r.distanceLabel),
                 if (r.city != null)
-                  _row(Icons.place, 'Area', '${r.city ?? ''}${r.pincode != null ? ' (${r.pincode})' : ''}'),
-                _row(Icons.people_outline, 'Offers', r.offerCountLabel),
+                  _row(Icons.place, l10n.requestArea, '${r.city ?? ''}${r.pincode != null ? ' (${r.pincode})' : ''}'),
+                _row(Icons.people_outline, l10n.requestOffers, r.offerCountLabel),
                 if (r.additionalNotes != null)
-                  _row(Icons.note, 'Notes', r.additionalNotes!),
+                  _row(Icons.note, l10n.requestNotes, r.additionalNotes!),
               ],
             ),
           ),
@@ -238,7 +242,7 @@ class _CustomerRequestDetailScreenState
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'The customer\'s exact address is shared only after they accept your offer.',
+                    l10n.requestAddressPrivacy,
                     style: TextStyle(fontSize: 12, color: AppColors.info),
                   ),
                 ),
@@ -257,6 +261,7 @@ class _CustomerRequestDetailScreenState
   }
 
   Widget _buildOfferForm() {
+    final l10n = context.l10n;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -267,8 +272,8 @@ class _CustomerRequestDetailScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Your Offer',
+          Text(
+            l10n.requestYourOffer,
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -280,8 +285,8 @@ class _CustomerRequestDetailScreenState
             controller: _priceController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              labelText: 'Your price (₹)',
-              hintText: 'e.g. 500',
+              labelText: l10n.requestYourPrice,
+              hintText: l10n.requestPriceHint,
               prefixIcon: const Icon(Icons.currency_rupee),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -291,8 +296,8 @@ class _CustomerRequestDetailScreenState
           TextFormField(
             controller: _durationController,
             decoration: InputDecoration(
-              labelText: 'Estimated duration (optional)',
-              hintText: 'e.g. 1-2 hours',
+              labelText: l10n.requestDuration,
+              hintText: l10n.requestDurationHint,
               prefixIcon: const Icon(Icons.timer_outlined),
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -304,8 +309,8 @@ class _CustomerRequestDetailScreenState
             maxLines: 3,
             maxLength: 500,
             decoration: InputDecoration(
-              labelText: 'Message to customer (optional)',
-              hintText: 'Why are you the right person for this job?',
+              labelText: l10n.requestMessage,
+              hintText: l10n.requestMessageHint,
               prefixIcon: const Padding(
                 padding: EdgeInsets.only(bottom: 48),
                 child: Icon(Icons.message_outlined),
@@ -332,7 +337,7 @@ class _CustomerRequestDetailScreenState
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white),
                     )
-                  : const Text('Submit Offer',
+                  : Text(l10n.requestSubmitOffer,
                       style: TextStyle(fontSize: 16)),
             ),
           ),
@@ -353,7 +358,9 @@ class _CustomerRequestDetailScreenState
         child: FilledButton.icon(
           onPressed: () => setState(() => _showOfferForm = !_showOfferForm),
           icon: Icon(_showOfferForm ? Icons.close : Icons.local_offer),
-          label: Text(_showOfferForm ? 'Cancel' : 'Make an Offer'),
+          label: Text(_showOfferForm
+              ? context.l10n.commonCancel
+              : context.l10n.requestMakeOffer),
           style: FilledButton.styleFrom(
             backgroundColor: AppColors.primary,
             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -378,15 +385,15 @@ class _CustomerRequestDetailScreenState
           children: [
             Icon(Icons.check_circle, color: AppColors.success),
             const SizedBox(width: 8),
-            const Expanded(
+            Expanded(
               child: Text(
-                'You\'ve already submitted an offer for this request.',
+                context.l10n.requestAlreadyOffered,
                 style: TextStyle(fontSize: 13),
               ),
             ),
             TextButton(
               onPressed: () => context.push('/my-offers'),
-              child: const Text('View Offers'),
+              child: Text(context.l10n.requestViewOffers),
             ),
           ],
         ),

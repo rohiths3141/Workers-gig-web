@@ -10,6 +10,7 @@ import 'package:wervexa_worker/domain/entities/enums.dart';
 import 'package:wervexa_worker/domain/entities/verification.dart';
 import 'package:wervexa_worker/domain/repositories/repositories.dart';
 import 'package:wervexa_worker/features/verification/presentation/kyc_screen.dart';
+import 'package:wervexa_worker/core/localization/l10n.dart';
 
 /// How fast the identity page learns the answer.
 ///
@@ -36,7 +37,11 @@ void main() {
         overrides: [
           verificationRepositoryProvider.overrideWithValue(repository),
         ],
-        child: const MaterialApp(home: KycScreen()),
+        child: const MaterialApp(
+          localizationsDelegates: appLocalizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: KycScreen(),
+        ),
       ),
     );
     await tester.pump();

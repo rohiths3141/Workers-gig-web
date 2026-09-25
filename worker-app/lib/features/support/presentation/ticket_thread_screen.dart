@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/support.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
@@ -54,10 +55,11 @@ class _TicketThreadScreenState extends ConsumerState<TicketThreadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final messages = ref.watch(ticketMessagesProvider(widget.ticketId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Support request')),
+      appBar: AppBar(title: Text(l10n.ticketTitle)),
       body: Column(
         children: [
           Expanded(
@@ -67,10 +69,10 @@ class _TicketThreadScreenState extends ConsumerState<TicketThreadScreen> {
                   ref.invalidate(ticketMessagesProvider(widget.ticketId)),
               onData: (items) {
                 if (items.isEmpty) {
-                  return const EmptyStateView(
+                  return EmptyStateView(
                     icon: Icons.forum_outlined,
-                    title: 'No messages yet',
-                    message: 'Your conversation will appear here.',
+                    title: l10n.ticketNoMessages,
+                    message: l10n.ticketNoMessagesBody,
                   );
                 }
 
@@ -102,9 +104,9 @@ class _TicketThreadScreenState extends ConsumerState<TicketThreadScreen> {
                     maxLines: 4,
                     minLines: 1,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
-                      hintText: 'Write a message',
-                      contentPadding: EdgeInsets.symmetric(
+                    decoration: InputDecoration(
+                      hintText: l10n.ticketWriteMessage,
+                      contentPadding: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.lg,
                         vertical: AppSpacing.md,
                       ),
@@ -161,7 +163,7 @@ class _MessageBubble extends StatelessWidget {
             if (!isMine)
               Padding(
                 padding: const EdgeInsets.only(bottom: AppSpacing.xs),
-                child: Text('Wervexa support',
+                child: Text(context.l10n.ticketSupportName,
                     style: AppTypography.badge
                         .copyWith(color: context.inkSecondary)),
               ),
@@ -169,7 +171,8 @@ class _MessageBubble extends StatelessWidget {
                 style: AppTypography.bodyMedium.copyWith(color: context.ink)),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              DateFormat('d MMM, h:mm a').format(message.createdAt),
+              DateFormat('d MMM, h:mm a', context.dateLocale)
+                  .format(message.createdAt),
               style:
                   AppTypography.bodySmall.copyWith(color: context.inkTertiary),
             ),

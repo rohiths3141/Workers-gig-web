@@ -3519,6 +3519,810 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit for verification'**
   String get bankSubmit;
+
+  /// No description provided for @profileCompleteness.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile completeness'**
+  String get profileCompleteness;
+
+  /// No description provided for @profileCompletenessBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A complete profile helps customers choose you.'**
+  String get profileCompletenessBody;
+
+  /// No description provided for @profileJobsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Jobs done'**
+  String get profileJobsDone;
+
+  /// No description provided for @profileRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get profileRating;
+
+  /// No description provided for @profileExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get profileExperience;
+
+  /// No description provided for @profileExperienceYears.
+  ///
+  /// In en, this message translates to:
+  /// **'{years} yr'**
+  String profileExperienceYears(Object years);
+
+  /// No description provided for @profileEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get profileEdit;
+
+  /// No description provided for @profileVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'VERIFIED'**
+  String get profileVerified;
+
+  /// No description provided for @profileNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'NOT VERIFIED'**
+  String get profileNotVerified;
+
+  /// No description provided for @profilePinInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid 6-digit PIN code'**
+  String get profilePinInvalid;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated.'**
+  String get profileUpdated;
+
+  /// No description provided for @profilePhotoUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo updated.'**
+  String get profilePhotoUpdated;
+
+  /// No description provided for @profileChangePhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Change photo'**
+  String get profileChangePhoto;
+
+  /// No description provided for @profileName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get profileName;
+
+  /// No description provided for @profilePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profilePhone;
+
+  /// No description provided for @profileLockedNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your name and number are linked to your identity check. Contact support if either needs to change.'**
+  String get profileLockedNotice;
+
+  /// No description provided for @profileAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get profileAbout;
+
+  /// No description provided for @profileBioHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell customers about your experience and what you are good at.'**
+  String get profileBioHint;
+
+  /// No description provided for @profileYearsExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Years of experience'**
+  String get profileYearsExperience;
+
+  /// No description provided for @profileBased.
+  ///
+  /// In en, this message translates to:
+  /// **'Where you are based'**
+  String get profileBased;
+
+  /// No description provided for @profileAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get profileAddress;
+
+  /// No description provided for @profileCity.
+  ///
+  /// In en, this message translates to:
+  /// **'City'**
+  String get profileCity;
+
+  /// No description provided for @profilePin.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN code'**
+  String get profilePin;
+
+  /// No description provided for @profileGender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get profileGender;
+
+  /// No description provided for @genderMale.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get genderMale;
+
+  /// No description provided for @genderFemale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get genderFemale;
+
+  /// No description provided for @genderOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get genderOther;
+
+  /// No description provided for @profileTrades.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trades'**
+  String get profileTrades;
+
+  /// No description provided for @profileTradesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can work in as many trades as you are approved for.'**
+  String get profileTradesBody;
+
+  /// No description provided for @profileTradesLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trades could not be loaded.'**
+  String get profileTradesLoadFailed;
+
+  /// No description provided for @tradePending.
+  ///
+  /// In en, this message translates to:
+  /// **'PENDING'**
+  String get tradePending;
+
+  /// No description provided for @profileAddTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a trade'**
+  String get profileAddTrade;
+
+  /// No description provided for @profileAddTradeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We may ask for proof of your skills before approving it.'**
+  String get profileAddTradeBody;
+
+  /// No description provided for @profileTradeRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested. We will let you know once it is approved.'**
+  String get profileTradeRequested;
+
+  /// No description provided for @profileSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get profileSave;
+
+  /// No description provided for @supportNewRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'New request'**
+  String get supportNewRequest;
+
+  /// No description provided for @supportEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No requests yet'**
+  String get supportEmpty;
+
+  /// No description provided for @supportEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'If something goes wrong with a job, a payment or your account, raise a request and we will help.'**
+  String get supportEmptyBody;
+
+  /// No description provided for @supportYourRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Your requests'**
+  String get supportYourRequests;
+
+  /// No description provided for @supportEmergency.
+  ///
+  /// In en, this message translates to:
+  /// **'In an emergency'**
+  String get supportEmergency;
+
+  /// No description provided for @supportEmergencyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This app cannot call for help on your behalf. If you are in danger, call the emergency services directly.'**
+  String get supportEmergencyBody;
+
+  /// No description provided for @supportCall112.
+  ///
+  /// In en, this message translates to:
+  /// **'Call 112'**
+  String get supportCall112;
+
+  /// No description provided for @supportPolice.
+  ///
+  /// In en, this message translates to:
+  /// **'Police'**
+  String get supportPolice;
+
+  /// No description provided for @ticketOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'OPEN'**
+  String get ticketOpen;
+
+  /// No description provided for @ticketInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'IN PROGRESS'**
+  String get ticketInProgress;
+
+  /// No description provided for @ticketReplyNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR REPLY NEEDED'**
+  String get ticketReplyNeeded;
+
+  /// No description provided for @ticketResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'RESOLVED'**
+  String get ticketResolved;
+
+  /// No description provided for @ticketClosed.
+  ///
+  /// In en, this message translates to:
+  /// **'CLOSED'**
+  String get ticketClosed;
+
+  /// No description provided for @ticketLastUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Last update {date}'**
+  String ticketLastUpdate(Object date);
+
+  /// No description provided for @supportCategoryJob.
+  ///
+  /// In en, this message translates to:
+  /// **'A job'**
+  String get supportCategoryJob;
+
+  /// No description provided for @supportCategoryPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'A payment'**
+  String get supportCategoryPayment;
+
+  /// No description provided for @supportCategoryWithdrawal.
+  ///
+  /// In en, this message translates to:
+  /// **'A withdrawal'**
+  String get supportCategoryWithdrawal;
+
+  /// No description provided for @supportCategoryAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'My account'**
+  String get supportCategoryAccount;
+
+  /// No description provided for @supportCategorySafety.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety'**
+  String get supportCategorySafety;
+
+  /// No description provided for @supportCategoryApp.
+  ///
+  /// In en, this message translates to:
+  /// **'The app'**
+  String get supportCategoryApp;
+
+  /// No description provided for @supportCategoryOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get supportCategoryOther;
+
+  /// No description provided for @supportRaised.
+  ///
+  /// In en, this message translates to:
+  /// **'Request {code} raised.'**
+  String supportRaised(Object code);
+
+  /// No description provided for @supportHowHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'How can we help?'**
+  String get supportHowHelp;
+
+  /// No description provided for @supportAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'What is it about?'**
+  String get supportAbout;
+
+  /// No description provided for @supportSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get supportSubject;
+
+  /// No description provided for @supportSubjectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'A few words about the problem'**
+  String get supportSubjectHint;
+
+  /// No description provided for @supportWhatHappened.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened?'**
+  String get supportWhatHappened;
+
+  /// No description provided for @supportSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get supportSend;
+
+  /// No description provided for @ticketTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Support request'**
+  String get ticketTitle;
+
+  /// No description provided for @ticketNoMessages.
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get ticketNoMessages;
+
+  /// No description provided for @ticketNoMessagesBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your conversation will appear here.'**
+  String get ticketNoMessagesBody;
+
+  /// No description provided for @ticketWriteMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Write a message'**
+  String get ticketWriteMessage;
+
+  /// No description provided for @ticketSupportName.
+  ///
+  /// In en, this message translates to:
+  /// **'Wervexa support'**
+  String get ticketSupportName;
+
+  /// No description provided for @requestsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer requests'**
+  String get requestsTitle;
+
+  /// No description provided for @requestsRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get requestsRefresh;
+
+  /// No description provided for @requestsLocationNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Location needed'**
+  String get requestsLocationNeeded;
+
+  /// No description provided for @requestsLocationBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We use your location to find customer requests near you.'**
+  String get requestsLocationBody;
+
+  /// No description provided for @requestsGrantLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Grant Location Access'**
+  String get requestsGrantLocation;
+
+  /// No description provided for @requestsEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching requests nearby'**
+  String get requestsEmpty;
+
+  /// No description provided for @requestsEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'New customer requests will appear here\nwhen they match your services.'**
+  String get requestsEmptyBody;
+
+  /// No description provided for @requestsViewOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'View & Offer →'**
+  String get requestsViewOffer;
+
+  /// No description provided for @requestEnterPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid price'**
+  String get requestEnterPrice;
+
+  /// No description provided for @requestOfferSubmitted.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer submitted at {price}!'**
+  String requestOfferSubmitted(Object price);
+
+  /// No description provided for @requestDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Request Details'**
+  String get requestDetailsTitle;
+
+  /// No description provided for @requestStatusOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get requestStatusOpen;
+
+  /// No description provided for @requestCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get requestCategory;
+
+  /// No description provided for @requestBudget.
+  ///
+  /// In en, this message translates to:
+  /// **'Budget'**
+  String get requestBudget;
+
+  /// No description provided for @requestSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get requestSchedule;
+
+  /// No description provided for @requestDistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get requestDistance;
+
+  /// No description provided for @requestArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get requestArea;
+
+  /// No description provided for @requestOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers'**
+  String get requestOffers;
+
+  /// No description provided for @requestNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get requestNotes;
+
+  /// No description provided for @requestAddressPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'The customer\'s exact address is shared only after they accept your offer.'**
+  String get requestAddressPrivacy;
+
+  /// No description provided for @requestYourOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Offer'**
+  String get requestYourOffer;
+
+  /// No description provided for @requestYourPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your price (₹)'**
+  String get requestYourPrice;
+
+  /// No description provided for @requestPriceHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 500'**
+  String get requestPriceHint;
+
+  /// No description provided for @requestDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Estimated duration (optional)'**
+  String get requestDuration;
+
+  /// No description provided for @requestDurationHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 1-2 hours'**
+  String get requestDurationHint;
+
+  /// No description provided for @requestMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Message to customer (optional)'**
+  String get requestMessage;
+
+  /// No description provided for @requestMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Why are you the right person for this job?'**
+  String get requestMessageHint;
+
+  /// No description provided for @requestSubmitOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Offer'**
+  String get requestSubmitOffer;
+
+  /// No description provided for @requestMakeOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Make an Offer'**
+  String get requestMakeOffer;
+
+  /// No description provided for @requestAlreadyOffered.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve already submitted an offer for this request.'**
+  String get requestAlreadyOffered;
+
+  /// No description provided for @requestViewOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'View Offers'**
+  String get requestViewOffers;
+
+  /// No description provided for @offersEmptyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers you submit on customer requests\nwill appear here.'**
+  String get offersEmptyBody;
+
+  /// No description provided for @offerWithdraw.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw'**
+  String get offerWithdraw;
+
+  /// No description provided for @offerWithdrawTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Withdraw offer?'**
+  String get offerWithdrawTitle;
+
+  /// No description provided for @offerWithdrawBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The customer will no longer see this offer.'**
+  String get offerWithdrawBody;
+
+  /// No description provided for @offerWithdrawn.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer withdrawn'**
+  String get offerWithdrawn;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Set up your profile'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help'**
+  String get onboardingHelp;
+
+  /// No description provided for @onboardingHello.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, {name}'**
+  String onboardingHello(Object name);
+
+  /// No description provided for @onboardingIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'A few things and you are ready to start getting work.'**
+  String get onboardingIntro;
+
+  /// No description provided for @onboardingSetup.
+  ///
+  /// In en, this message translates to:
+  /// **'Setup'**
+  String get onboardingSetup;
+
+  /// No description provided for @onboardingStepCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{done} of {total}'**
+  String onboardingStepCount(int done, int total);
+
+  /// No description provided for @onboardingBasicBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your city and PIN code, so we can find work near you.'**
+  String get onboardingBasicBody;
+
+  /// No description provided for @onboardingTradeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The trade you mainly work in.'**
+  String get onboardingTradeBody;
+
+  /// No description provided for @onboardingSkillsDoneBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your main trade counts as one. Open this to add every other trade you work in.'**
+  String get onboardingSkillsDoneBody;
+
+  /// No description provided for @onboardingSkillsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Add every trade you work in. You are not limited to one.'**
+  String get onboardingSkillsBody;
+
+  /// No description provided for @onboardingAreaBody.
+  ///
+  /// In en, this message translates to:
+  /// **'How far you are willing to travel for a job.'**
+  String get onboardingAreaBody;
+
+  /// No description provided for @onboardingKycBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A government ID. Customers are letting you into their homes.'**
+  String get onboardingKycBody;
+
+  /// No description provided for @onboardingReviewNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Once you have finished these, our team checks your documents. You can carry on setting up your services while you wait.'**
+  String get onboardingReviewNotice;
+
+  /// No description provided for @onboardingTradesLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Trades could not be loaded. Try again.'**
+  String get onboardingTradesLoadFailed;
+
+  /// No description provided for @onboardingMainTrade.
+  ///
+  /// In en, this message translates to:
+  /// **'What is your main trade?'**
+  String get onboardingMainTrade;
+
+  /// No description provided for @onboardingMainTradeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'You can add more trades afterwards.'**
+  String get onboardingMainTradeBody;
+
+  /// No description provided for @onboardingTradeSet.
+  ///
+  /// In en, this message translates to:
+  /// **'{trade} set as your main trade.'**
+  String onboardingTradeSet(Object trade);
+
+  /// No description provided for @onboardingTravelTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How far will you travel?'**
+  String get onboardingTravelTitle;
+
+  /// No description provided for @onboardingTravelBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We will only offer you jobs within this distance of where you are right now.'**
+  String get onboardingTravelBody;
+
+  /// No description provided for @onboardingTravelCentre.
+  ///
+  /// In en, this message translates to:
+  /// **'We use your current location as the centre point. You can change this any time from your profile.'**
+  String get onboardingTravelCentre;
+
+  /// No description provided for @onboardingLocationOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on location access to set your work area.'**
+  String get onboardingLocationOff;
+
+  /// No description provided for @commonSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get commonSave;
+
+  /// No description provided for @notificationsStayOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications stay off. You can turn them on in your phone settings.'**
+  String get notificationsStayOff;
+
+  /// No description provided for @notificationsPrimerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Get told when a job comes in'**
+  String get notificationsPrimerTitle;
+
+  /// No description provided for @notificationsPrimerBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Job offers expire. A notification is how you hear about one while the app is closed — nothing else is sent.'**
+  String get notificationsPrimerBody;
+
+  /// No description provided for @notificationsTurnOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on notifications'**
+  String get notificationsTurnOn;
+
+  /// No description provided for @commonNotNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get commonNotNow;
+
+  /// No description provided for @onboardingCityRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your city'**
+  String get onboardingCityRequired;
+
+  /// No description provided for @onboardingGenderRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your gender'**
+  String get onboardingGenderRequired;
+
+  /// No description provided for @onboardingWhereBased.
+  ///
+  /// In en, this message translates to:
+  /// **'Where are you based?'**
+  String get onboardingWhereBased;
 }
 
 class _AppLocalizationsDelegate

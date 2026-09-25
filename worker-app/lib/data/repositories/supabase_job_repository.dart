@@ -1,5 +1,6 @@
 import '../../core/errors/app_failure.dart';
 import '../../core/errors/result.dart';
+import '../../core/localization/app_locale.dart';
 import '../../core/logging/app_logger.dart';
 import '../../core/maps/polyline_codec.dart';
 import '../../core/money/money.dart';
@@ -200,7 +201,7 @@ final class SupabaseJobRepository extends SupabaseRepositoryBase
       filterValue: bookingId,
     ).asyncMap((rows) async {
       if (rows.isEmpty) {
-        throw const NotFoundFailure(message: 'That job is no longer available.');
+        throw NotFoundFailure(message: AppStrings.current.jobOfferExpired);
       }
       // Re-read through the select with its joins: the Realtime row carries no
       // embedded service or customer.

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/providers/providers.dart';
 import '../../../app/theme/app_colors.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/worker_offer.dart';
 
@@ -48,9 +49,13 @@ class _MyOffersScreenState extends ConsumerState<MyOffersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My offers'),
+        title: Text(context.l10n.homeMyOffers),
         actions: [
-          IconButton(icon: const Icon(Icons.refresh), onPressed: _load),
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: context.l10n.requestsRefresh,
+            onPressed: _load,
+          ),
         ],
       ),
       body: _buildBody(),
@@ -58,6 +63,7 @@ class _MyOffersScreenState extends ConsumerState<MyOffersScreen> {
   }
 
   Widget _buildBody() {
+    final l10n = context.l10n;
     if (_loading) return const Center(child: CircularProgressIndicator());
     if (_error != null) {
       return Center(
@@ -68,7 +74,7 @@ class _MyOffersScreenState extends ConsumerState<MyOffersScreen> {
             children: [
               Text(_error!, textAlign: TextAlign.center),
               const SizedBox(height: 12),
-              FilledButton(onPressed: _load, child: const Text('Retry')),
+              FilledButton(onPressed: _load, child: Text(l10n.commonRetry)),
             ],
           ),
         ),
@@ -82,12 +88,12 @@ class _MyOffersScreenState extends ConsumerState<MyOffersScreen> {
             Icon(Icons.local_offer_outlined,
                 size: 64, color: AppColors.inkTertiary),
             const SizedBox(height: 12),
-            const Text(
-              'No offers yet',
+            Text(
+              l10n.jobsEmptyOffers,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             Text(
-              'Offers you submit on customer requests\nwill appear here.',
+              l10n.offersEmptyBody,
               textAlign: TextAlign.center,
               style: TextStyle(color: AppColors.inkSecondary),
             ),
@@ -240,7 +246,7 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : const Icon(Icons.undo, size: 16),
-                label: const Text('Withdraw'),
+                label: Text(context.l10n.offerWithdraw),
                 style: TextButton.styleFrom(foregroundColor: AppColors.warning),
               ),
             ),
@@ -254,17 +260,17 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Withdraw offer?'),
-        content: const Text('The customer will no longer see this offer.'),
+        title: Text(ctx.l10n.offerWithdrawTitle),
+        content: Text(ctx.l10n.offerWithdrawBody),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+            child: Text(ctx.l10n.commonCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child:
-                const Text('Withdraw', style: TextStyle(color: AppColors.danger)),
+            child: Text(ctx.l10n.offerWithdraw,
+                style: const TextStyle(color: AppColors.danger)),
           ),
         ],
       ),
@@ -281,8 +287,8 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
 
     result.fold(
       (_) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Offer withdrawn'),
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(context.l10n.offerWithdrawn),
           backgroundColor: AppColors.success,
         ));
         widget.onWithdrawn();

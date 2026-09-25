@@ -1943,4 +1943,446 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bankSubmit => 'Submit for verification';
+
+  @override
+  String get profileCompleteness => 'Profile completeness';
+
+  @override
+  String get profileCompletenessBody =>
+      'A complete profile helps customers choose you.';
+
+  @override
+  String get profileJobsDone => 'Jobs done';
+
+  @override
+  String get profileRating => 'Rating';
+
+  @override
+  String get profileExperience => 'Experience';
+
+  @override
+  String profileExperienceYears(Object years) {
+    return '$years yr';
+  }
+
+  @override
+  String get profileEdit => 'Edit profile';
+
+  @override
+  String get profileVerified => 'VERIFIED';
+
+  @override
+  String get profileNotVerified => 'NOT VERIFIED';
+
+  @override
+  String get profilePinInvalid => 'Enter a valid 6-digit PIN code';
+
+  @override
+  String get profileUpdated => 'Profile updated.';
+
+  @override
+  String get profilePhotoUpdated => 'Photo updated.';
+
+  @override
+  String get profileChangePhoto => 'Change photo';
+
+  @override
+  String get profileName => 'Name';
+
+  @override
+  String get profilePhone => 'Phone';
+
+  @override
+  String get profileLockedNotice =>
+      'Your name and number are linked to your identity check. Contact support if either needs to change.';
+
+  @override
+  String get profileAbout => 'About you';
+
+  @override
+  String get profileBioHint =>
+      'Tell customers about your experience and what you are good at.';
+
+  @override
+  String get profileYearsExperience => 'Years of experience';
+
+  @override
+  String get profileBased => 'Where you are based';
+
+  @override
+  String get profileAddress => 'Address';
+
+  @override
+  String get profileCity => 'City';
+
+  @override
+  String get profilePin => 'PIN code';
+
+  @override
+  String get profileGender => 'Gender';
+
+  @override
+  String get genderMale => 'Male';
+
+  @override
+  String get genderFemale => 'Female';
+
+  @override
+  String get genderOther => 'Other';
+
+  @override
+  String get profileTrades => 'Your trades';
+
+  @override
+  String get profileTradesBody =>
+      'You can work in as many trades as you are approved for.';
+
+  @override
+  String get profileTradesLoadFailed => 'Your trades could not be loaded.';
+
+  @override
+  String get tradePending => 'PENDING';
+
+  @override
+  String get profileAddTrade => 'Add a trade';
+
+  @override
+  String get profileAddTradeBody =>
+      'We may ask for proof of your skills before approving it.';
+
+  @override
+  String get profileTradeRequested =>
+      'Requested. We will let you know once it is approved.';
+
+  @override
+  String get profileSave => 'Save changes';
+
+  @override
+  String get supportNewRequest => 'New request';
+
+  @override
+  String get supportEmpty => 'No requests yet';
+
+  @override
+  String get supportEmptyBody =>
+      'If something goes wrong with a job, a payment or your account, raise a request and we will help.';
+
+  @override
+  String get supportYourRequests => 'Your requests';
+
+  @override
+  String get supportEmergency => 'In an emergency';
+
+  @override
+  String get supportEmergencyBody =>
+      'This app cannot call for help on your behalf. If you are in danger, call the emergency services directly.';
+
+  @override
+  String get supportCall112 => 'Call 112';
+
+  @override
+  String get supportPolice => 'Police';
+
+  @override
+  String get ticketOpen => 'OPEN';
+
+  @override
+  String get ticketInProgress => 'IN PROGRESS';
+
+  @override
+  String get ticketReplyNeeded => 'YOUR REPLY NEEDED';
+
+  @override
+  String get ticketResolved => 'RESOLVED';
+
+  @override
+  String get ticketClosed => 'CLOSED';
+
+  @override
+  String ticketLastUpdate(Object date) {
+    return 'Last update $date';
+  }
+
+  @override
+  String get supportCategoryJob => 'A job';
+
+  @override
+  String get supportCategoryPayment => 'A payment';
+
+  @override
+  String get supportCategoryWithdrawal => 'A withdrawal';
+
+  @override
+  String get supportCategoryAccount => 'My account';
+
+  @override
+  String get supportCategorySafety => 'Safety';
+
+  @override
+  String get supportCategoryApp => 'The app';
+
+  @override
+  String get supportCategoryOther => 'Something else';
+
+  @override
+  String supportRaised(Object code) {
+    return 'Request $code raised.';
+  }
+
+  @override
+  String get supportHowHelp => 'How can we help?';
+
+  @override
+  String get supportAbout => 'What is it about?';
+
+  @override
+  String get supportSubject => 'Subject';
+
+  @override
+  String get supportSubjectHint => 'A few words about the problem';
+
+  @override
+  String get supportWhatHappened => 'What happened?';
+
+  @override
+  String get supportSend => 'Send request';
+
+  @override
+  String get ticketTitle => 'Support request';
+
+  @override
+  String get ticketNoMessages => 'No messages yet';
+
+  @override
+  String get ticketNoMessagesBody => 'Your conversation will appear here.';
+
+  @override
+  String get ticketWriteMessage => 'Write a message';
+
+  @override
+  String get ticketSupportName => 'Wervexa support';
+
+  @override
+  String get requestsTitle => 'Customer requests';
+
+  @override
+  String get requestsRefresh => 'Refresh';
+
+  @override
+  String get requestsLocationNeeded => 'Location needed';
+
+  @override
+  String get requestsLocationBody =>
+      'We use your location to find customer requests near you.';
+
+  @override
+  String get requestsGrantLocation => 'Grant Location Access';
+
+  @override
+  String get requestsEmpty => 'No matching requests nearby';
+
+  @override
+  String get requestsEmptyBody =>
+      'New customer requests will appear here\nwhen they match your services.';
+
+  @override
+  String get requestsViewOffer => 'View & Offer →';
+
+  @override
+  String get requestEnterPrice => 'Enter a valid price';
+
+  @override
+  String requestOfferSubmitted(Object price) {
+    return 'Offer submitted at $price!';
+  }
+
+  @override
+  String get requestDetailsTitle => 'Request Details';
+
+  @override
+  String get requestStatusOpen => 'Open';
+
+  @override
+  String get requestCategory => 'Category';
+
+  @override
+  String get requestBudget => 'Budget';
+
+  @override
+  String get requestSchedule => 'Schedule';
+
+  @override
+  String get requestDistance => 'Distance';
+
+  @override
+  String get requestArea => 'Area';
+
+  @override
+  String get requestOffers => 'Offers';
+
+  @override
+  String get requestNotes => 'Notes';
+
+  @override
+  String get requestAddressPrivacy =>
+      'The customer\'s exact address is shared only after they accept your offer.';
+
+  @override
+  String get requestYourOffer => 'Your Offer';
+
+  @override
+  String get requestYourPrice => 'Your price (₹)';
+
+  @override
+  String get requestPriceHint => 'e.g. 500';
+
+  @override
+  String get requestDuration => 'Estimated duration (optional)';
+
+  @override
+  String get requestDurationHint => 'e.g. 1-2 hours';
+
+  @override
+  String get requestMessage => 'Message to customer (optional)';
+
+  @override
+  String get requestMessageHint => 'Why are you the right person for this job?';
+
+  @override
+  String get requestSubmitOffer => 'Submit Offer';
+
+  @override
+  String get requestMakeOffer => 'Make an Offer';
+
+  @override
+  String get requestAlreadyOffered =>
+      'You\'ve already submitted an offer for this request.';
+
+  @override
+  String get requestViewOffers => 'View Offers';
+
+  @override
+  String get offersEmptyBody =>
+      'Offers you submit on customer requests\nwill appear here.';
+
+  @override
+  String get offerWithdraw => 'Withdraw';
+
+  @override
+  String get offerWithdrawTitle => 'Withdraw offer?';
+
+  @override
+  String get offerWithdrawBody => 'The customer will no longer see this offer.';
+
+  @override
+  String get offerWithdrawn => 'Offer withdrawn';
+
+  @override
+  String get onboardingTitle => 'Set up your profile';
+
+  @override
+  String get onboardingHelp => 'Help';
+
+  @override
+  String onboardingHello(Object name) {
+    return 'Hello, $name';
+  }
+
+  @override
+  String get onboardingIntro =>
+      'A few things and you are ready to start getting work.';
+
+  @override
+  String get onboardingSetup => 'Setup';
+
+  @override
+  String onboardingStepCount(int done, int total) {
+    return '$done of $total';
+  }
+
+  @override
+  String get onboardingBasicBody =>
+      'Your city and PIN code, so we can find work near you.';
+
+  @override
+  String get onboardingTradeBody => 'The trade you mainly work in.';
+
+  @override
+  String get onboardingSkillsDoneBody =>
+      'Your main trade counts as one. Open this to add every other trade you work in.';
+
+  @override
+  String get onboardingSkillsBody =>
+      'Add every trade you work in. You are not limited to one.';
+
+  @override
+  String get onboardingAreaBody =>
+      'How far you are willing to travel for a job.';
+
+  @override
+  String get onboardingKycBody =>
+      'A government ID. Customers are letting you into their homes.';
+
+  @override
+  String get onboardingReviewNotice =>
+      'Once you have finished these, our team checks your documents. You can carry on setting up your services while you wait.';
+
+  @override
+  String get onboardingTradesLoadFailed =>
+      'Trades could not be loaded. Try again.';
+
+  @override
+  String get onboardingMainTrade => 'What is your main trade?';
+
+  @override
+  String get onboardingMainTradeBody => 'You can add more trades afterwards.';
+
+  @override
+  String onboardingTradeSet(Object trade) {
+    return '$trade set as your main trade.';
+  }
+
+  @override
+  String get onboardingTravelTitle => 'How far will you travel?';
+
+  @override
+  String get onboardingTravelBody =>
+      'We will only offer you jobs within this distance of where you are right now.';
+
+  @override
+  String get onboardingTravelCentre =>
+      'We use your current location as the centre point. You can change this any time from your profile.';
+
+  @override
+  String get onboardingLocationOff =>
+      'Turn on location access to set your work area.';
+
+  @override
+  String get commonSave => 'Save';
+
+  @override
+  String get notificationsStayOff =>
+      'Notifications stay off. You can turn them on in your phone settings.';
+
+  @override
+  String get notificationsPrimerTitle => 'Get told when a job comes in';
+
+  @override
+  String get notificationsPrimerBody =>
+      'Job offers expire. A notification is how you hear about one while the app is closed — nothing else is sent.';
+
+  @override
+  String get notificationsTurnOn => 'Turn on notifications';
+
+  @override
+  String get commonNotNow => 'Not now';
+
+  @override
+  String get onboardingCityRequired => 'Please enter your city';
+
+  @override
+  String get onboardingGenderRequired => 'Please select your gender';
+
+  @override
+  String get onboardingWhereBased => 'Where are you based?';
 }

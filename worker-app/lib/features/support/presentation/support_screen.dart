@@ -8,6 +8,7 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/support.dart';
 import '../../../shared/widgets/async_value_view.dart';
@@ -20,14 +21,15 @@ class SupportScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final tickets = ref.watch(ticketsProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Help and support')),
+      appBar: AppBar(title: Text(l10n.settingsHelp)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _newTicket(context, ref),
         icon: const Icon(Icons.add_comment_outlined),
-        label: const Text('New request'),
+        label: Text(l10n.supportNewRequest),
       ),
       body: AsyncValueView<List<SupportTicket>>(
         value: tickets,
@@ -45,17 +47,16 @@ class SupportScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.xl),
 
             if (items.isEmpty)
-              const Padding(
-                padding: EdgeInsets.only(top: AppSpacing.xxxl),
+              Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.xxxl),
                 child: EmptyStateView(
                   icon: Icons.support_agent_rounded,
-                  title: 'No requests yet',
-                  message:
-                      'If something goes wrong with a job, a payment or your account, raise a request and we will help.',
+                  title: l10n.supportEmpty,
+                  message: l10n.supportEmptyBody,
                 ),
               )
             else ...[
-              const SectionHeader(title: 'Your requests'),
+              SectionHeader(title: l10n.supportYourRequests),
               for (final ticket in items)
                 Padding(
                   padding: const EdgeInsets.only(bottom: AppSpacing.md),
@@ -94,6 +95,7 @@ class _EmergencyCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return AppCard(
       borderColor: AppColors.danger.withValues(alpha: 0.3),
       backgroundColor: AppColors.dangerSurface,
@@ -104,14 +106,14 @@ class _EmergencyCard extends StatelessWidget {
             children: [
               const Icon(Icons.emergency_outlined, color: AppColors.danger),
               const SizedBox(width: AppSpacing.md),
-              Text('In an emergency',
+              Text(l10n.supportEmergency,
                   style: AppTypography.titleMedium
                       .copyWith(color: AppColors.danger)),
             ],
           ),
           const SizedBox(height: AppSpacing.sm),
           Text(
-            'This app cannot call for help on your behalf. If you are in danger, call the emergency services directly.',
+            l10n.supportEmergencyBody,
             style: AppTypography.bodyMedium.copyWith(color: AppColors.danger),
           ),
           const SizedBox(height: AppSpacing.lg),
@@ -125,7 +127,7 @@ class _EmergencyCard extends StatelessWidget {
                     side: const BorderSide(color: AppColors.danger),
                   ),
                   icon: const Icon(Icons.call_rounded),
-                  label: const Text('Call 112'),
+                  label: Text(l10n.supportCall112),
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -137,7 +139,7 @@ class _EmergencyCard extends StatelessWidget {
                     side: const BorderSide(color: AppColors.danger),
                   ),
                   icon: const Icon(Icons.local_police_outlined),
-                  label: const Text('Police'),
+                  label: Text(l10n.supportPolice),
                 ),
               ),
             ],
@@ -160,12 +162,14 @@ class _TicketTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final (label, color) = switch (ticket.status) {
-      SupportStatus.open => ('OPEN', AppColors.info),
-      SupportStatus.inProgress => ('IN PROGRESS', AppColors.info),
-      SupportStatus.waitingForUser => ('YOUR REPLY NEEDED', AppColors.warning),
-      SupportStatus.resolved => ('RESOLVED', AppColors.success),
-      SupportStatus.closed => ('CLOSED', AppColors.inkTertiary),
+      SupportStatus.open => (l10n.ticketOpen, AppColors.info),
+      SupportStatus.inProgress => (l10n.ticketInProgress, AppColors.info),
+      SupportStatus.waitingForUser =>
+        (l10n.ticketReplyNeeded, AppColors.warning),
+      SupportStatus.resolved => (l10n.ticketResolved, AppColors.success),
+      SupportStatus.closed => (l10n.ticketClosed, AppColors.inkTertiary),
     };
 
     return AppCard(
@@ -187,7 +191,8 @@ class _TicketTile extends StatelessWidget {
               style: AppTypography.titleMedium.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.xxs),
           Text(
-            'Last update ${DateFormat('d MMM, h:mm a').format(ticket.lastMessageAt)}',
+            l10n.ticketLastUpdate(DateFormat('d MMM, h:mm a', context.dateLocale)
+                .format(ticket.lastMessageAt)),
             style: AppTypography.bodySmall.copyWith(color: context.inkSecondary),
           ),
         ],
@@ -209,16 +214,16 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
   SupportCategory _category = SupportCategory.other;
   bool _busy = false;
 
-  static const _categories = [
-    (SupportCategory.booking, 'A job'),
-    (SupportCategory.payment, 'A payment'),
-    (SupportCategory.payout, 'A withdrawal'),
-    (SupportCategory.verification, 'Verification'),
-    (SupportCategory.account, 'My account'),
-    (SupportCategory.safety, 'Safety'),
-    (SupportCategory.appIssue, 'The app'),
-    (SupportCategory.other, 'Something else'),
-  ];
+  static List<(SupportCategory, String)> _categories(AppLocalizations l10n) => [
+        (SupportCategory.booking, l10n.supportCategoryJob),
+        (SupportCategory.payment, l10n.supportCategoryPayment),
+        (SupportCategory.payout, l10n.supportCategoryWithdrawal),
+        (SupportCategory.verification, l10n.verificationTitle),
+        (SupportCategory.account, l10n.supportCategoryAccount),
+        (SupportCategory.safety, l10n.supportCategorySafety),
+        (SupportCategory.appIssue, l10n.supportCategoryApp),
+        (SupportCategory.other, l10n.supportCategoryOther),
+      ];
 
   @override
   void dispose() {
@@ -242,7 +247,7 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
     result.fold(
       (ticket) {
         Navigator.of(context).pop();
-        showSuccess(context, 'Request ${ticket.ticketCode} raised.');
+        showSuccess(context, context.l10n.supportRaised(ticket.ticketCode));
       },
       (failure) => showFailure(context, failure.message),
     );
@@ -250,6 +255,7 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return SafeArea(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -257,18 +263,18 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('How can we help?',
+            Text(l10n.supportHowHelp,
                 style:
                     AppTypography.headlineMedium.copyWith(color: context.ink)),
             const SizedBox(height: AppSpacing.xl),
-            Text('What is it about?',
+            Text(l10n.supportAbout,
                 style: AppTypography.label.copyWith(color: context.inkSecondary)),
             const SizedBox(height: AppSpacing.sm),
             Wrap(
               spacing: AppSpacing.sm,
               runSpacing: AppSpacing.sm,
               children: [
-                for (final (value, label) in _categories)
+                for (final (value, label) in _categories(l10n))
                   ChoiceChip(
                     label: Text(label),
                     selected: _category == value,
@@ -280,9 +286,9 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
             TextField(
               controller: _subject,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'Subject',
-                hintText: 'A few words about the problem',
+              decoration: InputDecoration(
+                labelText: l10n.supportSubject,
+                hintText: l10n.supportSubjectHint,
               ),
             ),
             const SizedBox(height: AppSpacing.md),
@@ -290,8 +296,8 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
               controller: _message,
               maxLines: 5,
               textCapitalization: TextCapitalization.sentences,
-              decoration: const InputDecoration(
-                labelText: 'What happened?',
+              decoration: InputDecoration(
+                labelText: l10n.supportWhatHappened,
                 alignLabelWithHint: true,
               ),
             ),
@@ -307,7 +313,7 @@ class _NewTicketSheetState extends ConsumerState<_NewTicketSheet> {
                         valueColor: AlwaysStoppedAnimation(Colors.white),
                       ),
                     )
-                  : const Text('Send request'),
+                  : Text(l10n.supportSend),
             ),
           ],
         ),
