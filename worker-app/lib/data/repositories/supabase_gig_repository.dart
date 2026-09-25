@@ -9,6 +9,7 @@ import '../../domain/entities/media.dart';
 import '../../domain/repositories/repositories.dart';
 import '../mappers/mappers.dart';
 import 'supabase_repository_base.dart';
+import '../../core/localization/app_locale.dart';
 
 /// The worker's gigs.
 ///
@@ -223,7 +224,7 @@ final class SupabaseGigRepository extends SupabaseRepositoryBase
     )) {
       if (task.state == UploadState.failed) {
         return Err(UploadFailure(
-          message: task.failure ?? 'That photo could not be uploaded.',
+          message: task.failure ?? AppStrings.current.photoUploadFailed,
           isResumable: true,
         ));
       }
@@ -231,8 +232,8 @@ final class SupabaseGigRepository extends SupabaseRepositoryBase
     }
 
     if (finished == null) {
-      return const Err(UploadFailure(
-        message: 'That photo could not be uploaded. Try again.',
+      return Err(UploadFailure(
+        message: AppStrings.current.photoUploadFailedRetry,
         isResumable: true,
       ));
     }

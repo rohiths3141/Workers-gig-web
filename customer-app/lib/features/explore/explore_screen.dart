@@ -9,6 +9,8 @@ import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../domain/entities/gig_card.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 enum _LocationState { loading, ready, serviceDisabled, permissionDenied }
 
@@ -108,14 +110,15 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   @override
   Widget build(BuildContext context) {
     final categoriesAsync = ref.watch(serviceCategoriesProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Explore & Discover Gigs'),
+        title: Text(l10n.exploreTitle),
         actions: [
           IconButton(
             icon: Icon(_isMapView ? Icons.format_list_bulleted : Icons.map_outlined),
-            tooltip: _isMapView ? 'List View' : 'Map View',
+            tooltip: _isMapView ? l10n.exploreListView : l10n.exploreMapView,
             onPressed: () => setState(() => _isMapView = !_isMapView),
           ),
         ],
@@ -129,7 +132,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 TextField(
                   onChanged: (val) => setState(() => _searchQuery = val.trim().toLowerCase()),
                   decoration: InputDecoration(
-                    hintText: 'Search services, workers or skills...',
+                    hintText: l10n.exploreSearchHint,
                     prefixIcon: const Icon(Icons.search),
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
                     contentPadding: const EdgeInsets.symmetric(horizontal: 16),
@@ -144,7 +147,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                         return Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: FilterChip(
-                            label: Text(cat.name),
+                            label: Text(localizedServiceName(l10n, cat.name, slug: cat.slug)),
                             selected: _selectedCategoryId == cat.id,
                             onSelected: (selected) {
                               setState(() {
@@ -171,23 +174,24 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
+    final l10n = context.l10n;
     switch (_locationState) {
       case _LocationState.loading:
         return const Center(child: CircularProgressIndicator());
       case _LocationState.serviceDisabled:
         return EmptyState(
           icon: Icons.location_disabled,
-          title: 'Location services are off',
-          message: 'Turn on location to discover professionals near you.',
-          actionLabel: 'Retry',
+          title: l10n.exploreLocationOffTitle,
+          message: l10n.exploreLocationOffMessage,
+          actionLabel: l10n.commonRetry,
           onAction: _resolveLocation,
         );
       case _LocationState.permissionDenied:
         return EmptyState(
           icon: Icons.location_off_outlined,
-          title: 'Location permission needed',
-          message: 'We use your location to find professionals nearby.',
-          actionLabel: 'Grant Permission',
+          title: l10n.exploreLocationPermissionTitle,
+          message: l10n.exploreLocationPermissionMessage,
+          actionLabel: l10n.commonGrantPermission,
           onAction: _resolveLocation,
         );
       case _LocationState.ready:
@@ -195,10 +199,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     }
 
     if (_selectedCategoryId == null) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.category_outlined,
-        title: 'Choose a service to explore',
-        message: 'Select a category above to see nearby professionals.',
+        title: l10n.exploreChooseService,
+        message: l10n.exploreChooseServiceMessage,
       );
     }
 
@@ -220,9 +224,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 g.title.toLowerCase().contains(_searchQuery)).toList();
 
         if (filtered.isEmpty) {
-          return const EmptyState(
+          return EmptyState(
             icon: Icons.person_search_outlined,
-            title: 'No professionals are available for this service nearby',
+            title: l10n.exploreNoProfessionals,
           );
         }
 
@@ -230,7 +234,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       },
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (err, _) => ErrorState(
-        message: 'Could not load professionals.',
+        message: l10n.exploreLoadFailed,
         onRetry: () => ref.invalidate(gigDiscoveryProvider((
           serviceId: _selectedCategoryId!,
           lat: _position!.latitude,
@@ -336,7 +340,7 @@ class _GigListCard extends StatelessWidget {
                   children: [
                     Text(gig.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                     const SizedBox(height: 4),
-                    Text('By ${gig.workerName}', style: const TextStyle(color: AppColors.inkSecondary, fontSize: 13)),
+                    Text(context.l10n.exploreByWorker(gig.workerName), style: const TextStyle(color: AppColors.inkSecondary, fontSize: 13)),
                     const SizedBox(height: 6),
                     Row(
                       children: [
@@ -368,7 +372,7 @@ class _GigListCard extends StatelessWidget {
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('View'),
+                    child: Text(context.l10n.commonView),
                   ),
                 ],
               ),
@@ -427,7 +431,7 @@ class _GigMapCard extends StatelessWidget {
                 minimumSize: const Size(0, 44),
                 padding: const EdgeInsets.symmetric(horizontal: 16),
               ),
-              child: const Text('View'),
+              child: Text(context.l10n.commonView),
             ),
           ],
         ),

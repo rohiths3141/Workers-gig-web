@@ -16,6 +16,7 @@ import '../../domain/entities/enums.dart';
 import '../../domain/entities/media.dart';
 import '../../domain/repositories/repositories.dart';
 import '../mappers/mappers.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Upload and retrieval of files.
 ///
@@ -245,7 +246,7 @@ final class SupabaseMediaRepository implements MediaRepository {
         if (response.statusCode >= 400) {
           final body = await response.stream.bytesToString();
           throw UploadFailure(
-            message: 'The upload did not complete. Try again.',
+            message: AppStrings.current.uploadIncomplete,
             debugDetail: 'HTTP ${response.statusCode}: $body',
             isResumable: true,
           );
@@ -319,8 +320,8 @@ final class SupabaseMediaRepository implements MediaRepository {
   Future<Map<String, dynamic>> _post(String path, Map<String, Object?> body) async {
     final token = await _idToken();
     if (token == null || token.isEmpty) {
-      throw const AuthFailure(
-        message: 'Please sign in to continue.',
+      throw AuthFailure(
+        message: AppStrings.current.authSignInToContinue,
         requiresReauthentication: true,
       );
     }
@@ -361,19 +362,19 @@ final class SupabaseMediaRepository implements MediaRepository {
       // A non-JSON error body tells the worker nothing useful anyway.
     }
 
+    final l10n = AppStrings.current;
     return switch (status) {
       401 || 403 => AuthFailure(
-          message: serverMessage ?? 'Please sign in to continue.',
+          message: serverMessage ?? l10n.authSignInToContinue,
           requiresReauthentication: status == 401,
         ),
-      404 => NotFoundFailure(message: serverMessage ?? 'That is no longer available.'),
-      413 => const ValidationFailure(message: 'That file is too large.'),
-      415 => const ValidationFailure(message: 'That file type is not accepted.'),
-      422 => ValidationFailure(message: serverMessage ?? 'That file was refused.'),
-      429 => const ValidationFailure(
-          message: 'Too many uploads at once. Wait a moment and try again.'),
+      404 => NotFoundFailure(message: serverMessage ?? l10n.errorNoLongerAvailable),
+      413 => ValidationFailure(message: l10n.uploadTooLarge),
+      415 => ValidationFailure(message: l10n.uploadTypeNotAccepted),
+      422 => ValidationFailure(message: serverMessage ?? l10n.uploadRefused),
+      429 => ValidationFailure(message: l10n.uploadTooMany),
       _ => UploadFailure(
-          message: serverMessage ?? 'The upload did not complete. Try again.',
+          message: serverMessage ?? l10n.uploadIncomplete,
           debugDetail: 'HTTP $status',
           isResumable: true,
         ),
@@ -384,8 +385,8 @@ final class SupabaseMediaRepository implements MediaRepository {
   Future<Result<UploadTask>> retry(String localId) async {
     final pending = _tasks[localId];
     if (pending == null) {
-      return const Err(NotFoundFailure(
-        message: 'That upload is no longer available. Choose the file again.',
+      return Err(NotFoundFailure(
+        message: AppStrings.current.uploadGone,
       ));
     }
 
@@ -412,7 +413,7 @@ final class SupabaseMediaRepository implements MediaRepository {
     }
 
     return last == null
-        ? const Err(UploadFailure(message: 'The upload did not start.'))
+        ? Err(UploadFailure(message: AppStrings.current.uploadDidNotStart))
         : Ok(last);
   }
 

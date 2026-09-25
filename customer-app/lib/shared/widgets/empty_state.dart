@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/localization/l10n.dart';
 
 /// A consistent "nothing to show" placeholder.
 ///
@@ -89,7 +90,7 @@ class ErrorState extends StatelessWidget {
             ),
             if (onRetry != null) ...[
               const SizedBox(height: 16),
-              Center(child: OutlinedButton(onPressed: onRetry, child: const Text('Retry'))),
+              Center(child: OutlinedButton(onPressed: onRetry, child: Text(context.l10n.commonRetry))),
             ],
           ],
         ),

@@ -9,6 +9,7 @@ import 'app/providers/push_registration_provider.dart';
 import 'app/router/app_router.dart';
 import 'app/theme/app_theme.dart';
 import 'core/firebase/firebase_initializer.dart';
+import 'core/localization/l10n.dart';
 import 'core/logging/app_logger.dart';
 import 'core/supabase/supabase_client_provider.dart';
 
@@ -61,9 +62,16 @@ Future<void> main() async {
     );
   }
 
+  // Read before the first frame, so a customer who chose Tamil never sees the
+  // app flash up in English first.
+  final initialLocale = await LocaleController.loadInitial();
+
   runApp(
     ProviderScope(
-      overrides: [appConfigProvider.overrideWithValue(config)],
+      overrides: [
+        appConfigProvider.overrideWithValue(config),
+        initialAppLocaleProvider.overrideWithValue(initialLocale),
+      ],
       child: const WervexaCustomerApp(),
     ),
   );
@@ -75,6 +83,7 @@ class WervexaCustomerApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(appRouterProvider);
+    final locale = ref.watch(localeControllerProvider);
     ref.watch(pushRegistrationProvider);
 
     return MaterialApp.router(
@@ -84,6 +93,9 @@ class WervexaCustomerApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
       routerConfig: router,
+      locale: locale.locale,
+      supportedLocales: AppLocale.supportedLocales,
+      localizationsDelegates: appLocalizationsDelegates,
     );
   }
 }

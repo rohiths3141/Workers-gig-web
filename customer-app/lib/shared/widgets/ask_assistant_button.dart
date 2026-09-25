@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/localization/l10n.dart';
 
 /// The entry point to the service assistant.
 ///
@@ -20,9 +21,9 @@ class AskAssistantButton extends StatelessWidget {
       foregroundColor: Colors.white,
       elevation: 3,
       icon: const Icon(Icons.auto_awesome_rounded, size: 20),
-      label: const Text(
-        'Ask AI',
-        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+      label: Text(
+        context.l10n.assistantFabLabel,
+        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
       ),
     );
   }

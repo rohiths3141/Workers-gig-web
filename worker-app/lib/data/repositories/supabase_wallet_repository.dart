@@ -6,6 +6,7 @@ import '../../domain/entities/wallet.dart';
 import '../../domain/repositories/repositories.dart';
 import '../mappers/mappers.dart';
 import 'supabase_repository_base.dart';
+import '../../core/localization/app_locale.dart';
 
 /// The wallet and its ledger.
 ///
@@ -44,8 +45,8 @@ final class SupabaseWalletRepository extends SupabaseRepositoryBase
             // Its absence is a real problem, not something to paper over with a
             // zero balance — a fabricated zero would tell a worker they have
             // no money when the truth is unknown.
-            throw const NotFoundFailure(
-              message: 'Your wallet could not be loaded. Please try again.',
+            throw NotFoundFailure(
+              message: AppStrings.current.walletLoadFailedRetry,
             );
           }
 
@@ -100,8 +101,8 @@ final class SupabaseWalletRepository extends SupabaseRepositoryBase
           filterValue: workerId,
         ).asyncMap((rows) async {
           if (rows.isEmpty) {
-            throw const NotFoundFailure(
-                message: 'Your wallet could not be loaded.');
+            throw NotFoundFailure(
+                message: AppStrings.current.walletLoadFailed);
           }
           final row = rows.first;
           final pending =

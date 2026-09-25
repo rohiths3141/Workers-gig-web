@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 class ServiceRequestScreen extends StatefulWidget {
   final String serviceId;
@@ -140,7 +142,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedLocation == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select a service location')),
+        SnackBar(content: Text(context.l10n.requestSelectLocation)),
       );
       return;
     }
@@ -171,9 +173,12 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Request ${widget.serviceName.isEmpty ? "Service" : widget.serviceName}'),
+        title: Text(l10n.requestTitle(widget.serviceName.isEmpty
+            ? l10n.paymentService
+            : localizedServiceName(l10n, widget.serviceName))),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -201,9 +206,9 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Service Address',
-                                style: TextStyle(
+                              Text(
+                                l10n.requestServiceAddress,
+                                style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                   color: AppColors.ink,
@@ -212,10 +217,10 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 _isDetectingLocation
-                                    ? 'Detecting your location…'
+                                    ? l10n.requestDetectingLocation
                                     : (_selectedLocation != null
                                         ? _selectedLocation!['addressLine'] as String
-                                        : 'Tap to pick service location'),
+                                        : l10n.requestTapToPickLocation),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: _isDetectingLocation ? AppColors.primary : AppColors.inkSecondary,
@@ -236,7 +241,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
 
                 // Description Box
                 Text(
-                  'Describe the Issue / Task',
+                  l10n.requestDescribeIssue,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.ink,
@@ -247,14 +252,14 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                   controller: _descriptionController,
                   maxLines: 4,
                   decoration: InputDecoration(
-                    hintText: 'e.g. Living room main ceiling light switch is sparking when turned on.',
+                    hintText: l10n.requestDescribeHint,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   validator: (val) {
                     if (val == null || val.trim().length < 10) {
-                      return 'Please describe the problem in at least 10 characters';
+                      return l10n.requestDescribeMin;
                     }
                     return null;
                   },
@@ -263,7 +268,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
 
                 // Photo Attachments
                 Text(
-                  'Attach Photos of Problem (Optional)',
+                  l10n.requestAttachPhotos,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.ink,
@@ -296,7 +301,9 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                             border: Border.all(color: AppColors.primary, style: BorderStyle.solid),
                             color: AppColors.primary.withOpacity(0.05),
                           ),
-                          child: const Icon(Icons.add_a_photo_outlined, color: AppColors.primary),
+                          child: Icon(Icons.add_a_photo_outlined,
+                              color: AppColors.primary,
+                              semanticLabel: l10n.requestAddPhoto),
                         ),
                       ),
                   ],
@@ -305,7 +312,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
 
                 // Timing Option
                 Text(
-                  'When do you need the service?',
+                  l10n.requestWhen,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: AppColors.ink,
@@ -320,12 +327,12 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                   children: [
                     Expanded(
                       child: ChoiceChip(
-                        label: const SizedBox(
+                        label: SizedBox(
                           width: double.infinity,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.center,
-                            child: Text('⚡ Instant (30 min)'),
+                            child: Text(l10n.requestInstant),
                           ),
                         ),
                         selected: _isInstantBooking,
@@ -336,12 +343,12 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: ChoiceChip(
-                        label: const SizedBox(
+                        label: SizedBox(
                           width: double.infinity,
                           child: FittedBox(
                             fit: BoxFit.scaleDown,
                             alignment: Alignment.center,
-                            child: Text('📅 Schedule later'),
+                            child: Text(l10n.requestScheduleLater),
                           ),
                         ),
                         selected: !_isInstantBooking,
@@ -365,9 +372,9 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Find Available Workers',
-                      style: TextStyle(
+                    child: Text(
+                      l10n.requestFindWorkers,
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,

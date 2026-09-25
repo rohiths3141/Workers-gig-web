@@ -8,6 +8,8 @@ import '../../app/theme/app_colors.dart';
 import '../../domain/entities/booking.dart';
 import '../../domain/entities/enums.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 class BookingsScreen extends ConsumerWidget {
   const BookingsScreen({super.key});
@@ -27,17 +29,18 @@ class BookingsScreen extends ConsumerWidget {
     // failed: an empty set means "none of these are paid", which would put a
     // Pay now button on bookings the customer has already paid for.
     final paidIds = ref.watch(paidBookingIdsProvider).valueOrNull;
+    final l10n = context.l10n;
 
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My Service Bookings'),
-          bottom: const TabBar(
+          title: Text(l10n.bookingsTitle),
+          bottom: TabBar(
             tabs: [
-              Tab(text: 'Active'),
-              Tab(text: 'Completed'),
-              Tab(text: 'Cancelled'),
+              Tab(text: l10n.bookingsTabActive),
+              Tab(text: l10n.bookingsTabCompleted),
+              Tab(text: l10n.bookingsTabCancelled),
             ],
           ),
         ),
@@ -71,7 +74,7 @@ class BookingsScreen extends ConsumerWidget {
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, _) => ErrorState(
-            message: 'Could not load your bookings.',
+            message: l10n.bookingsLoadFailed,
             onRetry: () {
               ref.invalidate(customerBookingsProvider(customerId));
               ref.invalidate(paidBookingIdsProvider);
@@ -88,11 +91,12 @@ class BookingsScreen extends ConsumerWidget {
     Set<String>? paidIds, {
     bool isLive = false,
   }) {
+    final l10n = context.l10n;
     if (list.isEmpty) {
       return EmptyState(
         icon: Icons.calendar_today_outlined,
-        title: 'No bookings yet',
-        actionLabel: isLive ? 'Find a Service' : null,
+        title: l10n.bookingsEmpty,
+        actionLabel: isLive ? l10n.bookingsFindService : null,
         onAction: isLive ? () => context.go('/explore') : null,
       );
     }
@@ -104,9 +108,9 @@ class BookingsScreen extends ConsumerWidget {
         final booking = list[index];
         final awaitingPayment = booking.awaitingPayment(paidIds);
         final statusLabel = awaitingPayment
-            ? 'Payment pending'
+            ? l10n.bookingStatusPaymentPending
             : booking.status == BookingStatus.requested
-                ? 'Waiting for professional'
+                ? l10n.bookingsWaitingForProfessional
                 : booking.status.displayName;
         final statusColor =
             awaitingPayment ? AppColors.statusError : _getStatusColor(booking.status);
@@ -141,7 +145,7 @@ class BookingsScreen extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          booking.serviceName,
+                          localizedServiceName(l10n, booking.serviceName),
                           style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
@@ -167,7 +171,7 @@ class BookingsScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    'Booking Code: #${booking.bookingCode}',
+                    l10n.bookingsCode(booking.bookingCode),
                     style: const TextStyle(
                         fontSize: 12, color: AppColors.inkSecondary),
                   ),
@@ -195,7 +199,7 @@ class BookingsScreen extends ConsumerWidget {
                           onPressed: () =>
                               context.push('/bookings/${booking.id}/payment'),
                           style: _compactButton,
-                          child: const Text('Pay now'),
+                          child: Text(l10n.bookingsPayNow),
                         )
                       else if (needsApproval)
                         ElevatedButton(
@@ -205,14 +209,14 @@ class BookingsScreen extends ConsumerWidget {
                             backgroundColor: const WidgetStatePropertyAll(
                                 AppColors.statusSuccess),
                           ),
-                          child: const Text('Approve work'),
+                          child: Text(l10n.bookingsApproveWork),
                         )
                       else if (isLive && trackable.contains(booking.status))
                         ElevatedButton.icon(
                           onPressed: () =>
                               context.push('/bookings/${booking.id}/active'),
                           icon: const Icon(Icons.navigation_outlined, size: 16),
-                          label: const Text('Track Live'),
+                          label: Text(l10n.bookingsTrackLive),
                           style: _compactButton,
                         )
                       else
@@ -225,7 +229,7 @@ class BookingsScreen extends ConsumerWidget {
                             minimumSize: Size.zero,
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          child: const Text('Details'),
+                          child: Text(l10n.bookingsDetails),
                         ),
                     ],
                   ),

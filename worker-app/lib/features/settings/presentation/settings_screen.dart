@@ -8,8 +8,9 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
-import '../../../core/localization/app_locale.dart';
+import '../../../core/localization/l10n.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/language_picker.dart';
 
 /// Settings.
 class SettingsScreen extends ConsumerWidget {
@@ -17,68 +18,45 @@ class SettingsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final locale = ref.watch(localeControllerProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settingsTitle)),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.screenPadding),
         children: [
-          const SectionHeader(title: 'Language'),
-          AppCard(
+          SectionHeader(title: l10n.settingsLanguage),
+          // Every language listed carries every string in the app — the l10n
+          // completeness test fails the build otherwise — so there is no
+          // "partly translated" caveat left to show here.
+          const AppCard(
             padding: EdgeInsets.zero,
-            // The selected value and the change handler moved onto the group
-            // in Flutter 3.32; each tile now only names the value it stands
-            // for.
-            child: RadioGroup<AppLocale>(
-              groupValue: locale,
-              onChanged: (selected) {
-                if (selected == null) return;
-                ref.read(localeControllerProvider.notifier).setLocale(selected);
-              },
-              child: Column(
-                children: [
-                  for (final option in AppLocale.values)
-                    RadioListTile<AppLocale>(
-                      value: option,
-                      title: Text(option.nativeName),
-                      subtitle: Text(
-                        // Honest about coverage. A language that is only
-                        // partly translated says so, rather than leaving the
-                        // worker to discover half the app is still English.
-                        option.isFullyTranslated
-                            ? option.englishName
-                            : '${option.englishName} · partly translated',
-                      ),
-                    ),
-                ],
-              ),
-            ),
+            child: LanguageList(),
           ),
           const SizedBox(height: AppSpacing.xl),
 
-          const SectionHeader(title: 'About'),
+          SectionHeader(title: l10n.settingsAbout),
           AppCard(
             padding: EdgeInsets.zero,
             child: Column(
               children: [
                 ListTile(
                   leading: const Icon(Icons.description_outlined),
-                  title: const Text('Terms of service'),
+                  title: Text(l10n.settingsTerms),
                   trailing: const Icon(Icons.open_in_new_rounded, size: 20),
                   onTap: () => _open('https://wervexa.example/terms'),
                 ),
                 const Divider(height: 1, indent: 56),
                 ListTile(
                   leading: const Icon(Icons.privacy_tip_outlined),
-                  title: const Text('Privacy policy'),
+                  title: Text(l10n.settingsPrivacy),
                   trailing: const Icon(Icons.open_in_new_rounded, size: 20),
                   onTap: () => _open('https://wervexa.example/privacy'),
                 ),
                 const Divider(height: 1, indent: 56),
                 ListTile(
                   leading: const Icon(Icons.support_agent_rounded),
-                  title: const Text('Help and support'),
+                  title: Text(l10n.settingsHelp),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () => context.push(Routes.support),
                 ),
@@ -90,13 +68,13 @@ class SettingsScreen extends ConsumerWidget {
           OutlinedButton.icon(
             onPressed: () => _signOut(context, ref),
             icon: const Icon(Icons.logout_rounded),
-            label: const Text('Sign out'),
+            label: Text(l10n.commonSignOut),
           ),
           const SizedBox(height: AppSpacing.md),
           TextButton(
             onPressed: () => _deleteAccount(context),
             style: TextButton.styleFrom(foregroundColor: AppColors.danger),
-            child: const Text('Delete my account'),
+            child: Text(l10n.settingsDeleteAccount),
           ),
           const SizedBox(height: AppSpacing.xxl),
         ],
@@ -112,11 +90,12 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _signOut(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
     final confirmed = await confirmAction(
       context,
-      title: 'Sign out?',
-      message: 'You will need your phone number and a code to sign back in.',
-      confirmLabel: 'Sign out',
+      title: l10n.settingsSignOutTitle,
+      message: l10n.settingsSignOutBody,
+      confirmLabel: l10n.commonSignOut,
     );
     if (!confirmed) return;
     await ref.read(sessionProvider.notifier).signOut();
@@ -130,27 +109,27 @@ class SettingsScreen extends ConsumerWidget {
   /// and until that workflow exists this says so plainly rather than showing a
   /// button that only clears the phone.
   Future<void> _deleteAccount(BuildContext context) async {
+    final l10n = context.l10n;
     await showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete your account'),
+        title: Text(l10n.settingsDeleteTitle),
         content: Text(
-          'Deleting an account affects your job history, your earnings records and any open payments, so it is handled by our support team rather than automatically.\n\n'
-          'Raise a support request and we will confirm once it is done.',
+          l10n.settingsDeleteBody,
           style: AppTypography.bodyMedium
               .copyWith(color: dialogContext.inkSecondary),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text('Cancel'),
+            child: Text(l10n.commonCancel),
           ),
           FilledButton(
             onPressed: () {
               Navigator.of(dialogContext).pop();
               context.push(Routes.support);
             },
-            child: const Text('Contact support'),
+            child: Text(l10n.settingsContactSupport),
           ),
         ],
       ),

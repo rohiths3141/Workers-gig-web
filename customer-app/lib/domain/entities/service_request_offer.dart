@@ -1,4 +1,5 @@
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// A worker's offer on a customer service request, viewed from the customer
 /// side. Includes public-safe worker profile fields for comparison.
@@ -104,25 +105,26 @@ class ServiceRequestOffer {
 
   String get durationLabel {
     if (estimatedDurationMinutes == null) return '';
+    final l10n = AppStrings.current;
     final hours = estimatedDurationMinutes! ~/ 60;
     final mins = estimatedDurationMinutes! % 60;
-    if (hours == 0) return '${mins}min';
-    if (mins == 0) return '${hours}hr';
-    return '${hours}hr ${mins}min';
+    if (hours == 0) return l10n.durationMinutes(mins);
+    if (mins == 0) return l10n.durationHours(hours);
+    return l10n.durationHoursMinutes(hours, mins);
   }
 
   String get distanceLabel {
     if (distanceKm == null) return '';
-    return '${distanceKm!.toStringAsFixed(1)} km';
+    return AppStrings.current.distanceKm(distanceKm!.toStringAsFixed(1));
   }
 
-  String get workerDisplayName => workerName ?? 'Professional';
+  String get workerDisplayName =>
+      workerName ?? AppStrings.current.offerWorkerFallbackName;
 
   String get workerInitial {
-    if (workerName != null && workerName!.isNotEmpty) {
-      return workerName![0].toUpperCase();
-    }
-    return 'P';
+    final name = workerDisplayName;
+    if (name.isEmpty) return '';
+    return String.fromCharCode(name.runes.first).toUpperCase();
   }
 
   bool get canBeAccepted => const {

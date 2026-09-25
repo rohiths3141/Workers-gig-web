@@ -11,6 +11,8 @@ import '../../../shared/widgets/common_widgets.dart';
 import 'home_controller.dart';
 import 'widgets/availability_card.dart';
 import 'widgets/home_cards.dart';
+import '../../../core/localization/l10n.dart';
+import '../../../shared/widgets/service_names.dart';
 
 /// The worker's command centre.
 ///
@@ -31,6 +33,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final home = ref.watch(homeControllerProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SafeArea(
@@ -63,7 +66,7 @@ class HomeScreen extends ConsumerWidget {
                 const SizedBox(height: AppSpacing.xl),
 
                 if (data.activeJob != null) ...[
-                  const SectionHeader(title: 'Right now'),
+                  SectionHeader(title: l10n.homeRightNow),
                   ActiveJobCard(
                     job: data.activeJob!,
                     onOpen: () => context.push(Routes.activeJob),
@@ -73,10 +76,9 @@ class HomeScreen extends ConsumerWidget {
 
                 if (data.offers.isNotEmpty) ...[
                   SectionHeader(
-                    title: 'New work',
-                    subtitle:
-                        '${data.offers.length} job${data.offers.length == 1 ? '' : 's'} waiting for your answer',
-                    actionLabel: 'See all',
+                    title: l10n.homeNewWork,
+                    subtitle: l10n.homeJobsWaiting(data.offers.length),
+                    actionLabel: l10n.commonSeeAll,
                     action: () => context.go(Routes.jobs),
                   ),
                   for (final offer in data.offers.take(2))
@@ -90,12 +92,12 @@ class HomeScreen extends ConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(offer.job.serviceName,
+                                  Text(localizedServiceName(l10n, offer.job.serviceName),
                                       style: AppTypography.titleMedium
                                           .copyWith(color: context.ink)),
                                   const SizedBox(height: AppSpacing.xxs),
                                   Text(
-                                    '${offer.distanceKm.toStringAsFixed(1)} km · ${offer.job.approximateArea}',
+                                    '${l10n.distanceKm(offer.distanceKm.toStringAsFixed(1))} · ${offer.job.approximateArea}',
                                     style: AppTypography.bodySmall
                                         .copyWith(color: context.inkSecondary),
                                   ),
@@ -111,7 +113,7 @@ class HomeScreen extends ConsumerWidget {
                 ],
 
                 if (data.upcomingJobs.isNotEmpty) ...[
-                  const SectionHeader(title: 'Coming up'),
+                  SectionHeader(title: l10n.homeComingUp),
                   for (final job in data.upcomingJobs)
                     Padding(
                       padding: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -123,7 +125,7 @@ class HomeScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.xl),
                 ],
 
-                const SectionHeader(title: 'Earnings'),
+                SectionHeader(title: l10n.homeEarnings),
                 EarningsCard(
                   earnings: data.earnings,
                   onOpenWallet: () => context.go(Routes.wallet),
@@ -136,18 +138,18 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       QuickAction(
                         icon: Icons.storefront_outlined,
-                        label: 'My services',
+                        label: l10n.homeMyServices,
                         onTap: () => context.push(Routes.gigs),
                         badgeCount: 0,
                       ),
                       QuickAction(
                         icon: Icons.verified_outlined,
-                        label: 'Verification',
+                        label: l10n.homeVerification,
                         onTap: () => context.push(Routes.verification),
                       ),
                       QuickAction(
                         icon: Icons.support_agent_rounded,
-                        label: 'Support',
+                        label: l10n.homeSupport,
                         onTap: () => context.push(Routes.support),
                       ),
                     ],
@@ -162,12 +164,12 @@ class HomeScreen extends ConsumerWidget {
                     children: [
                       QuickAction(
                         icon: Icons.assignment_outlined,
-                        label: 'Requests',
+                        label: l10n.homeRequests,
                         onTap: () => context.push(Routes.customerRequests),
                       ),
                       QuickAction(
                         icon: Icons.local_offer_outlined,
-                        label: 'My offers',
+                        label: l10n.homeMyOffers,
                         onTap: () => context.push(Routes.myOffers),
                       ),
                     ],
@@ -190,12 +192,12 @@ class HomeScreen extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Add a service',
+                              Text(l10n.homeAddService,
                                   style: AppTypography.titleMedium
                                       .copyWith(color: context.ink)),
                               const SizedBox(height: AppSpacing.xxs),
                               Text(
-                                'Customers can only book you for services you have published.',
+                                l10n.homeAddServiceBody,
                                 style: AppTypography.bodySmall
                                     .copyWith(color: context.inkSecondary),
                               ),
@@ -217,6 +219,7 @@ class HomeScreen extends ConsumerWidget {
   /// A refusal to go available, rendered as a to-do list with destinations.
   void _showEligibilitySheet(BuildContext context, PermissionFailure failure) {
     final reasons = failure.reasons;
+    final l10n = context.l10n;
 
     // Scroll-controlled on the root navigator: the list of reasons can be
     // taller than the default half-height sheet, which overflowed, and the
@@ -232,12 +235,12 @@ class HomeScreen extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Not quite ready',
+              Text(l10n.homeNotReady,
                   style: AppTypography.headlineMedium
                       .copyWith(color: sheetContext.ink)),
               const SizedBox(height: AppSpacing.sm),
               Text(
-                'Finish these steps and you can start receiving jobs.',
+                l10n.homeNotReadyBody,
                 style: AppTypography.bodyLarge
                     .copyWith(color: sheetContext.inkSecondary),
               ),
@@ -273,12 +276,13 @@ class _Greeting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final hour = DateTime.now().hour;
     final greeting = hour < 12
-        ? 'Good morning'
+        ? l10n.homeGoodMorning
         : hour < 17
-            ? 'Good afternoon'
-            : 'Good evening';
+            ? l10n.homeGoodAfternoon
+            : l10n.homeGoodEvening;
 
     return Row(
       children: [
@@ -308,7 +312,7 @@ class _Greeting extends StatelessWidget {
             label: Text('${data.unreadNotifications}'),
             child: const Icon(Icons.notifications_none_rounded, size: 28),
           ),
-          tooltip: 'Notifications',
+          tooltip: l10n.homeNotifications,
         ),
       ],
     );

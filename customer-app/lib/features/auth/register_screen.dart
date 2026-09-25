@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers/session_controller.dart';
 import '../../app/theme/app_colors.dart';
 import 'auth_controller.dart';
+import '../../core/localization/l10n.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   final String firebaseUid;
@@ -53,10 +54,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Complete Profile'),
+        title: Text(l10n.registerTitle),
       ),
       body: SafeArea(
         child: Padding(
@@ -66,7 +68,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             children: [
               const SizedBox(height: 16),
               Text(
-                'Tell us your name',
+                l10n.registerHeading,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.ink,
@@ -74,7 +76,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Your name will be visible to service workers when you make a booking request.',
+                l10n.registerNameVisibility,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: AppColors.inkSecondary,
                 ),
@@ -89,8 +91,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       keyboardType: TextInputType.name,
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(
-                        labelText: 'Full Name *',
-                        hintText: 'e.g. Rahul Sharma',
+                        labelText: l10n.registerFullNameLabel,
+                        hintText: l10n.registerFullNameHint,
                         prefixIcon: const Icon(Icons.person_outline),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -98,7 +100,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ),
                       validator: (val) {
                         if (val == null || val.trim().isEmpty) {
-                          return 'Please enter your full name';
+                          return l10n.registerFullNameRequired;
                         }
                         return null;
                       },
@@ -108,8 +110,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
-                        labelText: 'Email Address (Optional)',
-                        hintText: 'e.g. rahul@example.com',
+                        labelText: l10n.registerEmailLabel,
+                        hintText: l10n.registerEmailHint,
                         prefixIcon: const Icon(Icons.email_outlined),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -162,9 +164,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text(
-                          'Save & Get Started',
-                          style: TextStyle(
+                      : Text(
+                          l10n.registerSubmit,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,

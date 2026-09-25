@@ -36,6 +36,7 @@ import '../../features/wallet/presentation/payout_screen.dart';
 import '../../features/wallet/presentation/transactions_screen.dart';
 import '../../features/wallet/presentation/wallet_screen.dart';
 import '../providers/session_controller.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Routes.
 abstract final class Routes {
@@ -258,7 +259,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         child: Padding(
           padding: const EdgeInsets.all(24),
           child: Text(
-            'That screen could not be opened.\n${state.uri}',
+            AppStrings.current.routerScreenNotFound('${state.uri}'),
             textAlign: TextAlign.center,
           ),
         ),

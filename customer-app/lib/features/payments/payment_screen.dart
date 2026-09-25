@@ -12,6 +12,8 @@ import '../../core/errors/result.dart';
 import '../../domain/entities/booking.dart';
 import '../../domain/entities/payment.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 /// Real Razorpay checkout. There is no path here that marks a payment
 /// successful without the gateway's own signed response being verified by
@@ -87,7 +89,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     try {
       _razorpay.open(options);
     } catch (e) {
-      setState(() => _error = 'Could not open the payment screen. Please try again.');
+      setState(() => _error = context.l10n.paymentCouldNotOpen);
     }
   }
 
@@ -114,8 +116,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         ref.invalidate(paidBookingIdsProvider);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Payment received. Your booking has been sent to the professional.'),
+            SnackBar(
+              content: Text(context.l10n.paymentReceived),
               backgroundColor: AppColors.statusSuccess,
             ),
           );
@@ -127,8 +129,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         // The gateway said success, but our server could not verify it —
         // never show a success state here. Surface it plainly and let the
         // customer retry or contact support with the payment reference.
-        setState(() => _error = 'We could not confirm this payment: ${failure.message}. '
-            'If money was deducted, contact support with reference ${response.paymentId}.');
+        setState(() => _error = context.l10n.paymentNotConfirmed(
+              failure.message,
+              response.paymentId ?? '',
+            ));
     }
   }
 
@@ -136,25 +140,27 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     setState(() {
       _error = response.message?.isNotEmpty == true
           ? response.message
-          : 'Payment was not completed.';
+          : context.l10n.paymentNotCompleted;
     });
   }
 
   void _onExternalWallet(ExternalWalletResponse response) {
-    setState(() => _error = 'Selected an external wallet (${response.walletName}) — not yet supported.');
+    setState(() => _error =
+        context.l10n.paymentExternalWalletUnsupported(response.walletName ?? ''));
   }
 
   @override
   Widget build(BuildContext context) {
     final bookingAsync = ref.watch(bookingStreamProvider(widget.bookingId));
     final paymentAsync = ref.watch(paymentForBookingProvider(widget.bookingId));
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Payment'),
+        title: Text(l10n.paymentTitle),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          tooltip: 'Back',
+          tooltip: l10n.commonBack,
           onPressed: () => context.canPop() ? context.pop() : context.go('/bookings'),
         ),
       ),
@@ -166,15 +172,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           // this booking has already been paid for is not the same as knowing
           // it has not, and treating the two alike is how someone pays twice.
           error: (_, __) => ErrorState(
-            message: 'We could not check whether this booking has already been '
-                'paid for. Please try again rather than paying twice.',
+            message: l10n.paymentStatusUnknown,
             onRetry: () =>
                 ref.invalidate(paymentForBookingProvider(widget.bookingId)),
           ),
         ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => ErrorState(
-          message: 'Could not load this booking.',
+          message: l10n.paymentBookingLoadFailed,
           onRetry: () => ref.invalidate(bookingStreamProvider(widget.bookingId)),
         ),
       ),
@@ -182,12 +187,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   }
 
   Widget _buildBody(Booking booking, Payment? payment) {
+    final l10n = context.l10n;
+    final serviceName = localizedServiceName(l10n, booking.serviceName);
     if (payment != null && payment.isSuccess) {
       return EmptyState(
         icon: Icons.check_circle_outline,
-        title: 'Payment complete',
-        message: '${payment.amountLabel} paid for ${booking.serviceName}.',
-        actionLabel: 'View booking',
+        title: l10n.paymentComplete,
+        message: l10n.paymentPaidFor(payment.amountLabel, serviceName),
+        actionLabel: l10n.paymentViewBooking,
         onAction: () => context.go('/bookings/${booking.id}'),
       );
     }
@@ -198,9 +205,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Booking Summary',
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.ink),
+            Text(
+              l10n.paymentBookingSummary,
+              style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700, color: AppColors.ink),
             ),
             const SizedBox(height: 10),
             Container(
@@ -215,18 +222,18 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (booking.workerName != null)
-                    _summaryRow('Provider', booking.workerName!),
-                  _summaryRow('Service', booking.serviceName),
+                    _summaryRow(l10n.paymentProvider, booking.workerName!),
+                  _summaryRow(l10n.paymentService, serviceName),
                   if (booking.scheduledAt != null) ...[
-                    _summaryRow('Date', DateFormat('EEE, d MMM').format(booking.scheduledAt!)),
-                    _summaryRow('Time', DateFormat('h:mm a').format(booking.scheduledAt!)),
+                    _summaryRow(l10n.paymentDate, DateFormat('EEE, d MMM', context.dateLocale).format(booking.scheduledAt!)),
+                    _summaryRow(l10n.paymentTime, DateFormat('h:mm a', context.dateLocale).format(booking.scheduledAt!)),
                   ],
-                  _summaryRow('Address', booking.addressLine),
+                  _summaryRow(l10n.paymentAddress, booking.addressLine),
                   const Divider(height: 24),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Total', style: TextStyle(fontWeight: FontWeight.w700, color: AppColors.ink)),
+                      Text(l10n.paymentTotal, style: const TextStyle(fontWeight: FontWeight.w700, color: AppColors.ink)),
                       Text(
                         booking.amountLabel,
                         style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20, color: AppColors.primary),
@@ -237,16 +244,15 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            const Row(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.lock_outline, size: 16, color: AppColors.inkSecondary),
-                SizedBox(width: 8),
+                const Icon(Icons.lock_outline, size: 16, color: AppColors.inkSecondary),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Your payment is held securely and released to the professional only after you approve the work. '
-                    'If the booking is cancelled before work starts, you get a refund.',
-                    style: TextStyle(color: AppColors.inkSecondary, fontSize: 12),
+                    l10n.paymentHeldSecurely,
+                    style: const TextStyle(color: AppColors.inkSecondary, fontSize: 12),
                   ),
                 ),
               ],
@@ -279,7 +285,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                         child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                       )
                     : Text(
-                        'Pay ${booking.amountLabel}',
+                        l10n.bookingDetailPayAmount(booking.amountLabel),
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
                       ),
               ),
@@ -300,7 +306,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           Flexible(
             child: Text(
               value,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.end,
               style: const TextStyle(color: AppColors.ink, fontSize: 13, fontWeight: FontWeight.w600),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

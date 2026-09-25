@@ -7,6 +7,7 @@ import '../../domain/entities/support.dart';
 import '../../domain/entities/verification.dart';
 import '../../domain/entities/wallet.dart';
 import '../../domain/entities/worker.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Row-to-entity conversion.
 ///
@@ -141,7 +142,8 @@ abstract final class WorkerMapper {
             .map((r) => EligibilityBlocker(
                   code: r['code'] as String? ?? 'UNKNOWN',
                   message:
-                      r['message'] as String? ?? 'This step is not complete yet.',
+                      r['message'] as String? ??
+                          AppStrings.current.eligibilityStepIncomplete,
                   action: r['action'] as String?,
                 ))
             .toList(growable: false),

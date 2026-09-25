@@ -5,6 +5,7 @@ import '../../../app/providers/session_controller.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../core/errors/app_failure.dart';
 import '../../../shared/widgets/async_value_view.dart';
+import '../../../core/localization/l10n.dart';
 
 /// The worker is authenticated but their profile could not be loaded.
 ///
@@ -17,10 +18,10 @@ class SessionErrorScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(sessionProvider).valueOrNull;
+    final l10n = context.l10n;
     final failure = session is SessionError
         ? session.failure
-        : const UnexpectedFailure(
-            message: 'We could not load your profile. Please try again.');
+        : UnexpectedFailure(message: l10n.sessionProfileLoadFailedRetry);
 
     return Scaffold(
       body: SafeArea(
@@ -40,13 +41,13 @@ class SessionErrorScreen extends ConsumerWidget {
                   FilledButton(
                     onPressed: () =>
                         ref.read(sessionProvider.notifier).refresh(),
-                    child: const Text('Try again'),
+                    child: Text(l10n.commonTryAgain),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   TextButton(
                     onPressed: () =>
                         ref.read(sessionProvider.notifier).signOut(),
-                    child: const Text('Sign out'),
+                    child: Text(l10n.commonSignOut),
                   ),
                 ],
               ),

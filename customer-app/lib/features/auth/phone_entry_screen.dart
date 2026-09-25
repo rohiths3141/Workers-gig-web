@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../shared/widgets/language_picker.dart';
 import 'auth_controller.dart';
+import '../../core/localization/l10n.dart';
 
 class PhoneEntryScreen extends ConsumerStatefulWidget {
   const PhoneEntryScreen({super.key});
@@ -35,7 +37,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
     final verificationId = state.verificationId;
     if (verificationId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Could not start verification. Please try again.')),
+        SnackBar(content: Text(context.l10n.authCouldNotStartVerification)),
       );
       return;
     }
@@ -56,6 +58,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
     final theme = Theme.of(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SafeArea(
@@ -68,7 +71,10 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                 child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 32),
+              const Align(
+                alignment: AlignmentDirectional.centerEnd,
+                child: LanguageButton(),
+              ),
               Container(
                 width: 60,
                 height: 60,
@@ -84,7 +90,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Welcome to Wervexa',
+                l10n.authWelcomeTitle,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: AppColors.ink,
@@ -92,7 +98,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Find top-rated local professionals for home repairs, plumbing, electrical, cleaning & more.',
+                l10n.authWelcomeSubtitle,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: AppColors.inkSecondary,
                 ),
@@ -104,7 +110,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Enter your phone number',
+                      l10n.authEnterPhone,
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
@@ -143,7 +149,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                             ),
                             validator: (val) {
                               if (val == null || val.trim().length < 10) {
-                                return 'Enter a valid 10-digit mobile number';
+                                return l10n.authInvalidMobile;
                               }
                               return null;
                             },
@@ -197,9 +203,9 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                             strokeWidth: 2,
                           ),
                         )
-                      : const Text(
-                          'Get OTP Verification',
-                          style: TextStyle(
+                      : Text(
+                          l10n.authGetOtp,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
@@ -210,7 +216,7 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
               const SizedBox(height: 16),
               Center(
                 child: Text(
-                  'By continuing, you agree to our Terms of Service & Privacy Policy',
+                  l10n.authTermsNotice,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: AppColors.inkSecondary,

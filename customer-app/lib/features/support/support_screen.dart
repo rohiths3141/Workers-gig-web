@@ -7,6 +7,7 @@ import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
 import '../../domain/entities/enums.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../core/localization/l10n.dart';
 
 class SupportScreen extends ConsumerWidget {
   const SupportScreen({super.key});
@@ -14,22 +15,23 @@ class SupportScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ticketsAsync = ref.watch(myTicketsProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Help & Support')),
+      appBar: AppBar(title: Text(l10n.supportTitle)),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _openNewTicketSheet(context, ref),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('New Ticket', style: TextStyle(color: Colors.white)),
+        label: Text(l10n.supportNewTicket, style: const TextStyle(color: Colors.white)),
       ),
       body: ticketsAsync.when(
         data: (tickets) {
           if (tickets.isEmpty) {
-            return const EmptyState(
+            return EmptyState(
               icon: Icons.support_agent_outlined,
-              title: 'No support tickets yet',
-              message: 'Need help with a booking or the app? Raise a ticket and our team will respond.',
+              title: l10n.supportEmpty,
+              message: l10n.supportEmptyMessage,
             );
           }
           return ListView.builder(
@@ -53,7 +55,7 @@ class SupportScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      t.status.name.toUpperCase(),
+                      _statusLabel(l10n, t.status).toUpperCase(),
                       style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.bold,
@@ -69,14 +71,24 @@ class SupportScreen extends ConsumerWidget {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => ErrorState(
-          message: 'Could not load your support tickets.',
+          message: l10n.supportLoadFailed,
           onRetry: () => ref.invalidate(myTicketsProvider),
         ),
       ),
     );
   }
 
+  static String _statusLabel(AppLocalizations l10n, SupportStatus status) =>
+      switch (status) {
+        SupportStatus.open => l10n.supportStatusOpen,
+        SupportStatus.inProgress => l10n.supportStatusInProgress,
+        SupportStatus.waitingForUser => l10n.supportStatusWaitingForYou,
+        SupportStatus.resolved => l10n.supportStatusResolved,
+        SupportStatus.closed => l10n.supportStatusClosed,
+      };
+
   void _openNewTicketSheet(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final subjectController = TextEditingController();
     final messageController = TextEditingController();
     SupportCategory category = SupportCategory.other;
@@ -98,11 +110,11 @@ class SupportScreen extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('New Support Ticket', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+              Text(l10n.supportNewTicketTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               const SizedBox(height: 16),
               DropdownButtonFormField<SupportCategory>(
                 initialValue: category,
-                decoration: const InputDecoration(labelText: 'Category', border: OutlineInputBorder()),
+                decoration: InputDecoration(labelText: l10n.supportCategory, border: const OutlineInputBorder()),
                 // Not `.values`: the enum also carries the categories support
                 // staff can move a ticket into, and offering a customer
                 // "Payout" or "Verification" would be nonsense.
@@ -114,13 +126,13 @@ class SupportScreen extends ConsumerWidget {
               const SizedBox(height: 12),
               TextField(
                 controller: subjectController,
-                decoration: const InputDecoration(labelText: 'Subject', border: OutlineInputBorder()),
+                decoration: InputDecoration(labelText: l10n.supportSubject, border: const OutlineInputBorder()),
               ),
               const SizedBox(height: 12),
               TextField(
                 controller: messageController,
                 maxLines: 4,
-                decoration: const InputDecoration(labelText: 'Describe the issue', border: OutlineInputBorder()),
+                decoration: InputDecoration(labelText: l10n.supportDescribeIssue, border: const OutlineInputBorder()),
               ),
               if (error != null) ...[
                 const SizedBox(height: 8),
@@ -134,7 +146,7 @@ class SupportScreen extends ConsumerWidget {
                       ? null
                       : () async {
                           if (subjectController.text.trim().length < 3 || messageController.text.trim().isEmpty) {
-                            setSheetState(() => error = 'Please fill in a subject and message.');
+                            setSheetState(() => error = l10n.supportFillSubjectMessage);
                             return;
                           }
                           setSheetState(() {
@@ -160,7 +172,7 @@ class SupportScreen extends ConsumerWidget {
                   style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white),
                   child: isSubmitting
                       ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                      : const Text('Submit Ticket'),
+                      : Text(l10n.supportSubmitTicket),
                 ),
               ),
             ],

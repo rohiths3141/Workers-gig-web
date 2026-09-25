@@ -9,6 +9,8 @@ import '../../../../domain/entities/enums.dart';
 import '../../../../domain/entities/job.dart';
 import '../../../../domain/entities/worker.dart';
 import '../../../../shared/widgets/common_widgets.dart';
+import '../../../../core/localization/l10n.dart';
+import '../../../../shared/widgets/service_names.dart';
 
 /// Account status and work availability, side by side.
 ///
@@ -23,21 +25,22 @@ class StatusSummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final (statusLabel, statusColor, statusIcon) = switch (worker.status) {
-      WorkerStatus.active => ('Verified', AppColors.success, Icons.verified_rounded),
+      WorkerStatus.active => (l10n.verificationVerified, AppColors.success, Icons.verified_rounded),
       WorkerStatus.registered =>
-        ('Setup incomplete', AppColors.inkTertiary, Icons.edit_outlined),
+        (l10n.workerStatusSetupIncomplete, AppColors.inkTertiary, Icons.edit_outlined),
       WorkerStatus.verificationPending =>
-        ('Under review', AppColors.info, Icons.schedule_rounded),
+        (l10n.workerStatusUnderReview, AppColors.info, Icons.schedule_rounded),
       WorkerStatus.inactive =>
-        ('Inactive', AppColors.inkTertiary, Icons.pause_circle_outline),
+        (l10n.workerStatusInactive, AppColors.inkTertiary, Icons.pause_circle_outline),
       WorkerStatus.restricted =>
-        ('Restricted', AppColors.warning, Icons.warning_amber_rounded),
-      WorkerStatus.suspended => ('Suspended', AppColors.danger, Icons.block_rounded),
+        (l10n.workerStatusRestricted, AppColors.warning, Icons.warning_amber_rounded),
+      WorkerStatus.suspended => (l10n.workerStatusSuspended, AppColors.danger, Icons.block_rounded),
       WorkerStatus.rejected =>
-        ('Not approved', AppColors.danger, Icons.cancel_outlined),
+        (l10n.verificationNotApproved, AppColors.danger, Icons.cancel_outlined),
       WorkerStatus.deactivated =>
-        ('Closed', AppColors.inkTertiary, Icons.remove_circle_outline),
+        (l10n.badgeClosed, AppColors.inkTertiary, Icons.remove_circle_outline),
     };
 
     return AppCard(
@@ -48,7 +51,7 @@ class StatusSummaryCard extends StatelessWidget {
             children: [
               Expanded(
                 child: _Fact(
-                  label: 'Account',
+                  label: l10n.homeAccount,
                   value: statusLabel,
                   color: statusColor,
                   icon: statusIcon,
@@ -57,11 +60,11 @@ class StatusSummaryCard extends StatelessWidget {
               Container(width: 1, height: 40, color: context.border),
               Expanded(
                 child: _Fact(
-                  label: 'Work status',
+                  label: l10n.homeWorkStatus,
                   value: switch (worker.availability) {
-                    WorkerAvailability.available => 'Available',
-                    WorkerAvailability.busy => 'On a job',
-                    WorkerAvailability.offline => 'Off duty',
+                    WorkerAvailability.available => l10n.availabilityAvailable,
+                    WorkerAvailability.busy => l10n.availabilityOnJob,
+                    WorkerAvailability.offline => l10n.availabilityOffDuty,
                   },
                   color: switch (worker.availability) {
                     WorkerAvailability.available => AppColors.available,
@@ -158,7 +161,7 @@ class EarningsCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Text('Today',
+              Text(context.l10n.scheduleToday,
                   style: AppTypography.label.copyWith(color: context.inkSecondary)),
               const Spacer(),
               Icon(Icons.chevron_right_rounded, color: context.inkTertiary),
@@ -173,10 +176,10 @@ class EarningsCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _MiniStat(label: 'This week', value: earnings.thisWeek),
+                child: _MiniStat(label: context.l10n.earningsThisWeek, value: earnings.thisWeek),
               ),
               Expanded(
-                child: _MiniStat(label: 'This month', value: earnings.thisMonth),
+                child: _MiniStat(label: context.l10n.earningsThisMonth, value: earnings.thisMonth),
               ),
             ],
           ),
@@ -219,16 +222,17 @@ class ActiveJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final nextAction = switch (job.status) {
-      BookingStatus.accepted => 'Waiting for the customer to confirm',
-      BookingStatus.confirmed => 'Start travelling',
-      BookingStatus.traveling => 'Mark yourself as arrived',
+      BookingStatus.accepted => l10n.jobNextWaitConfirm,
+      BookingStatus.confirmed => l10n.jobNextStartTravel,
+      BookingStatus.traveling => l10n.jobNextMarkArrived,
       BookingStatus.arrived => job.isArrivalVerified
-          ? 'Start the work'
-          : 'Ask the customer for the arrival code',
-      BookingStatus.inProgress => 'Finish and add photos',
-      BookingStatus.awaitingApproval => 'Waiting for the customer to approve',
-      _ => 'Open job',
+          ? l10n.jobNextStartWork
+          : l10n.jobNextAskCode,
+      BookingStatus.inProgress => l10n.jobNextFinish,
+      BookingStatus.awaitingApproval => l10n.jobNextWaitApprove,
+      _ => l10n.jobNextOpen,
     };
 
     return AppCard(
@@ -247,7 +251,7 @@ class ActiveJobCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          Text(job.gigTitle ?? job.serviceName,
+          Text(job.gigTitle ?? localizedServiceName(context.l10n, job.serviceName),
               style: AppTypography.titleLarge.copyWith(color: context.ink)),
           const SizedBox(height: AppSpacing.xs),
           Text(
@@ -293,8 +297,8 @@ class UpcomingJobTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final time = job.scheduledAt == null
-        ? 'Time to be confirmed'
-        : DateFormat('h:mm a').format(job.scheduledAt!);
+        ? context.l10n.jobTimeTbc
+        : DateFormat('h:mm a', context.dateLocale).format(job.scheduledAt!);
 
     return AppCard(
       onTap: onOpen,
@@ -314,7 +318,7 @@ class UpcomingJobTile extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(job.gigTitle ?? job.serviceName,
+                Text(job.gigTitle ?? localizedServiceName(context.l10n, job.serviceName),
                     style:
                         AppTypography.titleMedium.copyWith(color: context.ink)),
                 const SizedBox(height: AppSpacing.xxs),

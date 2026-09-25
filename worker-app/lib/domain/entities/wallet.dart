@@ -1,5 +1,6 @@
 import '../../core/money/money.dart';
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// The worker's wallet.
 ///
@@ -86,16 +87,21 @@ class WalletTransaction {
   bool get isCredit => type.isCredit;
 
   /// What the worker calls this line.
-  String get label => switch (type) {
-        WalletTransactionType.creditJobEarning => serviceName ?? 'Job earning',
-        WalletTransactionType.creditMaterialReimbursement => 'Material reimbursed',
-        WalletTransactionType.creditAdjustment => 'Adjustment',
-        WalletTransactionType.creditPayoutReversal => 'Payout returned',
-        WalletTransactionType.debitPlatformFee => 'Platform fee',
-        WalletTransactionType.debitPayout => 'Withdrawn',
-        WalletTransactionType.debitAdjustment => 'Adjustment',
-        WalletTransactionType.debitClaimRecovery => 'Claim recovery',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (type) {
+      WalletTransactionType.creditJobEarning =>
+        serviceName ?? l10n.walletTxJobEarning,
+      WalletTransactionType.creditMaterialReimbursement =>
+        l10n.walletTxMaterialReimbursed,
+      WalletTransactionType.creditAdjustment => l10n.walletTxAdjustment,
+      WalletTransactionType.creditPayoutReversal => l10n.walletTxPayoutReturned,
+      WalletTransactionType.debitPlatformFee => l10n.walletTxPlatformFee,
+      WalletTransactionType.debitPayout => l10n.walletTxWithdrawn,
+      WalletTransactionType.debitAdjustment => l10n.walletTxAdjustment,
+      WalletTransactionType.debitClaimRecovery => l10n.walletTxClaimRecovery,
+    };
+  }
 }
 
 /// A withdrawal request.
@@ -128,13 +134,16 @@ class Payout {
 
   /// Wording that does not overclaim. A payout is only described as paid once
   /// the money has actually moved.
-  String get statusLabel => switch (status) {
-        PayoutStatus.requested => 'Requested',
-        PayoutStatus.processing => 'Being processed',
-        PayoutStatus.completed => 'Paid',
-        PayoutStatus.failed => 'Failed',
-        PayoutStatus.rejected => 'Not approved',
-      };
+  String get statusLabel {
+    final l10n = AppStrings.current;
+    return switch (status) {
+      PayoutStatus.requested => l10n.payoutStatusRequested,
+      PayoutStatus.processing => l10n.payoutStatusProcessing,
+      PayoutStatus.completed => l10n.payoutStatusPaid,
+      PayoutStatus.failed => l10n.payoutStatusFailed,
+      PayoutStatus.rejected => l10n.verificationNotApproved,
+    };
+  }
 }
 
 /// A group of ledger entries belonging to one job, so the wallet can show

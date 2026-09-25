@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers/providers.dart';
 import '../../app/providers/session_controller.dart';
 import '../../app/theme/app_colors.dart';
+import '../../shared/widgets/language_picker.dart';
+import '../../core/localization/l10n.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -14,10 +16,12 @@ class ProfileScreen extends ConsumerWidget {
     final sessionState = ref.watch(sessionProvider).value;
     final customer = sessionState is SessionReady ? sessionState.customer : null;
     final authRepo = ref.watch(authRepositoryProvider);
+    final locale = ref.watch(localeControllerProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Profile & Account'),
+        title: Text(l10n.profileTitle),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -47,7 +51,7 @@ class ProfileScreen extends ConsumerWidget {
                       child: Text(
                         customer != null && customer.fullName.isNotEmpty
                             ? customer.fullName[0].toUpperCase()
-                            : 'C',
+                            : '',
                         style: const TextStyle(
                           fontSize: 26,
                           fontWeight: FontWeight.bold,
@@ -61,7 +65,7 @@ class ProfileScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            customer?.fullName ?? 'Customer Profile',
+                            customer?.fullName ?? l10n.profileFallbackName,
                             style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -84,6 +88,7 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.edit_outlined, color: AppColors.primary),
+                      tooltip: l10n.editProfileTitle,
                       onPressed: () => context.push('/profile/edit'),
                     ),
                   ],
@@ -93,21 +98,27 @@ class ProfileScreen extends ConsumerWidget {
 
               // Settings options list
               _buildProfileOption(
+                icon: Icons.translate_rounded,
+                title: l10n.profileLanguage,
+                subtitle: locale.nativeName,
+                onTap: () => showLanguagePicker(context),
+              ),
+              _buildProfileOption(
                 icon: Icons.location_on_outlined,
-                title: 'Saved Service Addresses',
-                subtitle: 'Manage home, office & secondary addresses',
+                title: l10n.profileAddresses,
+                subtitle: l10n.profileAddressesSubtitle,
                 onTap: () => context.push('/profile/addresses'),
               ),
               _buildProfileOption(
                 icon: Icons.history,
-                title: 'Past Service History',
-                subtitle: 'View receipts & past bookings',
+                title: l10n.profileHistory,
+                subtitle: l10n.profileHistorySubtitle,
                 onTap: () => context.go('/bookings'),
               ),
               _buildProfileOption(
                 icon: Icons.help_outline,
-                title: 'Help & Customer Support',
-                subtitle: 'Raise a ticket, track replies from our team',
+                title: l10n.profileSupport,
+                subtitle: l10n.profileSupportSubtitle,
                 onTap: () => context.push('/profile/support'),
               ),
 
@@ -123,9 +134,9 @@ class ProfileScreen extends ConsumerWidget {
                     ref.read(sessionProvider.notifier).signOut();
                   },
                   icon: const Icon(Icons.logout, color: AppColors.statusError),
-                  label: const Text(
-                    'Sign Out',
-                    style: TextStyle(
+                  label: Text(
+                    l10n.commonSignOut,
+                    style: const TextStyle(
                       color: AppColors.statusError,
                       fontWeight: FontWeight.bold,
                     ),

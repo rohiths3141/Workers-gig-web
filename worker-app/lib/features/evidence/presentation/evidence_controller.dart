@@ -8,6 +8,7 @@ import '../../../core/errors/app_failure.dart';
 import '../../../core/errors/result.dart';
 import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/media.dart';
+import '../../../core/localization/app_locale.dart';
 
 /// Capture and upload of job evidence.
 ///
@@ -50,7 +51,7 @@ class EvidenceController extends AutoDisposeFamilyAsyncNotifier<
       return _upload(File(picked.path));
     } catch (error) {
       return Err(UploadFailure(
-        message: 'The camera could not be opened. Check app permissions.',
+        message: AppStrings.current.cameraOpenFailed,
         debugDetail: error.toString(),
       ));
     }
@@ -95,7 +96,7 @@ class EvidenceController extends AutoDisposeFamilyAsyncNotifier<
 
       if (task.state == UploadState.failed) {
         failure = UploadFailure(
-          message: task.failure ?? 'That upload did not finish.',
+          message: task.failure ?? AppStrings.current.uploadDidNotFinish,
           isResumable: true,
         );
       }

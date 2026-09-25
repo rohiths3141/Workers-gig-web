@@ -6,6 +6,8 @@ import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../domain/entities/gig_card.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 const _searchRadiiKm = [5.0, 10.0, 20.0];
 
@@ -26,12 +28,13 @@ class _GigDiscoveryScreenState extends ConsumerState<GigDiscoveryScreen> {
     final lng = (widget.request['longitude'] as num?)?.toDouble();
     final serviceId = widget.request['serviceId'] as String?;
     final serviceName = widget.request['serviceName'] as String?;
+    final l10n = context.l10n;
 
     if (lat == null || lng == null || serviceId == null) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Available Professionals')),
+        appBar: AppBar(title: Text(l10n.discoveryTitle)),
         body: ErrorState(
-          message: 'Missing service or location details.',
+          message: l10n.discoveryMissingDetails,
           onRetry: () => context.pop(),
         ),
       );
@@ -46,7 +49,11 @@ class _GigDiscoveryScreenState extends ConsumerState<GigDiscoveryScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: Text(serviceName ?? 'Available Local Experts')),
+      appBar: AppBar(
+        title: Text(serviceName != null
+            ? localizedServiceName(l10n, serviceName)
+            : l10n.discoveryLocalExperts),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -54,9 +61,9 @@ class _GigDiscoveryScreenState extends ConsumerState<GigDiscoveryScreen> {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
               child: Row(
                 children: [
-                  const Text(
-                    'Within',
-                    style: TextStyle(fontSize: 13, color: AppColors.inkSecondary),
+                  Text(
+                    l10n.discoveryWithin,
+                    style: const TextStyle(fontSize: 13, color: AppColors.inkSecondary),
                   ),
                   const SizedBox(width: 8),
                   ..._searchRadiiKm.asMap().entries.map((entry) {
@@ -64,7 +71,7 @@ class _GigDiscoveryScreenState extends ConsumerState<GigDiscoveryScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: Text('${entry.value.toStringAsFixed(0)} km'),
+                        label: Text(l10n.distanceKm(entry.value.toStringAsFixed(0))),
                         selected: selected,
                         onSelected: (_) => setState(() => _radiusIndex = entry.key),
                         selectedColor: AppColors.primary,
@@ -86,8 +93,8 @@ class _GigDiscoveryScreenState extends ConsumerState<GigDiscoveryScreen> {
                   if (gigs.isEmpty) {
                     return EmptyState(
                       icon: Icons.person_search_outlined,
-                      title: 'No providers available nearby',
-                      message: 'Try a larger search radius or check back later.',
+                      title: l10n.discoveryNoProviders,
+                      message: l10n.discoveryTryLargerRadius,
                     );
                   }
                   // One card per professional, not per gig. A worker who
@@ -108,7 +115,7 @@ class _GigDiscoveryScreenState extends ConsumerState<GigDiscoveryScreen> {
                 },
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, _) => ErrorState(
-                  message: 'Could not load nearby providers.',
+                  message: l10n.discoveryLoadFailed,
                   onRetry: () => ref.invalidate(
                     gigDiscoveryProvider(
                       (serviceId: serviceId, lat: lat, lng: lng, radiusKm: radiusKm),
@@ -167,6 +174,7 @@ class _WorkerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final worker = gigs.first;
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.all(14),
@@ -235,7 +243,7 @@ class _WorkerCard extends StatelessWidget {
                     if (gigs.length > 1) ...[
                       const SizedBox(height: 4),
                       Text(
-                        '${gigs.length} services for this job',
+                        l10n.discoveryServicesForJob(gigs.length),
                         style: const TextStyle(
                             fontSize: 12, color: AppColors.inkTertiary),
                       ),
@@ -296,7 +304,7 @@ class _WorkerCard extends StatelessWidget {
                             textStyle: const TextStyle(
                                 fontSize: 13, fontWeight: FontWeight.w600),
                           ),
-                          child: const Text('Book'),
+                          child: Text(l10n.discoveryBook),
                         ),
                       ),
                     ],

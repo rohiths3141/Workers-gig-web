@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/utils/phone_format.dart';
 import 'auth_controller.dart';
+import '../../core/localization/l10n.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
   final String verificationId;
@@ -72,7 +73,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     if (!mounted || !sent) return;
     _startResendCountdown();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('We sent a new code.')),
+      SnackBar(content: Text(context.l10n.authNewCodeSent)),
     );
   }
 
@@ -85,6 +86,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     final state = ref.watch(authControllerProvider);
     final theme = Theme.of(context);
     final canResend = _resendIn <= 0 && !state.isLoading;
+    final l10n = context.l10n;
 
     return PopScope(
       canPop: false,
@@ -93,10 +95,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Verify phone'),
+          title: Text(l10n.authVerifyPhoneTitle),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            tooltip: 'Change number',
+            tooltip: l10n.authChangeNumber,
             onPressed: _changeNumber,
           ),
         ),
@@ -108,7 +110,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  'Enter 6-digit code',
+                  l10n.authEnterCodeTitle,
                   style: theme.textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: AppColors.ink,
@@ -116,8 +118,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'We sent an SMS verification code to '
-                  '${formatIndianPhone(widget.phoneNumber)}',
+                  l10n.authCodeSentTo(formatIndianPhone(widget.phoneNumber)),
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: AppColors.inkSecondary,
                   ),
@@ -130,7 +131,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     alignment: Alignment.centerLeft,
                   ),
-                  child: const Text('Wrong number? Change it'),
+                  child: Text(l10n.authWrongNumber),
                 ),
                 const SizedBox(height: 24),
                 Form(
@@ -156,7 +157,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     ),
                     validator: (val) {
                       if (val == null || val.trim().length != 6) {
-                        return 'Please enter 6 digits';
+                        return l10n.authEnterSixDigits;
                       }
                       return null;
                     },
@@ -191,16 +192,16 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                   child: canResend
                       ? TextButton(
                           onPressed: _resend,
-                          child: const Text(
-                            'Resend code',
-                            style: TextStyle(
+                          child: Text(
+                            l10n.authResendCode,
+                            style: const TextStyle(
                               color: AppColors.primary,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                         )
                       : Text(
-                          'Resend code in ${_resendIn}s',
+                          l10n.authResendCodeIn(_resendIn),
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: AppColors.inkSecondary,
                           ),
@@ -227,9 +228,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               strokeWidth: 2,
                             ),
                           )
-                        : const Text(
-                            'Verify & Continue',
-                            style: TextStyle(
+                        : Text(
+                            l10n.authVerifyAndContinue,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,

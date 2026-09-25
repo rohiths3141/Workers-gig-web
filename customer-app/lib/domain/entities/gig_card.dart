@@ -1,5 +1,6 @@
 import 'enums.dart';
 import '../../core/utils/money_format.dart';
+import '../../core/localization/app_locale.dart';
 
 /// A discovered gig returned by customer_find_gigs().
 ///
@@ -94,10 +95,11 @@ class GigCard {
   /// Human-readable price string, e.g. "₹350 per job"
   String get priceLabel => '${formatRupees(priceMinor)} ${pricingUnit.label}';
 
-  String get ratingLabel =>
-      workerRatingCount == 0 ? 'New' : workerRating.toStringAsFixed(1);
+  String get ratingLabel => workerRatingCount == 0
+      ? AppStrings.current.gigRatingNew
+      : workerRating.toStringAsFixed(1);
 
   String get distanceLabel => distanceKm < 1
-      ? '${(distanceKm * 1000).round()} m'
-      : '${distanceKm.toStringAsFixed(1)} km';
+      ? AppStrings.current.distanceMetres((distanceKm * 1000).round())
+      : AppStrings.current.distanceKm(distanceKm.toStringAsFixed(1));
 }

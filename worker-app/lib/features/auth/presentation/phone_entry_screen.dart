@@ -7,7 +7,9 @@ import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../shared/widgets/language_picker.dart';
 import 'auth_controller.dart';
+import '../../../core/localization/l10n.dart';
 
 /// Enter a mobile number.
 ///
@@ -62,8 +64,9 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(actions: const [LanguageButton()]),
       body: SafeArea(
         child: Column(
           children: [
@@ -75,12 +78,12 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('What is your mobile number?',
+                    Text(l10n.phoneTitle,
                         style: AppTypography.headlineLarge
                             .copyWith(color: context.ink)),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'We will send you a one-time code to confirm it is you.',
+                      l10n.phoneSubtitle,
                       style: AppTypography.bodyLarge
                           .copyWith(color: context.inkSecondary),
                     ),
@@ -125,9 +128,9 @@ class _PhoneEntryScreenState extends ConsumerState<PhoneEntryScreen> {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.screenPadding),
               child: BusyFilledButton(
-                label: 'Send code',
+                label: l10n.phoneSendCode,
                 busy: _busy,
-                busyLabel: 'Sending…',
+                busyLabel: l10n.phoneSending,
                 onPressed: _isValid ? _submit : null,
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../domain/entities/enums.dart';
+import '../../core/localization/l10n.dart';
 
 class MaterialsScreen extends ConsumerWidget {
   final String bookingId;
@@ -14,24 +15,26 @@ class MaterialsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final materialsAsync = ref.watch(bookingMaterialsProvider(bookingId));
     final materialRepo = ref.watch(materialRepositoryProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Material / Parts Requests'),
+        title: Text(l10n.materialsTitle),
       ),
       body: SafeArea(
         child: materialsAsync.when(
           data: (materials) {
             if (materials.isEmpty) {
-              return const Center(
+              return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.build_circle_outlined, size: 48, color: AppColors.inkSecondary),
-                    SizedBox(height: 12),
+                    const Icon(Icons.build_circle_outlined, size: 48, color: AppColors.inkSecondary),
+                    const SizedBox(height: 12),
                     Text(
-                      'No material requests submitted for this booking',
-                      style: TextStyle(color: AppColors.inkSecondary),
+                      l10n.materialsEmpty,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: AppColors.inkSecondary),
                     ),
                   ],
                 ),
@@ -77,8 +80,9 @@ class MaterialsScreen extends ConsumerWidget {
                         ],
                         const SizedBox(height: 8),
                         Text(
-                          '${mat.quantityLabel}'
-                          '${mat.isEstimate ? ' · estimated' : ' · actual'}',
+                          mat.isEstimate
+                              ? l10n.materialsQuantityEstimated(mat.quantityLabel)
+                              : l10n.materialsQuantityActual(mat.quantityLabel),
                           style: const TextStyle(fontSize: 12, color: AppColors.ink),
                         ),
                         const Divider(height: 20),
@@ -92,7 +96,7 @@ class MaterialsScreen extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
-                                mat.status.name.toUpperCase(),
+                                _statusLabel(l10n, mat.status).toUpperCase(),
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
@@ -117,7 +121,7 @@ class MaterialsScreen extends ConsumerWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16),
                                     ),
-                                    child: const Text('Reject'),
+                                    child: Text(l10n.materialsReject),
                                   ),
                                   const SizedBox(width: 8),
                                   ElevatedButton(
@@ -132,7 +136,7 @@ class MaterialsScreen extends ConsumerWidget {
                                       padding: const EdgeInsets.symmetric(
                                           horizontal: 16),
                                     ),
-                                    child: const Text('Approve'),
+                                    child: Text(l10n.materialsApprove),
                                   ),
                                 ],
                               ),
@@ -146,11 +150,23 @@ class MaterialsScreen extends ConsumerWidget {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, _) => Center(child: Text('Error: $err')),
+          error: (err, _) => Center(child: Text(l10n.commonErrorDetail('$err'))),
         ),
       ),
     );
   }
+
+  String _statusLabel(AppLocalizations l10n, MaterialStatus status) =>
+      switch (status) {
+        MaterialStatus.requested => l10n.materialStatusRequested,
+        MaterialStatus.customerReview => l10n.materialStatusCustomerReview,
+        MaterialStatus.approved => l10n.materialStatusApproved,
+        MaterialStatus.rejected => l10n.materialStatusRejected,
+        MaterialStatus.purchased => l10n.materialStatusPurchased,
+        MaterialStatus.costRecorded => l10n.materialStatusCostRecorded,
+        MaterialStatus.billed => l10n.materialStatusBilled,
+        MaterialStatus.cancelled => l10n.materialStatusCancelled,
+      };
 
   Color _getStatusColor(MaterialStatus status) {
     switch (status) {

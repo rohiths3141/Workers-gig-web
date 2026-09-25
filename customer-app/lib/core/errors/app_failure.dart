@@ -1,13 +1,31 @@
+import '../localization/app_locale.dart';
+import '../../l10n/app_localizations.dart';
+
 /// Every way a customer-side request can fail, as a closed set.
 ///
 /// Identical sealed hierarchy to the worker app. The server writes the
 /// customer-readable messages, so nothing here contains hard-coded wording
 /// that could disagree with what the backend says.
 sealed class AppFailure implements Exception {
-  const AppFailure({required this.message, this.debugDetail, this.cause});
+  const AppFailure({String? message, this.debugDetail, this.cause})
+      : _message = message;
+
+  final String? _message;
 
   /// Shown to the customer. Plain language, no error codes.
-  final String message;
+  ///
+  /// A failure the server or the app described carries that wording. One
+  /// that only knows its kind is worded when it is shown, in the language on
+  /// screen at that moment.
+  String get message => _message ?? _defaultMessage(AppStrings.current);
+
+  String _defaultMessage(AppLocalizations l10n) => switch (this) {
+        NetworkFailure() => l10n.errorNoInternet,
+        TimeoutFailure() => l10n.errorTimeout,
+        ServerFailure() => l10n.errorServer,
+        ClockSkewFailure() => l10n.errorClockSkew,
+        _ => l10n.errorUnexpected,
+      };
 
   /// For logs and Crashlytics only. Never rendered.
   final String? debugDetail;
@@ -30,7 +48,7 @@ sealed class AppFailure implements Exception {
 
 final class NetworkFailure extends AppFailure {
   const NetworkFailure({
-    super.message = 'No internet connection. Check your network and try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -38,7 +56,7 @@ final class NetworkFailure extends AppFailure {
 
 final class TimeoutFailure extends AppFailure {
   const TimeoutFailure({
-    super.message = 'That took too long. Try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -103,7 +121,7 @@ final class UploadFailure extends AppFailure {
 
 final class ServerFailure extends AppFailure {
   const ServerFailure({
-    super.message = 'Something went wrong at our end. Please try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -115,9 +133,7 @@ final class ServerFailure extends AppFailure {
 /// clears a small skew; a large one is the customer's device settings.
 final class ClockSkewFailure extends AppFailure {
   const ClockSkewFailure({
-    super.message =
-        "Your phone's date and time look out of sync. Turn on automatic "
-            'date & time in Settings, then try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -125,7 +141,7 @@ final class ClockSkewFailure extends AppFailure {
 
 final class UnexpectedFailure extends AppFailure {
   const UnexpectedFailure({
-    super.message = 'Something went wrong. Please try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });

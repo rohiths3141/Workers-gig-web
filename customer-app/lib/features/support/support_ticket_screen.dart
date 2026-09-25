@@ -5,6 +5,7 @@ import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../core/localization/l10n.dart';
 
 class SupportTicketScreen extends ConsumerStatefulWidget {
   final String ticketId;
@@ -42,16 +43,17 @@ class _SupportTicketScreenState extends ConsumerState<SupportTicketScreen> {
   @override
   Widget build(BuildContext context) {
     final messagesAsync = ref.watch(supportMessagesProvider(widget.ticketId));
+    final l10n = context.l10n;
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.subject ?? 'Support Ticket')),
+      appBar: AppBar(title: Text(widget.subject ?? l10n.supportTicketTitle)),
       body: Column(
         children: [
           Expanded(
             child: messagesAsync.when(
               data: (messages) {
                 if (messages.isEmpty) {
-                  return const EmptyState(icon: Icons.forum_outlined, title: 'No messages yet');
+                  return EmptyState(icon: Icons.forum_outlined, title: l10n.supportNoMessages);
                 }
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
@@ -59,7 +61,9 @@ class _SupportTicketScreenState extends ConsumerState<SupportTicketScreen> {
                   itemBuilder: (context, index) {
                     final m = messages[index];
                     return Align(
-                      alignment: m.isFromCustomer ? Alignment.centerRight : Alignment.centerLeft,
+                      alignment: m.isFromCustomer
+                          ? AlignmentDirectional.centerEnd
+                          : AlignmentDirectional.centerStart,
                       child: Container(
                         margin: const EdgeInsets.only(bottom: 10),
                         padding: const EdgeInsets.all(12),
@@ -80,7 +84,7 @@ class _SupportTicketScreenState extends ConsumerState<SupportTicketScreen> {
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, _) => ErrorState(
-                message: 'Could not load messages.',
+                message: l10n.supportMessagesLoadFailed,
                 onRetry: () => ref.invalidate(supportMessagesProvider(widget.ticketId)),
               ),
             ),
@@ -95,7 +99,7 @@ class _SupportTicketScreenState extends ConsumerState<SupportTicketScreen> {
                     child: TextField(
                       controller: _messageController,
                       decoration: InputDecoration(
-                        hintText: 'Type a message...',
+                        hintText: l10n.supportTypeMessage,
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(24)),
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                       ),
@@ -105,6 +109,7 @@ class _SupportTicketScreenState extends ConsumerState<SupportTicketScreen> {
                   IconButton(
                     onPressed: _isSending ? null : _send,
                     icon: const Icon(Icons.send, color: AppColors.primary),
+                    tooltip: l10n.supportSend,
                   ),
                 ],
               ),

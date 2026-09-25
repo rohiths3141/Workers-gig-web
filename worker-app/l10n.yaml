@@ -1,0 +1,8 @@
+arb-dir: lib/l10n
+template-arb-file: app_en.arb
+output-localization-file: app_localizations.dart
+output-class: AppLocalizations
+nullable-getter: false
+# Lists any key a language is missing. The l10n completeness test fails on the
+# same condition, so a partly translated language cannot ship silently.
+untranslated-messages-file: build/untranslated_messages.json

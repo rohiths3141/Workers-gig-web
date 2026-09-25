@@ -14,6 +14,7 @@ import '../../domain/entities/worker.dart';
 import '../../domain/repositories/repositories.dart';
 import 'providers.dart';
 import 'push_registration_provider.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Where the app should send the worker.
 ///
@@ -115,15 +116,25 @@ class OnboardingProgress {
 }
 
 enum OnboardingStep {
-  basicProfile('Your details'),
-  trade('Your main trade'),
-  skills('What you can do'),
-  serviceArea('Where you work'),
-  kyc('Identity check'),
-  review('Ready to work');
+  basicProfile,
+  trade,
+  skills,
+  serviceArea,
+  kyc,
+  review;
 
-  const OnboardingStep(this.label);
-  final String label;
+  /// In the language on screen.
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      OnboardingStep.basicProfile => l10n.onboardingStepDetails,
+      OnboardingStep.trade => l10n.onboardingStepTrade,
+      OnboardingStep.skills => l10n.onboardingStepSkills,
+      OnboardingStep.serviceArea => l10n.onboardingStepArea,
+      OnboardingStep.kyc => l10n.onboardingStepKyc,
+      OnboardingStep.review => l10n.onboardingStepReady,
+    };
+  }
 }
 
 /// Resolves and holds the session.

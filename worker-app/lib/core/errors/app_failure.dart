@@ -1,3 +1,6 @@
+import '../../l10n/app_localizations.dart';
+import '../localization/app_locale.dart';
+
 /// Every way a request can fail, as a closed set.
 ///
 /// The point of this file is that a caller cannot forget a case, and that no
@@ -5,10 +8,25 @@
 /// [message] already written for the person holding the phone, and an optional
 /// [debugDetail] that goes to logging and crash reporting only.
 sealed class AppFailure implements Exception {
-  const AppFailure({required this.message, this.debugDetail, this.cause});
+  const AppFailure({String? message, this.debugDetail, this.cause})
+      : _message = message;
+
+  final String? _message;
 
   /// Shown to the worker. Plain language, no jargon, no error codes.
-  final String message;
+  ///
+  /// A failure the server or the app described carries that wording. One
+  /// that only knows its kind is worded when it is shown, in the language on
+  /// screen at that moment.
+  String get message => _message ?? _defaultMessage(AppStrings.current);
+
+  String _defaultMessage(AppLocalizations l10n) => switch (this) {
+        NetworkFailure() => l10n.errorNoInternet,
+        TimeoutFailure() => l10n.errorTimeout,
+        ServerFailure() => l10n.errorServer,
+        ClockSkewFailure() => l10n.errorClockSkew,
+        _ => l10n.errorUnexpected,
+      };
 
   /// For logs and Crashlytics. Never rendered.
   final String? debugDetail;
@@ -33,7 +51,7 @@ sealed class AppFailure implements Exception {
 /// No usable connection, or the request never reached the server.
 final class NetworkFailure extends AppFailure {
   const NetworkFailure({
-    super.message = 'No internet connection. Check your network and try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -41,7 +59,7 @@ final class NetworkFailure extends AppFailure {
 
 final class TimeoutFailure extends AppFailure {
   const TimeoutFailure({
-    super.message = 'That took too long. Try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -132,7 +150,7 @@ final class UploadFailure extends AppFailure {
 /// The server reached, understood, and broke.
 final class ServerFailure extends AppFailure {
   const ServerFailure({
-    super.message = 'Something went wrong at our end. Please try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -141,7 +159,7 @@ final class ServerFailure extends AppFailure {
 /// Nothing above matched. Always reported to crash monitoring.
 final class UnexpectedFailure extends AppFailure {
   const UnexpectedFailure({
-    super.message = 'Something went wrong. Please try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -153,9 +171,7 @@ final class UnexpectedFailure extends AppFailure {
 /// clears a small skew; a large one is the worker's device settings.
 final class ClockSkewFailure extends AppFailure {
   const ClockSkewFailure({
-    super.message =
-        "Your phone's date and time look out of sync. Turn on automatic "
-            'date & time in Settings, then try again.',
+    super.message,
     super.debugDetail,
     super.cause,
   });
@@ -172,7 +188,8 @@ class EligibilityReason {
 
   factory EligibilityReason.fromJson(Map<String, dynamic> json) => EligibilityReason(
         code: json['code'] as String? ?? 'UNKNOWN',
-        message: json['message'] as String? ?? 'This step is not complete yet.',
+        message: json['message'] as String? ??
+            AppStrings.current.eligibilityStepIncomplete,
         action: json['action'] as String?,
       );
 

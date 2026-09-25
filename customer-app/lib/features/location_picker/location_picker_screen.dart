@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/localization/l10n.dart';
 
 class LocationPickerScreen extends StatefulWidget {
   final Map<String, dynamic>? initial;
@@ -132,7 +133,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
     final addressText = _addressLineController.text.trim();
     if (addressText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter or confirm the address for this pin')),
+        SnackBar(content: Text(context.l10n.pickerEnterAddress)),
       );
       return;
     }
@@ -158,9 +159,10 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select Service Address'),
+        title: Text(l10n.pickerTitle),
       ),
       body: Stack(
         children: [
@@ -198,14 +200,14 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
           ] else
             Container(
               color: AppColors.surfaceMuted,
-              child: const Center(
+              child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 12),
-                    Text('Getting your location...',
-                        style: TextStyle(color: AppColors.inkSecondary)),
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 12),
+                    Text(l10n.pickerGettingLocation,
+                        style: const TextStyle(color: AppColors.inkSecondary)),
                   ],
                 ),
               ),
@@ -219,11 +221,11 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
               child: Material(
                 color: AppColors.statusError.withOpacity(0.95),
                 borderRadius: BorderRadius.circular(12),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   child: Text(
-                    'Location permission denied — move the map manually to pick your address.',
-                    style: TextStyle(color: Colors.white, fontSize: 12),
+                    l10n.pickerPermissionDenied,
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
                   ),
                 ),
               ),
@@ -236,6 +238,7 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
             child: FloatingActionButton.small(
               backgroundColor: Colors.white,
               onPressed: _isLocating ? null : _getCurrentLocation,
+              tooltip: l10n.commonUseCurrentLocation,
               child: _isLocating
                   ? const SizedBox(
                       width: 18,
@@ -271,12 +274,14 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      children: const [
-                        Icon(Icons.place, color: AppColors.primary),
-                        SizedBox(width: 8),
-                        Text(
-                          'Confirm Service Pin Position',
-                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                      children: [
+                        const Icon(Icons.place, color: AppColors.primary),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            l10n.pickerConfirmPin,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
                         ),
                       ],
                     ),
@@ -284,8 +289,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     TextFormField(
                       controller: _addressLineController,
                       decoration: InputDecoration(
-                        labelText: 'House / Flat / Street Name',
-                        hintText: 'e.g. #102, Green Avenue, Indiranagar',
+                        labelText: l10n.pickerAddressLabel,
+                        hintText: l10n.pickerAddressHint,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -295,8 +300,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     TextFormField(
                       controller: _landmarkController,
                       decoration: InputDecoration(
-                        labelText: 'Landmark (Optional)',
-                        hintText: 'e.g. Near HDFC Bank ATM',
+                        labelText: l10n.pickerLandmarkLabel,
+                        hintText: l10n.pickerLandmarkHint,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -314,9 +319,9 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text(
-                          'Confirm Location & Proceed',
-                          style: TextStyle(
+                        child: Text(
+                          l10n.pickerConfirm,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,

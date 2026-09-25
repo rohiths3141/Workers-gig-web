@@ -6,6 +6,7 @@ import '../../app/providers/providers.dart';
 import '../../app/providers/session_controller.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
+import '../../core/localization/l10n.dart';
 
 class EditProfileScreen extends ConsumerStatefulWidget {
   const EditProfileScreen({super.key});
@@ -58,8 +59,8 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
       case Ok():
         ref.invalidate(sessionProvider);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile updated successfully'),
+          SnackBar(
+            content: Text(context.l10n.editProfileSaved),
             backgroundColor: AppColors.statusSuccess,
           ),
         );
@@ -71,9 +72,10 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: Text(l10n.editProfileTitle),
       ),
       body: SafeArea(
         child: Padding(
@@ -85,14 +87,14 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 TextFormField(
                   controller: _nameController,
                   decoration: InputDecoration(
-                    labelText: 'Full Name',
+                    labelText: l10n.editProfileFullName,
                     prefixIcon: const Icon(Icons.person_outline),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.trim().isEmpty) return 'Name cannot be empty';
+                    if (val == null || val.trim().isEmpty) return l10n.editProfileNameEmpty;
                     return null;
                   },
                 ),
@@ -100,7 +102,7 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                 TextFormField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: 'Email Address',
+                    labelText: l10n.editProfileEmail,
                     prefixIcon: const Icon(Icons.email_outlined),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -125,9 +127,9 @@ class _EditProfileScreenState extends ConsumerState<EditProfileScreen> {
                     ),
                     child: _isSaving
                         ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Save Changes',
-                            style: TextStyle(
+                        : Text(
+                            l10n.commonSaveChanges,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,

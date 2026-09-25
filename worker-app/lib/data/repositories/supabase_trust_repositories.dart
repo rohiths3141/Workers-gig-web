@@ -7,6 +7,7 @@ import '../../domain/entities/verification.dart';
 import '../../domain/repositories/repositories.dart';
 import '../mappers/mappers.dart';
 import 'supabase_repository_base.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Verification, insurance and claims.
 ///
@@ -219,8 +220,8 @@ final class SupabaseVerificationRepository extends SupabaseRepositoryBase
         operation: 'respondToClaim',
         () async {
           if (response.trim().length < 10) {
-            throw const ValidationFailure(
-              message: 'Please explain what happened in a little more detail.',
+            throw ValidationFailure(
+              message: AppStrings.current.claimResponseTooShort,
             );
           }
           await db.rpc<dynamic>(

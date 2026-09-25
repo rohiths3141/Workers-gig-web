@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../app/providers/session_controller.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
+import '../../core/localization/l10n.dart';
 
 /// The customer is signed in but their profile could not be loaded.
 ///
@@ -15,12 +16,11 @@ class SessionErrorScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = context.l10n;
     final session = ref.watch(sessionProvider).valueOrNull;
     final failure = session is SessionError
         ? session.failure
-        : const UnexpectedFailure(
-            message: 'We could not load your profile. Please try again.',
-          );
+        : UnexpectedFailure(message: l10n.sessionProfileLoadFailedRetry);
     final isClockSkew = failure is ClockSkewFailure;
 
     return Scaffold(
@@ -40,7 +40,7 @@ class SessionErrorScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 20),
               Text(
-                isClockSkew ? "Check your phone's clock" : 'We could not load your profile',
+                isClockSkew ? l10n.sessionCheckClock : l10n.sessionProfileLoadFailed,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
                   fontSize: 18,
@@ -66,9 +66,9 @@ class SessionErrorScreen extends ConsumerWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  child: const Text(
-                    'Try again',
-                    style: TextStyle(
+                  child: Text(
+                    l10n.commonTryAgain,
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
@@ -79,7 +79,7 @@ class SessionErrorScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => ref.read(sessionProvider.notifier).signOut(),
-                child: const Text('Sign out'),
+                child: Text(l10n.commonSignOut),
               ),
             ],
           ),

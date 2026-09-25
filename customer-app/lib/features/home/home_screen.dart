@@ -13,6 +13,7 @@ import '../../domain/entities/service_category.dart';
 import '../../shared/widgets/ask_assistant_button.dart';
 import '../../shared/widgets/empty_state.dart';
 import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -23,6 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final customer = sessionState is SessionReady ? sessionState.customer : null;
     final categoriesAsync = ref.watch(serviceCategoriesProvider);
     final activeBookingsAsync = ref.watch(activeBookingsProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -49,8 +51,8 @@ class HomeScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 customer != null
-                                    ? 'Hello, ${customer.fullName} 👋'
-                                    : 'Hello 👋',
+                                    ? l10n.homeGreetingNamed(customer.fullName)
+                                    : l10n.homeGreeting,
                                 style: const TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.w700,
@@ -58,9 +60,9 @@ class HomeScreen extends ConsumerWidget {
                                 ),
                               ),
                               const SizedBox(height: 2),
-                              const Text(
-                                'What service do you need today?',
-                                style: TextStyle(
+                              Text(
+                                l10n.homeWhatService,
+                                style: const TextStyle(
                                   fontSize: 13,
                                   color: AppColors.inkSecondary,
                                 ),
@@ -82,7 +84,7 @@ class HomeScreen extends ConsumerWidget {
                           const Icon(Icons.location_on, color: AppColors.primary, size: 16),
                           const SizedBox(width: 4),
                           Text(
-                            customer?.city ?? 'Set your location',
+                            customer?.city ?? l10n.homeSetLocation,
                             style: const TextStyle(
                               fontSize: 13,
                               fontWeight: FontWeight.w600,
@@ -115,7 +117,7 @@ class HomeScreen extends ConsumerWidget {
                           child: _ActiveBookingBanner(
                             code: booking.bookingCode,
                             status: isAwaitingApproval
-                                ? 'Work finished — tap to approve'
+                                ? l10n.homeWorkFinishedApprove
                                 : booking.status.displayName,
                             onTap: () => context.push(
                               trackable.contains(booking.status)
@@ -133,9 +135,9 @@ class HomeScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          'Categories',
-                          style: TextStyle(
+                        Text(
+                          l10n.homeCategories,
+                          style: const TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w700,
                             color: AppColors.ink,
@@ -143,7 +145,7 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         TextButton(
                           onPressed: () => context.go('/explore'),
-                          child: const Text('See All'),
+                          child: Text(l10n.commonSeeAll),
                         ),
                       ],
                     ),
@@ -154,7 +156,7 @@ class HomeScreen extends ConsumerWidget {
                         padding: EdgeInsets.all(32.0),
                         child: Center(child: CircularProgressIndicator()),
                       ),
-                      error: (err, _) => Text('Failed to load categories: $err'),
+                      error: (err, _) => Text(l10n.homeCategoriesLoadFailed('$err')),
                     ),
 
                     const SizedBox(height: 24),
@@ -163,8 +165,8 @@ class HomeScreen extends ConsumerWidget {
                         Expanded(
                           child: _ActionCard(
                             icon: Icons.search_rounded,
-                            title: 'Find a Worker',
-                            subtitle: 'Browse nearby gigs',
+                            title: l10n.homeFindWorker,
+                            subtitle: l10n.homeFindWorkerSubtitle,
                             onTap: () => context.go('/explore'),
                           ),
                         ),
@@ -172,8 +174,8 @@ class HomeScreen extends ConsumerWidget {
                         Expanded(
                           child: _ActionCard(
                             icon: Icons.post_add_rounded,
-                            title: 'Post a Request',
-                            subtitle: 'Workers come to you',
+                            title: l10n.homePostRequest,
+                            subtitle: l10n.homePostRequestSubtitle,
                             onTap: () => context.push('/post-request'),
                           ),
                         ),
@@ -193,11 +195,12 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildCategoryGrid(BuildContext context, List<ServiceCategory> categories) {
+    final l10n = context.l10n;
     if (categories.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.category_outlined,
-        title: 'No services available right now',
-        message: 'Please check back later.',
+        title: l10n.homeNoServices,
+        message: l10n.commonCheckBackLater,
       );
     }
 
@@ -235,7 +238,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 6),
               Text(
-                cat.name,
+                localizedServiceName(l10n, cat.name, slug: cat.slug),
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -267,19 +270,20 @@ Future<void> _changeSearchLocation(
   final addresses = addressesResult.fold((a) => a, (_) => <CustomerAddress>[]);
   if (!context.mounted) return;
 
+  final l10n = context.l10n;
   final choice = await showModalBottomSheet<String>(
     context: context,
     builder: (sheetContext) => SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(16),
-            child: Text('Search services near', style: TextStyle(fontWeight: FontWeight.bold)),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(l10n.homeSearchNear, style: const TextStyle(fontWeight: FontWeight.bold)),
           ),
           ListTile(
             leading: const Icon(Icons.my_location_rounded, color: AppColors.primary),
-            title: const Text('Use current location'),
+            title: Text(l10n.commonUseCurrentLocation),
             onTap: () => Navigator.of(sheetContext).pop('__current__'),
           ),
           for (final addr in addresses)
@@ -291,13 +295,13 @@ Future<void> _changeSearchLocation(
                         ? Icons.work_outline_rounded
                         : Icons.place_outlined,
               ),
-              title: Text(addr.label),
+              title: Text(localizedAddressLabel(l10n, addr.label)),
               subtitle: Text(addr.addressLine, maxLines: 1, overflow: TextOverflow.ellipsis),
               onTap: addr.hasCoords ? () => Navigator.of(sheetContext).pop(addr.id) : null,
             ),
           ListTile(
             leading: const Icon(Icons.map_outlined),
-            title: const Text('Choose on map'),
+            title: Text(l10n.commonChooseOnMap),
             onTap: () => Navigator.of(sheetContext).pop('__map__'),
           ),
         ],
@@ -390,13 +394,13 @@ class _SearchBar extends StatelessWidget {
                 color: AppColors.surfaceMuted,
                 borderRadius: BorderRadius.circular(14),
               ),
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.search, color: AppColors.inkTertiary, size: 20),
-                  SizedBox(width: 10),
+                  const Icon(Icons.search, color: AppColors.inkTertiary, size: 20),
+                  const SizedBox(width: 10),
                   Text(
-                    'Search for services...',
-                    style: TextStyle(color: AppColors.inkTertiary, fontSize: 14),
+                    context.l10n.homeSearchHint,
+                    style: const TextStyle(color: AppColors.inkTertiary, fontSize: 14),
                   ),
                 ],
               ),
@@ -448,7 +452,7 @@ class _ActiveBookingBanner extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Active Booking #$code',
+                    context.l10n.homeActiveBooking(code),
                     style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
                   ),
                   Text(
@@ -519,6 +523,7 @@ class _ServiceRequestsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final requestsAsync = ref.watch(myServiceRequestsStreamProvider);
+    final l10n = context.l10n;
 
     return requestsAsync.when(
       data: (requests) {
@@ -535,9 +540,9 @@ class _ServiceRequestsSection extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  'Your Active Requests',
-                  style: TextStyle(
+                Text(
+                  l10n.homeActiveRequests,
+                  style: const TextStyle(
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
                     color: AppColors.ink,
@@ -545,7 +550,7 @@ class _ServiceRequestsSection extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () => context.push('/my-requests'),
-                  child: const Text('View All'),
+                  child: Text(l10n.commonViewAll),
                 ),
               ],
             ),

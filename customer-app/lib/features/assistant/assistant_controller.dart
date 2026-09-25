@@ -2,10 +2,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/providers/providers.dart';
 import '../../core/errors/result.dart';
+import '../../core/localization/app_locale.dart';
 import '../../core/logging/app_logger.dart';
 import '../../domain/entities/service_category.dart';
 import '../../domain/entities/service_match.dart';
 import '../../domain/entities/service_problem.dart';
+import '../../shared/widgets/service_icon.dart';
 import 'assistant_message.dart';
 
 /// The assistant conversation.
@@ -43,16 +45,19 @@ class AssistantState {
 /// cannot be reached.
 class AssistantController extends StateNotifier<AssistantState> {
   AssistantController(this._ref) : super(const AssistantState()) {
-    _append(const AssistantTurn(_opening));
+    _append(AssistantTurn(_opening));
   }
 
   final Ref _ref;
 
   static const _log = AppLogger('Assistant');
 
-  static const _opening =
-      "Tell me what's wrong, in your own words — and I'll find the right "
-      'professional for it.';
+  /// Each turn is worded in the language on screen when it is said, like any
+  /// other chat: switching language mid-conversation does not rewrite it.
+  static String get _opening => AppStrings.current.assistantOpening;
+
+  static String _name(ServiceCategory service) =>
+      localizedServiceName(AppStrings.current, service.name, slug: service.slug);
 
   /// The reply lands in the same frame the question does without this, which
   /// reads as a canned response rather than an answer. This is pacing, not
@@ -97,7 +102,7 @@ class AssistantController extends StateNotifier<AssistantState> {
       await _pause();
       if (!mounted) return;
       _append(AssistantTurn(
-        '${failure.message} I need the service list to answer that.',
+        AppStrings.current.assistantCatalogueFailed(failure.message),
         retryMessage: message,
       ));
       state = state.copyWith(isThinking: false);
@@ -111,7 +116,7 @@ class AssistantController extends StateNotifier<AssistantState> {
       await _pause();
       if (!mounted) return;
       _append(AssistantTurn(
-        'Something went wrong loading the service list.',
+        AppStrings.current.assistantCatalogueError,
         retryMessage: message,
       ));
       state = state.copyWith(isThinking: false);
@@ -131,19 +136,13 @@ class AssistantController extends StateNotifier<AssistantState> {
   }
 
   void _respond(ServiceMatchResult result, _Catalogue catalogue) {
+    final l10n = AppStrings.current;
     switch (result.outcome) {
       case MatchOutcome.greeting:
-        _append(const AssistantTurn(
-          'Hello. What do you need help with at home? A leaking tap, an AC '
-          'that stopped cooling, a switch that sparks — whatever it is, '
-          'describe it however you like.',
-        ));
+        _append(AssistantTurn(l10n.assistantGreeting));
 
       case MatchOutcome.tooVague:
-        _append(const AssistantTurn(
-          'I can help — I just need to know what the problem is. What is not '
-          'working?',
-        ));
+        _append(AssistantTurn(l10n.assistantTooVague));
 
       case MatchOutcome.confident:
         final best = result.best!;
@@ -155,33 +154,25 @@ class AssistantController extends StateNotifier<AssistantState> {
 
       case MatchOutcome.multipleServices:
         _append(AssistantTurn(
-          'That sounds like ${result.candidates.length} separate jobs — they '
-          'need different trades. Here is each one:',
+          l10n.assistantMultipleJobs(result.candidates.length),
         ));
         for (final match in result.candidates) {
           _append(ServiceOfferTurn(
             match: match,
             customerWords: result.query,
-            heading: match.service.name,
+            heading: _name(match.service),
           ));
         }
 
       case MatchOutcome.ambiguous:
-        _append(const AssistantTurn(
-          "I want to get this right — that could go to more than one trade. "
-          'Which is closer?',
-        ));
+        _append(AssistantTurn(l10n.assistantAmbiguous));
         _append(ServiceChoiceTurn(
           options: result.candidates,
           customerWords: result.query,
         ));
 
       case MatchOutcome.unmatched:
-        _append(const AssistantTurn(
-          "I could not place that against the services on the platform. "
-          'Pick the closest one and I will take your description across — or '
-          'post it as a request and let professionals come to you.',
-        ));
+        _append(AssistantTurn(l10n.assistantUnmatched));
         _append(CatalogueChoiceTurn(
           services: catalogue.services,
           customerWords: result.query,
@@ -190,20 +181,18 @@ class AssistantController extends StateNotifier<AssistantState> {
   }
 
   String _confidentReply(ServiceMatch match) {
-    final name = match.service.name;
+    final name = _name(match.service);
     final problem = match.closestProblem;
     if (problem != null) {
-      return 'That sounds like $name — most likely "${problem.title}".';
+      return AppStrings.current.assistantConfidentWithProblem(name, problem.title);
     }
-    return 'That sounds like a job for $name.';
+    return AppStrings.current.assistantConfident(name);
   }
 
   /// Records a service the customer picked after being asked.
   void choose(ServiceCategory service, String customerWords) {
-    _append(CustomerTurn(service.name));
-    _append(AssistantTurn(
-      '${service.name} it is. Your description goes across as you wrote it.',
-    ));
+    _append(CustomerTurn(_name(service)));
+    _append(AssistantTurn(AppStrings.current.assistantChosen(_name(service))));
     _append(ServiceOfferTurn(
       match: ServiceMatch.chosen(service),
       customerWords: customerWords,
@@ -213,17 +202,14 @@ class AssistantController extends StateNotifier<AssistantState> {
   /// Records a service the customer picked from a scored shortlist, keeping
   /// the matched problem the matcher already worked out for it.
   void chooseMatch(ServiceMatch match, String customerWords) {
-    _append(CustomerTurn(match.service.name));
-    _append(AssistantTurn(
-      '${match.service.name} it is. Your description goes across as you '
-      'wrote it.',
-    ));
+    _append(CustomerTurn(_name(match.service)));
+    _append(AssistantTurn(AppStrings.current.assistantChosen(_name(match.service))));
     _append(ServiceOfferTurn(match: match, customerWords: customerWords));
   }
 
   /// Clears the conversation back to the opening line.
   void reset() {
-    state = const AssistantState(entries: [AssistantTurn(_opening)]);
+    state = AssistantState(entries: [AssistantTurn(_opening)]);
   }
 
   void _append(AssistantEntry entry) {

@@ -1,5 +1,7 @@
 library;
 
+import '../../core/localization/app_locale.dart';
+
 /// Enumerations mirroring the Postgres types in migration 0001 and 0013.
 ///
 /// Each one parses from the database's wire value and refuses to guess: an
@@ -473,11 +475,14 @@ enum BudgetType {
   static BudgetType parse(String? raw) => _parse(_byWire, raw, 'budget_type');
   static final _byWire = {for (final v in BudgetType.values) v.wire: v};
 
-  String get label => switch (this) {
-        BudgetType.none => 'Flexible',
-        BudgetType.fixed => 'Fixed price',
-        BudgetType.range => 'Price range',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      BudgetType.none => l10n.budgetTypeFlexible,
+      BudgetType.fixed => l10n.budgetTypeFixed,
+      BudgetType.range => l10n.budgetTypeRange,
+    };
+  }
 }
 
 /// public.schedule_type
@@ -494,12 +499,15 @@ enum ScheduleType {
       _parse(_byWire, raw, 'schedule_type');
   static final _byWire = {for (final v in ScheduleType.values) v.wire: v};
 
-  String get label => switch (this) {
-        ScheduleType.asap => 'As soon as possible',
-        ScheduleType.today => 'Today',
-        ScheduleType.tomorrow => 'Tomorrow',
-        ScheduleType.specificDate => 'Specific date',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      ScheduleType.asap => l10n.scheduleAsap,
+      ScheduleType.today => l10n.scheduleToday,
+      ScheduleType.tomorrow => l10n.scheduleTomorrow,
+      ScheduleType.specificDate => l10n.scheduleSpecificDate,
+    };
+  }
 }
 
 /// public.offer_status
@@ -534,16 +542,19 @@ enum OfferStatus {
         OfferStatus.closed,
       }.contains(this);
 
-  String get workerLabel => switch (this) {
-        OfferStatus.submitted => 'Submitted',
-        OfferStatus.viewed => 'Viewed by customer',
-        OfferStatus.shortlisted => 'Shortlisted',
-        OfferStatus.accepted => 'Accepted ✓',
-        OfferStatus.rejected => 'Not selected',
-        OfferStatus.withdrawn => 'Withdrawn',
-        OfferStatus.expired => 'Expired',
-        OfferStatus.closed => 'Closed',
-      };
+  String get workerLabel {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      OfferStatus.submitted => l10n.offerStatusSubmitted,
+      OfferStatus.viewed => l10n.offerStatusViewed,
+      OfferStatus.shortlisted => l10n.offerStatusShortlisted,
+      OfferStatus.accepted => l10n.offerStatusAccepted,
+      OfferStatus.rejected => l10n.offerStatusRejected,
+      OfferStatus.withdrawn => l10n.offerStatusWithdrawn,
+      OfferStatus.expired => l10n.offerStatusExpired,
+      OfferStatus.closed => l10n.offerStatusClosed,
+    };
+  }
 }
 
 /// public.booking_source

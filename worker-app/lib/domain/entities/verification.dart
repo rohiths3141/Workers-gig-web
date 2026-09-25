@@ -1,5 +1,6 @@
 import '../../core/money/money.dart';
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// One verification case, from `public.worker_verifications`.
 ///
@@ -60,16 +61,20 @@ class VerificationCase {
   bool get isCurrentlyValid => status.isApproved && !isExpired;
 
   /// The one line shown next to the badge.
-  String get statusLabel => switch (status) {
-        VerificationStatus.notSubmitted => 'Not started',
-        VerificationStatus.pending => 'Submitted',
-        VerificationStatus.underReview => 'Being reviewed',
-        VerificationStatus.moreInfoRequired => 'More information needed',
-        VerificationStatus.approved => isExpired ? 'Expired' : 'Verified',
-        VerificationStatus.rejected => 'Not approved',
-        VerificationStatus.expired => 'Expired',
-        VerificationStatus.notApplicable => 'Not required',
-      };
+  String get statusLabel {
+    final l10n = AppStrings.current;
+    return switch (status) {
+      VerificationStatus.notSubmitted => l10n.verificationNotStarted,
+      VerificationStatus.pending => l10n.verificationSubmitted,
+      VerificationStatus.underReview => l10n.verificationUnderReview,
+      VerificationStatus.moreInfoRequired => l10n.verificationMoreInfo,
+      VerificationStatus.approved =>
+        isExpired ? l10n.verificationExpired : l10n.verificationVerified,
+      VerificationStatus.rejected => l10n.verificationNotApproved,
+      VerificationStatus.expired => l10n.verificationExpired,
+      VerificationStatus.notApplicable => l10n.verificationNotRequired,
+    };
+  }
 }
 
 /// The outcome of polling the DigiLocker consent flow.
@@ -119,18 +124,19 @@ class Qualification {
 
   Map<String, String> validate() {
     final errors = <String, String>{};
+    final l10n = AppStrings.current;
     if ((institution ?? '').trim().length < 2) {
-      errors['institution'] = 'Which institute issued this?';
+      errors['institution'] = l10n.qualificationErrorInstitution;
     }
     if ((qualificationName ?? '').trim().isEmpty) {
-      errors['qualification'] = 'What is the qualification called?';
+      errors['qualification'] = l10n.qualificationErrorName;
     }
     final year = yearOfPassing;
     final thisYear = DateTime.now().year;
     if (year == null) {
-      errors['year'] = 'Which year did you complete it?';
+      errors['year'] = l10n.qualificationErrorYearMissing;
     } else if (year < 1950 || year > thisYear) {
-      errors['year'] = 'Enter a year between 1950 and $thisYear';
+      errors['year'] = l10n.qualificationErrorYearRange(thisYear);
     }
     return errors;
   }

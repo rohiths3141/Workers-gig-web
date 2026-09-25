@@ -1,5 +1,6 @@
 import '../../core/money/money.dart';
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// One service a worker offers.
 ///
@@ -153,34 +154,35 @@ class GigDraft {
   /// something is fine only for the server to reject it.
   Map<String, String> validate() {
     final errors = <String, String>{};
+    final l10n = AppStrings.current;
 
     if (serviceId == null) {
-      errors['serviceId'] = 'Choose which trade this service belongs to';
+      errors['serviceId'] = l10n.gigErrorTrade;
     }
 
     final trimmed = title.trim();
     if (trimmed.length < 6) {
-      errors['title'] = 'Give this service a clear name of at least 6 characters';
+      errors['title'] = l10n.gigErrorTitleShort;
     } else if (trimmed.length > 120) {
-      errors['title'] = 'Keep the name under 120 characters';
+      errors['title'] = l10n.gigErrorTitleLong;
     }
 
     if (priceMinor == null || priceMinor! <= 0) {
-      errors['price'] = 'Enter what you charge for this service';
+      errors['price'] = l10n.gigErrorPrice;
     }
 
     final minutes = estimatedDurationMinutes;
     if (minutes == null) {
-      errors['duration'] = 'How long does this usually take?';
+      errors['duration'] = l10n.gigErrorDurationMissing;
     } else if (minutes < 15) {
-      errors['duration'] = 'The shortest job we can list is 15 minutes';
+      errors['duration'] = l10n.gigErrorDurationShort;
     } else if (minutes > 20160) {
-      errors['duration'] = 'The longest job we can list is 14 days';
+      errors['duration'] = l10n.gigErrorDurationLong;
     }
 
     final radius = serviceRadiusKm;
     if (radius != null && (radius <= 0 || radius > 100)) {
-      errors['radius'] = 'Travel distance must be between 1 and 100 km';
+      errors['radius'] = l10n.gigErrorRadius;
     }
 
     return errors;

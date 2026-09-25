@@ -8,6 +8,7 @@ import '../../core/errors/failure_mapper.dart';
 import '../../core/errors/result.dart';
 import '../../core/logging/app_logger.dart';
 import '../../domain/repositories/repositories.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Firebase Authentication, phone OTP only.
 ///
@@ -47,9 +48,9 @@ class FirebaseAuthRepository implements AuthRepository {
   Future<Result<AuthAwaitingOtp>> requestOtp(String phoneNumber) async {
     final normalised = _normalisePhone(phoneNumber);
     if (normalised == null) {
-      return const Err(ValidationFailure(
-        message: 'Enter a 10-digit mobile number.',
-        fieldErrors: {'phone': 'Enter a 10-digit mobile number'},
+      return Err(ValidationFailure(
+        message: AppStrings.current.authPhoneTenDigits,
+        fieldErrors: {'phone': AppStrings.current.authPhoneTenDigits},
       ));
     }
 
@@ -94,8 +95,8 @@ class FirebaseAuthRepository implements AuthRepository {
 
     return completer.future.timeout(
       const Duration(seconds: 90),
-      onTimeout: () => const Err(TimeoutFailure(
-        message: 'We could not send the code. Check your network and try again.',
+      onTimeout: () => Err(TimeoutFailure(
+        message: AppStrings.current.authCodeSendTimeout,
       )),
     );
   }
@@ -107,7 +108,7 @@ class FirebaseAuthRepository implements AuthRepository {
   }) async {
     final code = smsCode.trim();
     if (code.length < 4 || int.tryParse(code) == null) {
-      return const Err(ValidationFailure(message: 'Enter the code you received.'));
+      return Err(ValidationFailure(message: AppStrings.current.authEnterReceivedCode));
     }
 
     try {
@@ -121,8 +122,8 @@ class FirebaseAuthRepository implements AuthRepository {
 
       if (user == null) {
         // Defensive: Firebase should never return a null user on success.
-        return const Err(AuthFailure(
-          message: 'Sign-in did not complete. Please try again.',
+        return Err(AuthFailure(
+          message: AppStrings.current.authSignInIncomplete,
         ));
       }
 
@@ -149,8 +150,8 @@ class FirebaseAuthRepository implements AuthRepository {
   Future<Result<String>> idToken({bool forceRefresh = false}) async {
     final user = _auth.currentUser;
     if (user == null) {
-      return const Err(AuthFailure(
-        message: 'Please sign in to continue.',
+      return Err(AuthFailure(
+        message: AppStrings.current.authSignInToContinue,
         requiresReauthentication: true,
       ));
     }
@@ -158,8 +159,8 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       final token = await user.getIdToken(forceRefresh);
       if (token == null || token.isEmpty) {
-        return const Err(AuthFailure(
-          message: 'Your session has ended. Please sign in again.',
+        return Err(AuthFailure(
+          message: AppStrings.current.errorSessionEnded,
           requiresReauthentication: true,
         ));
       }
@@ -188,10 +189,8 @@ class FirebaseAuthRepository implements AuthRepository {
     // check that anything happened. The real workflow is a server-side request
     // that operations process, and it does not exist yet — so this refuses
     // rather than pretending.
-    return const Err(ValidationFailure(
-      message:
-          'Account deletion is handled by our support team. Raise a request and '
-          'we will confirm once it is done.',
+    return Err(ValidationFailure(
+      message: AppStrings.current.accountDeletionBySupport,
     ));
   }
 

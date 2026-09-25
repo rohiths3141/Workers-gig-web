@@ -9,6 +9,7 @@ import '../../../domain/entities/job.dart';
 import '../../../domain/entities/gig.dart';
 import '../../../domain/entities/worker.dart';
 import '../../../domain/repositories/repositories.dart';
+import '../../../core/localization/app_locale.dart';
 
 /// Everything the home screen shows, loaded together.
 class HomeData {
@@ -44,7 +45,7 @@ class HomeController extends AutoDisposeAsyncNotifier<HomeData> {
   Future<HomeData> build() async {
     final worker = ref.watch(currentWorkerProvider);
     if (worker == null) {
-      throw const AuthFailure(message: 'Please sign in to continue.');
+      throw AuthFailure(message: AppStrings.current.authSignInToContinue);
     }
 
     final results = await Future.wait([

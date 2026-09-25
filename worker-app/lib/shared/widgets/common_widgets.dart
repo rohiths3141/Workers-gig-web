@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../app/theme/app_typography.dart';
+import '../../core/localization/l10n.dart';
 import '../../domain/entities/enums.dart';
 
 /// A card. Hairline border on a tinted ground rather than a shadow — shadows
@@ -59,59 +60,65 @@ class StatusBadge extends StatelessWidget {
     super.key,
   });
 
+  // Badge words are upper-cased for display. That changes English and leaves
+  // the Indian scripts, which have no case, exactly as written.
+
   factory StatusBadge.forBooking(BookingStatus status) {
-    final (label, color) = switch (status) {
-      BookingStatus.requested => ('NEW', AppColors.info),
-      BookingStatus.accepted => ('ACCEPTED', AppColors.info),
-      BookingStatus.confirmed => ('CONFIRMED', AppColors.primary),
-      BookingStatus.traveling => ('ON THE WAY', AppColors.primary),
-      BookingStatus.arrived => ('ARRIVED', AppColors.primary),
-      BookingStatus.inProgress => ('WORKING', AppColors.warning),
-      BookingStatus.awaitingApproval => ('AWAITING CUSTOMER', AppColors.warning),
-      BookingStatus.completed => ('DONE', AppColors.success),
-      BookingStatus.paymentPending => ('PAYMENT DUE', AppColors.warning),
-      BookingStatus.paid => ('PAID', AppColors.success),
-      BookingStatus.closed => ('CLOSED', AppColors.inkTertiary),
-      BookingStatus.cancelled => ('CANCELLED', AppColors.danger),
-      BookingStatus.disputed => ('DISPUTED', AppColors.danger),
-      BookingStatus.expired => ('EXPIRED', AppColors.inkTertiary),
+    final color = switch (status) {
+      BookingStatus.requested || BookingStatus.accepted => AppColors.info,
+      BookingStatus.confirmed ||
+      BookingStatus.traveling ||
+      BookingStatus.arrived =>
+        AppColors.primary,
+      BookingStatus.inProgress ||
+      BookingStatus.awaitingApproval ||
+      BookingStatus.paymentPending =>
+        AppColors.warning,
+      BookingStatus.completed || BookingStatus.paid => AppColors.success,
+      BookingStatus.cancelled || BookingStatus.disputed => AppColors.danger,
+      BookingStatus.closed || BookingStatus.expired => AppColors.inkTertiary,
     };
-    return StatusBadge(label: label, color: color);
+    return StatusBadge(
+      label: bookingStatusLabel(AppStrings.current, status).toUpperCase(),
+      color: color,
+    );
   }
 
   factory StatusBadge.forGig(GigStatus status) {
+    final l10n = AppStrings.current;
     final (label, color, icon) = switch (status) {
-      GigStatus.draft => ('DRAFT', AppColors.inkTertiary, Icons.edit_outlined),
+      GigStatus.draft => (l10n.badgeDraft, AppColors.inkTertiary, Icons.edit_outlined),
       GigStatus.pendingReview =>
-        ('IN REVIEW', AppColors.warning, Icons.hourglass_empty_rounded),
-      GigStatus.active => ('LIVE', AppColors.available, Icons.check_circle_outline),
-      GigStatus.paused => ('PAUSED', AppColors.inkTertiary, Icons.pause_circle_outline),
-      GigStatus.rejected => ('NOT APPROVED', AppColors.danger, Icons.cancel_outlined),
-      GigStatus.archived => ('REMOVED', AppColors.inkTertiary, Icons.archive_outlined),
+        (l10n.badgeInReview, AppColors.warning, Icons.hourglass_empty_rounded),
+      GigStatus.active => (l10n.badgeLive, AppColors.available, Icons.check_circle_outline),
+      GigStatus.paused => (l10n.badgePaused, AppColors.inkTertiary, Icons.pause_circle_outline),
+      GigStatus.rejected => (l10n.badgeNotApproved, AppColors.danger, Icons.cancel_outlined),
+      GigStatus.archived => (l10n.badgeRemoved, AppColors.inkTertiary, Icons.archive_outlined),
     };
-    return StatusBadge(label: label, color: color, icon: icon);
+    return StatusBadge(label: label.toUpperCase(), color: color, icon: icon);
   }
 
   factory StatusBadge.forVerification(VerificationStatus status) {
+    final l10n = AppStrings.current;
     final (label, color, icon) = switch (status) {
       VerificationStatus.notSubmitted =>
-        ('NOT STARTED', AppColors.inkTertiary, Icons.radio_button_unchecked),
+        (l10n.badgeNotStarted, AppColors.inkTertiary, Icons.radio_button_unchecked),
       VerificationStatus.pending =>
-        ('SUBMITTED', AppColors.info, Icons.schedule_rounded),
+        (l10n.badgeSubmitted, AppColors.info, Icons.schedule_rounded),
       VerificationStatus.underReview =>
-        ('IN REVIEW', AppColors.info, Icons.visibility_outlined),
+        (l10n.badgeInReview, AppColors.info, Icons.visibility_outlined),
       VerificationStatus.moreInfoRequired =>
-        ('ACTION NEEDED', AppColors.warning, Icons.priority_high_rounded),
+        (l10n.badgeActionNeeded, AppColors.warning, Icons.priority_high_rounded),
       VerificationStatus.approved =>
-        ('VERIFIED', AppColors.success, Icons.verified_rounded),
+        (l10n.badgeVerified, AppColors.success, Icons.verified_rounded),
       VerificationStatus.rejected =>
-        ('NOT APPROVED', AppColors.danger, Icons.cancel_outlined),
+        (l10n.badgeNotApproved, AppColors.danger, Icons.cancel_outlined),
       VerificationStatus.expired =>
-        ('EXPIRED', AppColors.warning, Icons.update_rounded),
+        (l10n.badgeExpired, AppColors.warning, Icons.update_rounded),
       VerificationStatus.notApplicable =>
-        ('NOT REQUIRED', AppColors.inkTertiary, Icons.remove_rounded),
+        (l10n.badgeNotRequired, AppColors.inkTertiary, Icons.remove_rounded),
     };
-    return StatusBadge(label: label, color: color, icon: icon);
+    return StatusBadge(label: label.toUpperCase(), color: color, icon: icon);
   }
 
   final String label;
@@ -150,6 +157,25 @@ class StatusBadge extends StatelessWidget {
     );
   }
 }
+
+/// A booking status in the worker's words, in the language on screen.
+String bookingStatusLabel(AppLocalizations l10n, BookingStatus status) =>
+    switch (status) {
+      BookingStatus.requested => l10n.badgeNew,
+      BookingStatus.accepted => l10n.badgeAccepted,
+      BookingStatus.confirmed => l10n.badgeConfirmed,
+      BookingStatus.traveling => l10n.badgeOnTheWay,
+      BookingStatus.arrived => l10n.badgeArrived,
+      BookingStatus.inProgress => l10n.badgeWorking,
+      BookingStatus.awaitingApproval => l10n.badgeAwaitingCustomer,
+      BookingStatus.completed => l10n.badgeDone,
+      BookingStatus.paymentPending => l10n.badgePaymentDue,
+      BookingStatus.paid => l10n.badgePaid,
+      BookingStatus.closed => l10n.badgeClosed,
+      BookingStatus.cancelled => l10n.badgeCancelled,
+      BookingStatus.disputed => l10n.badgeDisputed,
+      BookingStatus.expired => l10n.badgeExpired,
+    };
 
 /// A section heading with an optional trailing action.
 class SectionHeader extends StatelessWidget {
@@ -413,10 +439,11 @@ Future<bool> confirmAction(
   BuildContext context, {
   required String title,
   required String message,
-  String confirmLabel = 'Confirm',
-  String cancelLabel = 'Cancel',
+  String? confirmLabel,
+  String? cancelLabel,
   bool isDestructive = false,
 }) async {
+  final l10n = context.l10n;
   final result = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
@@ -425,14 +452,14 @@ Future<bool> confirmAction(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(false),
-          child: Text(cancelLabel),
+          child: Text(cancelLabel ?? l10n.commonCancel),
         ),
         FilledButton(
           onPressed: () => Navigator.of(context).pop(true),
           style: isDestructive
               ? FilledButton.styleFrom(backgroundColor: AppColors.danger)
               : null,
-          child: Text(confirmLabel),
+          child: Text(confirmLabel ?? l10n.commonConfirm),
         ),
       ],
     ),

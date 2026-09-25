@@ -6,6 +6,7 @@ import '../../core/errors/app_failure.dart';
 import '../../core/errors/failure_mapper.dart';
 import '../../core/errors/result.dart';
 import '../../core/logging/app_logger.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Shared plumbing for the Supabase-backed repositories.
 ///
@@ -45,8 +46,8 @@ abstract base class SupabaseRepositoryBase {
   String get uid {
     final value = currentFirebaseUid();
     if (value == null || value.isEmpty) {
-      throw const AuthFailure(
-        message: 'Please sign in to continue.',
+      throw AuthFailure(
+        message: AppStrings.current.authSignInToContinue,
         requiresReauthentication: true,
       );
     }

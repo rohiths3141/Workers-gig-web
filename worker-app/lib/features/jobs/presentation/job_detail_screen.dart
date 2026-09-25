@@ -5,12 +5,14 @@ import 'package:intl/intl.dart';
 import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
+import '../../../domain/entities/enums.dart';
 import '../../../domain/entities/job.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import 'active_job_screen.dart';
 import 'jobs_controller.dart';
 import 'widgets/rate_customer_sheet.dart';
+import '../../../core/localization/l10n.dart';
 
 /// One job.
 ///
@@ -28,7 +30,7 @@ class JobDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(job.valueOrNull?.bookingCode ?? 'Job'),
+        title: Text(job.valueOrNull?.bookingCode ?? context.l10n.jobTitleFallback),
       ),
       body: AsyncValueView<Job>(
         value: job,
@@ -75,7 +77,7 @@ class _JobRecord extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(AppRadius.md),
                   ),
                   child: Text(
-                    'Cancelled: ${job.cancellationReason}',
+                    context.l10n.jobCancelledReason(job.cancellationReason ?? ''),
                     style: AppTypography.bodySmall
                         .copyWith(color: AppColors.danger),
                   ),
@@ -94,23 +96,23 @@ class _JobRecord extends ConsumerWidget {
               children: [
                 if (job.quotedAmount != null)
                   DetailRow(
-                    label: 'Job amount',
+                    label: context.l10n.jobAmount,
                     value: job.quotedAmount!.format(),
                   ),
                 if (job.materialAmount.isPositive)
                   DetailRow(
-                    label: 'Materials',
+                    label: context.l10n.jobMaterials,
                     value: job.materialAmount.format(),
                   ),
                 if (job.platformFee != null && job.platformFee!.isPositive)
                   DetailRow(
-                    label: 'Platform fee',
+                    label: context.l10n.walletTxPlatformFee,
                     value: '-${job.platformFee!.format()}',
                   ),
                 if (job.earnings != null) ...[
                   const Divider(height: AppSpacing.xl),
                   DetailRow(
-                    label: 'You earned',
+                    label: context.l10n.jobYouEarned,
                     value: job.earnings!.format(),
                     valueStyle: AppTypography.amountLarge
                         .copyWith(color: AppColors.earnings),
@@ -130,12 +132,12 @@ class _JobRecord extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Rate the customer',
+                      Text(context.l10n.jobRateCustomer,
                           style: AppTypography.titleMedium
                               .copyWith(color: context.ink)),
                       const SizedBox(height: AppSpacing.xxs),
                       Text(
-                        'How was this job for you?',
+                        context.l10n.jobRateQuestion,
                         style: AppTypography.bodySmall
                             .copyWith(color: context.inkSecondary),
                       ),
@@ -144,7 +146,7 @@ class _JobRecord extends ConsumerWidget {
                 ),
                 TextButton(
                   onPressed: () => RateCustomerSheet.show(context, job.id),
-                  child: const Text('Rate'),
+                  child: Text(context.l10n.jobRate),
                 ),
               ],
             ),
@@ -152,11 +154,11 @@ class _JobRecord extends ConsumerWidget {
           const SizedBox(height: AppSpacing.lg),
         ],
 
-        SectionHeader(title: 'What happened', subtitle: job.bookingCode),
+        SectionHeader(title: context.l10n.jobHistory, subtitle: job.bookingCode),
         timeline.when(
           loading: () => const ListSkeleton(itemCount: 3, itemHeight: 48),
           error: (error, _) => Text(
-            'The job history could not be loaded.',
+            context.l10n.jobHistoryLoadFailed,
             style: AppTypography.bodySmall.copyWith(color: AppColors.danger),
           ),
           data: (events) => AppCard(
@@ -175,7 +177,7 @@ class _JobRecord extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(_humanise(event.eventType),
+                              Text(_humanise(context.l10n, event.eventType),
                                   style: AppTypography.bodyMedium
                                       .copyWith(color: context.ink)),
                               if (event.note != null)
@@ -202,7 +204,12 @@ class _JobRecord extends ConsumerWidget {
   }
 
   /// WORKER_ACCEPTED -> "Worker accepted".
-  static String _humanise(String eventType) {
+  /// Booking-status events read like the status badges. Any other event
+  /// type is shown as its code, made readable.
+  static String _humanise(AppLocalizations l10n, String eventType) {
+    for (final status in BookingStatus.values) {
+      if (status.wire == eventType) return bookingStatusLabel(l10n, status);
+    }
     final words = eventType.toLowerCase().replaceAll('_', ' ');
     return words.isEmpty ? words : words[0].toUpperCase() + words.substring(1);
   }

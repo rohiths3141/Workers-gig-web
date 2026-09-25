@@ -1,4 +1,5 @@
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// A file held in Supabase Storage, recorded in the media_assets table.
 ///
@@ -221,12 +222,12 @@ class MediaConstraints {
           .map((m) => m.split('/').last.toUpperCase())
           .toSet()
           .join(', ');
-      return 'That file type is not accepted here. Use $kinds.';
+      return AppStrings.current.mediaTypeNotAccepted(kinds);
     }
-    if (bytes <= 0) return 'That file is empty.';
+    if (bytes <= 0) return AppStrings.current.mediaEmpty;
     if (bytes > maxSizeBytes) {
       final mb = (maxSizeBytes / 1048576).round();
-      return 'That file is too large. The limit is ${mb}MB.';
+      return AppStrings.current.mediaTooLarge(mb);
     }
     return null;
   }

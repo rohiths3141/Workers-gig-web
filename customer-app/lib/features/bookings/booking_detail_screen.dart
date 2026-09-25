@@ -8,7 +8,9 @@ import '../../core/errors/result.dart';
 import '../../domain/entities/booking.dart';
 import '../../domain/entities/enums.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
 import '../../core/utils/money_format.dart';
+import '../../core/localization/l10n.dart';
 
 class BookingDetailScreen extends ConsumerWidget {
   final String bookingId;
@@ -18,6 +20,7 @@ class BookingDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(bookingId));
+    final l10n = context.l10n;
 
     // Payment sends the customer straight here, so there is often nothing to
     // pop back to: pressing back used to close the app. Back always means
@@ -31,7 +34,7 @@ class BookingDetailScreen extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Booking Details'),
+          title: Text(l10n.bookingDetailTitle),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: goBack,
@@ -41,7 +44,7 @@ class BookingDetailScreen extends ConsumerWidget {
           data: (booking) => _buildBody(context, ref, booking),
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, _) => ErrorState(
-            message: 'Failed to load booking details.',
+            message: l10n.bookingDetailLoadFailed,
             onRetry: () => ref.invalidate(bookingStreamProvider(bookingId)),
           ),
         ),
@@ -55,10 +58,11 @@ class BookingDetailScreen extends ConsumerWidget {
     final payment = ref.watch(paymentForBookingProvider(booking.id)).valueOrNull;
     final isPaid = payment?.isSuccess ?? false;
     final awaitingUpfrontPayment = booking.status == BookingStatus.requested && !isPaid;
+    final l10n = context.l10n;
     final statusText = awaitingUpfrontPayment
-        ? 'Payment pending'
+        ? l10n.bookingStatusPaymentPending
         : booking.status == BookingStatus.requested
-            ? 'Waiting for the professional to accept'
+            ? l10n.bookingDetailWaitingAccept
             : booking.status.displayName;
 
     return SafeArea(
@@ -83,7 +87,7 @@ class BookingDetailScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Booking #${booking.bookingCode}',
+                          l10n.bookingDetailNumber(booking.bookingCode),
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
@@ -91,7 +95,7 @@ class BookingDetailScreen extends ConsumerWidget {
                           ),
                         ),
                         Text(
-                          'Status: $statusText',
+                          l10n.bookingDetailStatus(statusText),
                           style: const TextStyle(fontSize: 13, color: AppColors.inkSecondary),
                         ),
                       ],
@@ -112,7 +116,7 @@ class BookingDetailScreen extends ConsumerWidget {
                         minimumSize: const Size(0, 44),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                       ),
-                      child: const Text('Live Map'),
+                      child: Text(l10n.bookingDetailLiveMap),
                     ),
                 ],
               ),
@@ -126,7 +130,7 @@ class BookingDetailScreen extends ConsumerWidget {
             ],
 
             // Service Info Card
-            const Text('Service Request Info', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(l10n.bookingDetailServiceInfo, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(height: 8),
             Card(
               shape: RoundedRectangleBorder(
@@ -138,7 +142,7 @@ class BookingDetailScreen extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(booking.serviceName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    Text(localizedServiceName(l10n, booking.serviceName), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 4),
                     Text(booking.description, style: const TextStyle(fontSize: 13, color: AppColors.ink)),
                     const Divider(height: 24),
@@ -163,7 +167,7 @@ class BookingDetailScreen extends ConsumerWidget {
                 context.push('/bookings/${booking.id}/materials');
               },
               icon: const Icon(Icons.build_circle_outlined),
-              label: const Text('View Material / Parts Requests'),
+              label: Text(l10n.bookingDetailViewMaterials),
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
@@ -174,7 +178,7 @@ class BookingDetailScreen extends ConsumerWidget {
             const SizedBox(height: 16),
 
             // Fare breakdown
-            const Text('Fare Details', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(l10n.bookingDetailFareDetails, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.all(16),
@@ -188,7 +192,7 @@ class BookingDetailScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Estimated Fare'),
+                      Text(l10n.bookingDetailEstimatedFare),
                       Text(formatRupees(booking.quotedAmountMinor)),
                     ],
                   ),
@@ -197,7 +201,7 @@ class BookingDetailScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Final Confirmed Fare', style: TextStyle(fontWeight: FontWeight.bold)),
+                        Text(l10n.bookingDetailFinalFare, style: const TextStyle(fontWeight: FontWeight.bold)),
                         Text(
                           formatRupees(booking.finalAmountMinor!),
                           style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary),
@@ -221,7 +225,7 @@ class BookingDetailScreen extends ConsumerWidget {
                     context.push('/bookings/${booking.id}/review');
                   },
                   icon: const Icon(Icons.star),
-                  label: const Text('Rate & Review Service Worker'),
+                  label: Text(l10n.bookingDetailRateReview),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.accentGold,
                     foregroundColor: Colors.white,
@@ -233,12 +237,12 @@ class BookingDetailScreen extends ConsumerWidget {
               ),
 
             if (booking.status == BookingStatus.awaitingApproval) ...[
-              const Text('Approve Completion', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              Text(l10n.bookingDetailApproveCompletion, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               const SizedBox(height: 8),
               Text(
                 isPaid
-                    ? 'Your professional has marked this job as done. Approving releases your payment to them.'
-                    : 'Your professional has marked this job as done. Approve to confirm and proceed to payment.',
+                    ? l10n.bookingDetailApprovePaidHint
+                    : l10n.bookingDetailApproveUnpaidHint,
                 style: const TextStyle(fontSize: 12, color: AppColors.inkSecondary),
               ),
               const SizedBox(height: 12),
@@ -247,7 +251,7 @@ class BookingDetailScreen extends ConsumerWidget {
                   Expanded(
                     child: OutlinedButton(
                       onPressed: () => context.push('/profile/support'),
-                      child: const Text('Report Problem'),
+                      child: Text(l10n.bookingDetailReportProblem),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -260,7 +264,7 @@ class BookingDetailScreen extends ConsumerWidget {
                           (_) {
                             ref.invalidate(paymentForBookingProvider(booking.id));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Completion approved')),
+                              SnackBar(content: Text(l10n.bookingDetailCompletionApproved)),
                             );
                           },
                           (failure) => ScaffoldMessenger.of(context).showSnackBar(
@@ -272,7 +276,7 @@ class BookingDetailScreen extends ConsumerWidget {
                         backgroundColor: AppColors.statusSuccess,
                         foregroundColor: Colors.white,
                       ),
-                      child: const Text('Approve Completion'),
+                      child: Text(l10n.bookingDetailApproveCompletion),
                     ),
                   ),
                 ],
@@ -291,13 +295,13 @@ class BookingDetailScreen extends ConsumerWidget {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text('Pay ${booking.amountLabel} to confirm', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.bookingDetailPayToConfirm(booking.amountLabel), style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Your booking is sent to the professional once payment is complete.',
-                style: TextStyle(fontSize: 12, color: AppColors.inkSecondary),
+              Text(
+                l10n.bookingDetailSentAfterPayment,
+                style: const TextStyle(fontSize: 12, color: AppColors.inkSecondary),
               ),
               const SizedBox(height: 16),
             ],
@@ -315,7 +319,7 @@ class BookingDetailScreen extends ConsumerWidget {
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
-                  child: Text('Pay ${booking.amountLabel}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.bookingDetailPayAmount(booking.amountLabel), style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(height: 16),
@@ -328,7 +332,7 @@ class BookingDetailScreen extends ConsumerWidget {
                 child: OutlinedButton(
                   onPressed: () => _confirmCancel(context, ref, booking.id, isPaid: isPaid),
                   style: OutlinedButton.styleFrom(foregroundColor: AppColors.statusError),
-                  child: const Text('Cancel Booking'),
+                  child: Text(l10n.bookingDetailCancelBooking),
                 ),
               ),
           ],
@@ -337,12 +341,21 @@ class BookingDetailScreen extends ConsumerWidget {
     );
   }
 
+  /// Sent to the database in English whatever language is on screen: the
+  /// reason is read by operations and the professional, not only the customer.
   static const _cancelReasons = [
     'Booked by mistake',
     'I no longer need this service',
     'I want to choose a different time',
     'I found someone else',
   ];
+
+  static List<String> _cancelReasonLabels(AppLocalizations l10n) => [
+        l10n.cancelReasonMistake,
+        l10n.cancelReasonNoLongerNeeded,
+        l10n.cancelReasonDifferentTime,
+        l10n.cancelReasonFoundSomeoneElse,
+      ];
 
   Future<void> _confirmCancel(
     BuildContext context,
@@ -352,28 +365,30 @@ class BookingDetailScreen extends ConsumerWidget {
   }) async {
     // The database requires a reason for every customer cancellation; sending
     // none made every cancel fail.
+    final l10n = context.l10n;
+    final reasonLabels = _cancelReasonLabels(l10n);
     final reason = await showDialog<String>(
       context: context,
       builder: (ctx) => SimpleDialog(
-        title: const Text('Why are you cancelling?'),
+        title: Text(l10n.cancelDialogTitle),
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
             child: Text(
               isPaid
-                  ? 'This cannot be undone. Your payment will be refunded to the original payment method.'
-                  : 'This cannot be undone.',
+                  ? l10n.cancelDialogRefundNotice
+                  : l10n.cancelDialogCannotUndo,
               style: const TextStyle(fontSize: 13, color: AppColors.inkSecondary),
             ),
           ),
-          for (final option in _cancelReasons)
+          for (var i = 0; i < _cancelReasons.length; i++)
             SimpleDialogOption(
-              onPressed: () => Navigator.pop(ctx, option),
-              child: Text(option),
+              onPressed: () => Navigator.pop(ctx, _cancelReasons[i]),
+              child: Text(reasonLabels[i]),
             ),
           SimpleDialogOption(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Keep booking', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
+            child: Text(l10n.cancelDialogKeepBooking, style: const TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600)),
           ),
         ],
       ),
@@ -386,7 +401,7 @@ class BookingDetailScreen extends ConsumerWidget {
       case Ok():
         ref.invalidate(paymentForBookingProvider(bookingId));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(isPaid ? 'Booking cancelled. Your refund has been requested.' : 'Booking cancelled'),
+          content: Text(isPaid ? l10n.bookingCancelledRefund : l10n.bookingCancelled),
         ));
       case Err(:final failure):
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(failure.message)));
@@ -402,6 +417,7 @@ class _ArrivalCodeSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final codeAsync = ref.watch(arrivalCodeProvider(bookingId));
+    final l10n = context.l10n;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -413,26 +429,26 @@ class _ArrivalCodeSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             children: [
-              Icon(Icons.lock_clock, color: Colors.brown),
-              SizedBox(width: 8),
+              const Icon(Icons.lock_clock, color: Colors.brown),
+              const SizedBox(width: 8),
               Text(
-                'Arrival Code',
-                style: TextStyle(fontWeight: FontWeight.bold, color: Colors.brown, fontSize: 15),
+                l10n.arrivalCodeTitle,
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.brown, fontSize: 15),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Share this code with your professional to confirm they have arrived:',
-            style: TextStyle(fontSize: 12, color: AppColors.ink),
+          Text(
+            l10n.arrivalCodeShare,
+            style: const TextStyle(fontSize: 12, color: AppColors.ink),
           ),
           const SizedBox(height: 12),
           Center(
             child: codeAsync.when(
               data: (code) => Text(
-                code ?? 'Unavailable',
+                code ?? l10n.arrivalCodeUnavailable,
                 style: const TextStyle(
                   fontSize: 26,
                   fontWeight: FontWeight.bold,
@@ -441,7 +457,7 @@ class _ArrivalCodeSection extends ConsumerWidget {
                 ),
               ),
               loading: () => const CircularProgressIndicator(),
-              error: (_, __) => const Text('Could not load code'),
+              error: (_, __) => Text(l10n.arrivalCodeLoadFailed),
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
+import '../../core/localization/l10n.dart';
 
 /// "Book a Service" — the step between choosing a gig and paying.
 ///
@@ -26,6 +27,8 @@ class BookServiceScreen extends ConsumerStatefulWidget {
 }
 
 class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
+  /// Parsed, never shown: each chip displays its time in the language on
+  /// screen.
   static const _timeSlots = ['9:00 AM', '11:00 AM', '1:00 PM', '3:00 PM', '5:00 PM'];
 
   /// A slot has to be far enough ahead for someone to actually travel to it.
@@ -89,7 +92,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
 
     if (gigId == null || request == null || addressLine == null || latitude == null || longitude == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Missing booking details — please start again.')),
+        SnackBar(content: Text(context.l10n.bookMissingDetails)),
       );
       return;
     }
@@ -108,10 +111,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
         }
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('That time has passed. We moved you to the next '
-              'available slot — check it and confirm again.'),
-        ),
+        SnackBar(content: Text(context.l10n.bookSlotPassed)),
       );
       return;
     }
@@ -138,23 +138,25 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
         context.go('/bookings/${value.id}/payment');
       case Err(:final failure):
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Booking failed: ${failure.message}'), backgroundColor: AppColors.statusError),
+          SnackBar(content: Text(context.l10n.bookFailed(failure.message)), backgroundColor: AppColors.statusError),
         );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final workerName = widget.gigCard['workerName'] as String? ?? 'Professional';
+    final l10n = context.l10n;
+    final dateLocale = context.dateLocale;
+    final workerName = widget.gigCard['workerName'] as String? ?? l10n.offerWorkerFallbackName;
     final serviceTitle = widget.gigCard['serviceTitle'] as String? ?? '';
     final priceLabel = widget.gigCard['priceLabel'] as String? ?? '—';
     final workerPhotoUrl = widget.gigCard['workerPhotoUrl'] as String?;
     final request = widget.gigCard['request'] as Map<String, dynamic>?;
-    final addressLine = request?['addressLine'] as String? ?? 'No address selected';
+    final addressLine = request?['addressLine'] as String? ?? l10n.bookNoAddress;
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Book a Service')),
+      appBar: AppBar(title: Text(l10n.bookTitle)),
       body: SafeArea(
         child: Column(
           children: [
@@ -205,7 +207,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    const _SectionLabel('Select Date'),
+                    _SectionLabel(l10n.bookSelectDate),
                     const SizedBox(height: 10),
                     SizedBox(
                       height: 68,
@@ -216,7 +218,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                         itemBuilder: (_, i) {
                           final d = _dates[i];
                           final selected = i == _dateIndex;
-                          final label = i == 0 ? 'Today' : DateFormat('EEE').format(d);
+                          final label = i == 0 ? l10n.scheduleToday : DateFormat('EEE', dateLocale).format(d);
                           final firstFree = _firstBookableSlot(i);
                           return _SelectChip(
                             selected: selected,
@@ -236,7 +238,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                                         fontSize: 13,
                                         fontWeight: FontWeight.w600,
                                         color: selected ? Colors.white : AppColors.ink)),
-                                Text(DateFormat('d MMM').format(d),
+                                Text(DateFormat('d MMM', dateLocale).format(d),
                                     style: TextStyle(
                                         fontSize: 11,
                                         color: selected ? Colors.white70 : AppColors.inkSecondary)),
@@ -248,7 +250,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    const _SectionLabel('Select Time'),
+                    _SectionLabel(l10n.bookSelectTime),
                     const SizedBox(height: 10),
                     Wrap(
                       spacing: 10,
@@ -263,7 +265,7 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                             child: Text(
-                              _timeSlots[i],
+                              DateFormat('h:mm a', dateLocale).format(_slotAt(_dateIndex, i)),
                               style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -279,10 +281,10 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const _SectionLabel('Address'),
+                        _SectionLabel(l10n.paymentAddress),
                         TextButton(
                           onPressed: () => context.pop(),
-                          child: const Text('Change'),
+                          child: Text(l10n.commonChange),
                         ),
                       ],
                     ),
@@ -311,13 +313,13 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    const _SectionLabel('Special Instructions (Optional)'),
+                    _SectionLabel(l10n.bookSpecialInstructions),
                     const SizedBox(height: 10),
                     TextField(
                       controller: _notesController,
                       maxLines: 3,
                       decoration: InputDecoration(
-                        hintText: 'e.g. Focus on kitchen and bathroom...',
+                        hintText: l10n.bookSpecialInstructionsHint,
                         filled: true,
                         fillColor: AppColors.surfaceMuted,
                         border: OutlineInputBorder(
@@ -351,9 +353,9 @@ class _BookServiceScreenState extends ConsumerState<BookServiceScreen> {
                           height: 22,
                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                         )
-                      : const Text(
-                          'Confirm Booking →',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+                      : Text(
+                          l10n.bookConfirm,
+                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
                         ),
                 ),
               ),

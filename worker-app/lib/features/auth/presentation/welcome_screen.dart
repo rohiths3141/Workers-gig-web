@@ -6,6 +6,8 @@ import '../../../app/theme/app_colors.dart';
 import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../shared/widgets/brand_logo.dart';
+import '../../../shared/widgets/language_picker.dart';
+import '../../../core/localization/l10n.dart';
 
 /// The product introduction.
 ///
@@ -15,31 +17,32 @@ import '../../../shared/widgets/brand_logo.dart';
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
-  static const _promises = [
-    (
-      Icons.work_outline_rounded,
-      'Get suitable work',
-      'Jobs near you, matched to the trades you actually offer.'
-    ),
-    (
-      Icons.verified_outlined,
-      'Prove your skills',
-      'Your ITI and diploma certificates, verified once and shown to every customer.'
-    ),
-    (
-      Icons.timeline_rounded,
-      'Track every job',
-      'From accepting a job to finishing it, with photo records at each step.'
-    ),
-    (
-      Icons.account_balance_wallet_outlined,
-      'Get paid securely',
-      'Every rupee recorded, with a clear statement and withdrawals on your terms.'
-    ),
-  ];
+  static List<(IconData, String, String)> _promises(AppLocalizations l10n) => [
+        (
+          Icons.work_outline_rounded,
+          l10n.welcomePromiseWorkTitle,
+          l10n.welcomePromiseWorkBody,
+        ),
+        (
+          Icons.verified_outlined,
+          l10n.welcomePromiseSkillsTitle,
+          l10n.welcomePromiseSkillsBody,
+        ),
+        (
+          Icons.timeline_rounded,
+          l10n.welcomePromiseTrackTitle,
+          l10n.welcomePromiseTrackBody,
+        ),
+        (
+          Icons.account_balance_wallet_outlined,
+          l10n.welcomePromisePaidTitle,
+          l10n.welcomePromisePaidBody,
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -60,22 +63,29 @@ class WelcomeScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: AppSpacing.xxxl),
+                        // First thing on the first screen: a worker who cannot
+                        // read English has to be able to switch before
+                        // anything else.
+                        const Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: LanguageButton(),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
                         // The full lockup, on the one screen that introduces
                         // the product rather than getting on with the work.
                         const BrandLogo(width: 168),
                         const SizedBox(height: AppSpacing.xl),
-                        Text('Work that finds you',
+                        Text(l10n.welcomeHeadline,
                             style: AppTypography.displayLarge
                                 .copyWith(color: context.ink)),
                         const SizedBox(height: AppSpacing.md),
                         Text(
-                          'Wervexa connects skilled professionals with customers who need them.',
+                          l10n.welcomeSubtitle,
                           style: AppTypography.bodyLarge
                               .copyWith(color: context.inkSecondary),
                         ),
                         const SizedBox(height: AppSpacing.xxxl),
-                        for (final (icon, title, body) in _promises)
+                        for (final (icon, title, body) in _promises(l10n))
                           Padding(
                             padding:
                                 const EdgeInsets.only(bottom: AppSpacing.xl),
@@ -145,11 +155,11 @@ class WelcomeScreen extends StatelessWidget {
                 children: [
                   FilledButton(
                     onPressed: () => context.push(Routes.auth),
-                    child: const Text('Get started'),
+                    child: Text(l10n.welcomeGetStarted),
                   ),
                   const SizedBox(height: AppSpacing.md),
                   Text(
-                    'We will send a one-time code to your mobile number.',
+                    l10n.welcomeCodeNotice,
                     textAlign: TextAlign.center,
                     style: AppTypography.bodySmall
                         .copyWith(color: context.inkTertiary),

@@ -7,6 +7,7 @@ import '../../core/errors/app_failure.dart';
 import '../../core/errors/result.dart';
 import '../../domain/entities/payment.dart';
 import '../../domain/repositories/repositories.dart';
+import '../../core/localization/app_locale.dart';
 
 /// Talks to the trusted web tier for everything a Razorpay payment needs
 /// server-side authority for (creating an order with a real amount,
@@ -33,15 +34,15 @@ final class HttpPaymentRepository implements PaymentRepository {
     T Function(Map<String, dynamic>) parse,
   ) async {
     if (_apiBaseUrl.isEmpty) {
-      return const Err(ServerFailure(
-        message: 'Payments are not configured for this build yet.',
+      return Err(ServerFailure(
+        message: AppStrings.current.paymentsNotConfigured,
       ));
     }
 
     final tokenRes = await _authRepository.idToken();
     final token = tokenRes.valueOrNull;
     if (token == null) {
-      return const Err(AuthFailure(message: 'Please sign in again to continue.'));
+      return Err(AuthFailure(message: AppStrings.current.authErrorSignInAgain));
     }
 
     try {
@@ -63,7 +64,8 @@ final class HttpPaymentRepository implements PaymentRepository {
       }
 
       final error = json['error'] as Map<String, dynamic>?;
-      final message = error?['message'] as String? ?? 'Something went wrong. Please try again.';
+      final message =
+          error?['message'] as String? ?? AppStrings.current.errorUnexpected;
       final code = error?['code'] as String?;
 
       return Err(switch (code) {

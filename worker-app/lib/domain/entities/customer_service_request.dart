@@ -1,4 +1,5 @@
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// A customer-posted service request visible to workers who match its
 /// service category and location radius.
@@ -64,7 +65,7 @@ class CustomerServiceRequest {
   String get budgetLabel {
     switch (budgetType) {
       case BudgetType.none:
-        return 'Flexible';
+        return AppStrings.current.budgetTypeFlexible;
       case BudgetType.fixed:
         return '₹${((budgetMinMinor ?? 0) / 100).toStringAsFixed(0)}';
       case BudgetType.range:
@@ -78,12 +79,13 @@ class CustomerServiceRequest {
 
   String get distanceLabel {
     if (distanceKm == null) return '';
-    if (distanceKm! < 1) return '${(distanceKm! * 1000).round()} m away';
-    return '${distanceKm!.toStringAsFixed(1)} km away';
+    if (distanceKm! < 1) {
+      return AppStrings.current.distanceMetresAway((distanceKm! * 1000).round());
+    }
+    return AppStrings.current.distanceKmAway(distanceKm!.toStringAsFixed(1));
   }
 
-  String get offerCountLabel =>
-      offerCount == 0 ? 'No offers yet' : '$offerCount offer${offerCount > 1 ? 's' : ''}';
+  String get offerCountLabel => AppStrings.current.offerCount(offerCount);
 
   // ── JSON factory ──
 

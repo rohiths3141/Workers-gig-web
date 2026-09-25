@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/router/app_router.dart';
 import '../../../app/theme/app_spacing.dart';
+import '../../../core/localization/l10n.dart';
 
 /// The four-tab shell.
 ///
@@ -16,34 +17,42 @@ class AppShell extends ConsumerWidget {
 
   final Widget child;
 
-  static const _destinations = [
-    (Routes.home, Icons.home_outlined, Icons.home_rounded, 'Home'),
-    (Routes.jobs, Icons.work_outline_rounded, Icons.work_rounded, 'Jobs'),
-    (
-      Routes.wallet,
-      Icons.account_balance_wallet_outlined,
-      Icons.account_balance_wallet_rounded,
-      'Wallet'
-    ),
-    (Routes.profile, Icons.person_outline_rounded, Icons.person_rounded, 'Profile'),
-  ];
+  static List<(String, IconData, IconData, String)> _destinations(
+          AppLocalizations l10n) =>
+      [
+        (Routes.home, Icons.home_outlined, Icons.home_rounded, l10n.navHome),
+        (Routes.jobs, Icons.work_outline_rounded, Icons.work_rounded, l10n.navJobs),
+        (
+          Routes.wallet,
+          Icons.account_balance_wallet_outlined,
+          Icons.account_balance_wallet_rounded,
+          l10n.navWallet
+        ),
+        (
+          Routes.profile,
+          Icons.person_outline_rounded,
+          Icons.person_rounded,
+          l10n.navProfile
+        ),
+      ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final location = GoRouterState.of(context).matchedLocation;
-    final index = _destinations.indexWhere((d) => location.startsWith(d.$1));
+    final destinations = _destinations(context.l10n);
+    final index = destinations.indexWhere((d) => location.startsWith(d.$1));
 
     return Scaffold(
       body: child,
       bottomNavigationBar: NavigationBar(
         selectedIndex: index < 0 ? 0 : index,
-        onDestinationSelected: (i) => context.go(_destinations[i].$1),
+        onDestinationSelected: (i) => context.go(destinations[i].$1),
         // 64dp keeps every tab comfortably above the 48dp floor once the label
         // is accounted for.
         height: 64 + AppSpacing.sm,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         destinations: [
-          for (final (_, icon, selectedIcon, label) in _destinations)
+          for (final (_, icon, selectedIcon, label) in destinations)
             NavigationDestination(
               icon: Icon(icon),
               selectedIcon: Icon(selectedIcon),

@@ -8,6 +8,7 @@ import '../../../app/theme/app_typography.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import 'auth_controller.dart';
 import '../../profile/presentation/profile_screen.dart' show formatIndianPhone;
+import '../../../core/localization/l10n.dart';
 
 /// Creates the worker profile for an authenticated Firebase user.
 ///
@@ -41,12 +42,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final name = _nameController.text.trim();
     final email = _emailController.text.trim();
 
-    final nameError = name.length < 2 ? 'Please enter your full name' : null;
+    final l10n = context.l10n;
+    final nameError = name.length < 2 ? l10n.registerNameRequired : null;
     // Optional, as the field's own label and the nullable `p_email` argument
     // both say. It used to refuse an empty field with "Please enter a valid
     // email address", which read as a required field nobody had marked.
     final emailError = email.isNotEmpty && !_emailPattern.hasMatch(email)
-        ? 'Please enter a valid email address'
+        ? l10n.registerEmailInvalid
         : null;
 
     if (nameError != null || emailError != null) {
@@ -63,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (phone == null || phone.isEmpty) {
       // Without a verified number there is nothing to register against. Sending
       // the worker back to sign in is the honest outcome.
-      showFailure(context, 'Please sign in again to continue.');
+      showFailure(context, l10n.authErrorSignInAgain);
       await ref.read(authRepositoryProvider).signOut();
       return;
     }
@@ -92,6 +94,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   Widget build(BuildContext context) {
     final session = ref.watch(sessionProvider).valueOrNull;
     final phone = session is SessionNeedsRegistration ? session.phoneNumber : null;
+    final l10n = context.l10n;
 
     return Scaffold(
       body: SafeArea(
@@ -106,12 +109,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: AppSpacing.xxxl),
-                    Text('What should we call you?',
+                    Text(l10n.registerTitle,
                         style: AppTypography.headlineLarge
                             .copyWith(color: context.ink)),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'This is the name customers will see.',
+                      l10n.registerSubtitle,
                       style: AppTypography.bodyLarge
                           .copyWith(color: context.inkSecondary),
                     ),
@@ -123,8 +126,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       textInputAction: TextInputAction.next,
                       onChanged: (_) => setState(() => _nameError = null),
                       decoration: InputDecoration(
-                        labelText: 'Full name',
-                        hintText: 'Arun Kumar',
+                        labelText: l10n.registerNameLabel,
+                        hintText: l10n.registerNameHint,
                         errorText: _nameError,
                       ),
                     ),
@@ -136,9 +139,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       onChanged: (_) => setState(() => _emailError = null),
                       onSubmitted: (_) => _submit(),
                       decoration: InputDecoration(
-                        labelText: 'Email (optional)',
+                        labelText: l10n.registerEmailLabel,
                         hintText: 'arun@example.com',
-                        helperText: 'For receipts and statements.',
+                        helperText: l10n.registerEmailHelper,
                         errorText: _emailError,
                       ),
                     ),
@@ -153,7 +156,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             const SizedBox(width: AppSpacing.md),
                             Expanded(
                               child: Text(
-                                'Verified: ${formatIndianPhone(phone)}',
+                                l10n.registerVerifiedPhone(formatIndianPhone(phone)),
                                 style: AppTypography.bodyMedium
                                     .copyWith(color: context.inkSecondary),
                               ),
@@ -169,9 +172,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.screenPadding),
               child: BusyFilledButton(
-                label: 'Continue',
+                label: l10n.commonContinue,
                 busy: _busy,
-                busyLabel: 'Saving…',
+                busyLabel: l10n.commonSaving,
                 onPressed: _submit,
               ),
             ),

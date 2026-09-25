@@ -5,6 +5,7 @@ import '../../app/theme/app_colors.dart';
 import '../../app/theme/app_spacing.dart';
 import '../../app/theme/app_typography.dart';
 import '../../core/errors/app_failure.dart';
+import '../../core/localization/l10n.dart';
 
 /// Renders loading, error and data for an [AsyncValue].
 ///
@@ -121,7 +122,7 @@ class FailureView extends StatelessWidget {
           OutlinedButton.icon(
             onPressed: onRetry,
             icon: const Icon(Icons.refresh_rounded),
-            label: const Text('Try again'),
+            label: Text(context.l10n.commonTryAgain),
           ),
         ],
       ],
@@ -265,8 +266,7 @@ class OfflineBanner extends StatelessWidget {
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
-              message ??
-                  'You are offline. Job actions will work again once you reconnect.',
+              message ?? context.l10n.offlineBanner,
               style: AppTypography.bodySmall.copyWith(color: AppColors.warning),
             ),
           ),

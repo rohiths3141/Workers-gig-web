@@ -11,6 +11,7 @@ import '../../domain/entities/worker.dart';
 import '../../domain/repositories/repositories.dart';
 import '../mappers/mappers.dart';
 import 'supabase_repository_base.dart';
+import '../../core/localization/app_locale.dart';
 
 /// The worker's own profile.
 ///
@@ -170,16 +171,16 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
         operation: 'updateServiceArea',
         () async {
           if (latitude < -90 || latitude > 90) {
-            throw const ValidationFailure(
-                message: 'That location does not look right.');
+            throw ValidationFailure(
+                message: AppStrings.current.locationInvalid);
           }
           if (longitude < -180 || longitude > 180) {
-            throw const ValidationFailure(
-                message: 'That location does not look right.');
+            throw ValidationFailure(
+                message: AppStrings.current.locationInvalid);
           }
           if (radiusKm <= 0 || radiusKm > 100) {
-            throw const ValidationFailure(
-                message: 'Choose a travel distance between 1 and 100 km.');
+            throw ValidationFailure(
+                message: AppStrings.current.travelDistanceRange);
           }
 
           final row = await db
@@ -226,7 +227,7 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
     )) {
       if (task.state == UploadState.failed) {
         return Err(UploadFailure(
-          message: task.failure ?? 'That photo could not be uploaded.',
+          message: task.failure ?? AppStrings.current.photoUploadFailed,
           isResumable: true,
         ));
       }
@@ -234,8 +235,8 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
     }
 
     if (finished?.mediaAssetId == null) {
-      return const Err(UploadFailure(
-        message: 'That photo could not be uploaded. Try again.',
+      return Err(UploadFailure(
+        message: AppStrings.current.photoUploadFailedRetry,
         isResumable: true,
       ));
     }
@@ -243,7 +244,7 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
     return getCurrentWorker().then(
       (result) => result.flatMap(
         (worker) => worker == null
-            ? const Err(NotFoundFailure(message: 'Your profile could not be loaded.'))
+            ? Err(NotFoundFailure(message: AppStrings.current.profileLoadFailed))
             : Ok(worker),
       ),
     );

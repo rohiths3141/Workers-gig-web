@@ -9,6 +9,7 @@ import '../../../app/theme/app_typography.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import 'auth_controller.dart';
 import '../../profile/presentation/profile_screen.dart' show formatIndianPhone;
+import '../../../core/localization/l10n.dart';
 
 /// Enter the one-time code.
 ///
@@ -95,7 +96,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     result.fold(
       (_) {
         _startResendCountdown();
-        showSuccess(context, 'We sent a new code.');
+        showSuccess(context, context.l10n.authNewCodeSent);
       },
       (failure) => setState(() => _error = failure.message),
     );
@@ -103,6 +104,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -116,12 +118,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Enter the code',
+                    Text(l10n.otpTitle,
                         style: AppTypography.headlineLarge
                             .copyWith(color: context.ink)),
                     const SizedBox(height: AppSpacing.sm),
                     Text(
-                      'We sent a 6-digit code to ${formatIndianPhone(widget.phoneNumber)}.',
+                      l10n.otpSentTo(formatIndianPhone(widget.phoneNumber)),
                       style: AppTypography.bodyLarge
                           .copyWith(color: context.inkSecondary),
                     ),
@@ -155,13 +157,13 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     Center(
                       child: _resendIn > 0
                           ? Text(
-                              'You can ask for a new code in $_resendIn seconds',
+                              l10n.otpResendIn(_resendIn),
                               style: AppTypography.bodyMedium
                                   .copyWith(color: context.inkTertiary),
                             )
                           : TextButton(
                               onPressed: _resend,
-                              child: const Text('Send a new code'),
+                              child: Text(l10n.otpSendNew),
                             ),
                     ),
                   ],
@@ -171,9 +173,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
             Padding(
               padding: const EdgeInsets.all(AppSpacing.screenPadding),
               child: BusyFilledButton(
-                label: 'Verify',
+                label: l10n.otpVerify,
                 busy: _busy,
-                busyLabel: 'Verifying…',
+                busyLabel: l10n.otpVerifying,
                 onPressed: _controller.text.length == 6 ? _verify : null,
               ),
             ),

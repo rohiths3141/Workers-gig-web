@@ -10,6 +10,7 @@ import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import 'jobs_controller.dart';
 import 'widgets/job_cards.dart';
+import '../../../core/localization/l10n.dart';
 
 /// The jobs list, by stage.
 class JobsScreen extends ConsumerStatefulWidget {
@@ -24,12 +25,21 @@ class _JobsScreenState extends ConsumerState<JobsScreen>
   late final TabController _tabs = TabController(length: 5, vsync: this);
 
   static const _filters = [
-    (JobListFilter.offers, 'New'),
-    (JobListFilter.upcoming, 'Upcoming'),
-    (JobListFilter.active, 'Active'),
-    (JobListFilter.completed, 'Done'),
-    (JobListFilter.cancelled, 'Cancelled'),
+    JobListFilter.offers,
+    JobListFilter.upcoming,
+    JobListFilter.active,
+    JobListFilter.completed,
+    JobListFilter.cancelled,
   ];
+
+  static String _filterLabel(AppLocalizations l10n, JobListFilter filter) =>
+      switch (filter) {
+        JobListFilter.offers => l10n.badgeNew,
+        JobListFilter.upcoming => l10n.jobsTabUpcoming,
+        JobListFilter.active => l10n.jobsTabActive,
+        JobListFilter.completed => l10n.badgeDone,
+        JobListFilter.cancelled => l10n.badgeCancelled,
+      };
 
   @override
   void dispose() {
@@ -39,21 +49,24 @@ class _JobsScreenState extends ConsumerState<JobsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Jobs'),
+        title: Text(l10n.navJobs),
         bottom: TabBar(
           controller: _tabs,
           isScrollable: true,
           tabAlignment: TabAlignment.start,
-          tabs: [for (final (_, label) in _filters) Tab(text: label)],
+          tabs: [
+            for (final filter in _filters) Tab(text: _filterLabel(l10n, filter)),
+          ],
         ),
       ),
       body: TabBarView(
         controller: _tabs,
         children: [
           const _OffersTab(),
-          for (final (filter, _) in _filters.skip(1)) _JobListTab(filter: filter),
+          for (final filter in _filters.skip(1)) _JobListTab(filter: filter),
         ],
       ),
     );
@@ -75,11 +88,10 @@ class _OffersTab extends ConsumerWidget {
       onRetry: () => ref.invalidate(offersProvider),
       onData: (items) {
         if (items.isEmpty) {
-          return const EmptyStateView(
+          return EmptyStateView(
             icon: Icons.work_outline_rounded,
-            title: 'No new jobs right now',
-            message:
-                'When you are available, we will let you know as soon as a suitable job comes in.',
+            title: context.l10n.jobsNoOffers,
+            message: context.l10n.jobsNoOffersBody,
           );
         }
 
@@ -114,7 +126,7 @@ class _OffersTab extends ConsumerWidget {
 
     result.fold(
       (job) {
-        showSuccess(context, 'Job accepted.');
+        showSuccess(context, context.l10n.jobsAccepted);
         context.push(Routes.job(job.id));
       },
       // A ConflictFailure here means another worker won the race. The message
@@ -131,10 +143,9 @@ class _OffersTab extends ConsumerWidget {
   ) async {
     final confirmed = await confirmAction(
       context,
-      title: 'Decline this job?',
-      message:
-          'It will be offered to another worker. Declining often may affect how many jobs you are shown.',
-      confirmLabel: 'Decline',
+      title: context.l10n.jobsDeclineTitle,
+      message: context.l10n.jobsDeclineBody,
+      confirmLabel: context.l10n.jobsDecline,
     );
 
     if (!confirmed || !context.mounted) return;
@@ -144,7 +155,7 @@ class _OffersTab extends ConsumerWidget {
 
     if (!context.mounted) return;
     result.fold(
-      (_) => showSuccess(context, 'Job declined.'),
+      (_) => showSuccess(context, context.l10n.jobsDeclined),
       (failure) => showFailure(context, failure.message),
     );
   }
@@ -165,24 +176,25 @@ class _JobListTab extends ConsumerWidget {
       loading: const ListSkeleton(),
       onData: (page) {
         if (page.items.isEmpty) {
+          final l10n = context.l10n;
           final (title, message) = switch (filter) {
             JobListFilter.upcoming => (
-                'Nothing scheduled',
-                'Jobs you have accepted will appear here.',
+                l10n.jobsEmptyUpcoming,
+                l10n.jobsEmptyUpcomingBody,
               ),
             JobListFilter.active => (
-                'No job in progress',
-                'When you start a job it will show up here.',
+                l10n.jobsEmptyActive,
+                l10n.jobsEmptyActiveBody,
               ),
             JobListFilter.completed => (
-                'No completed jobs yet',
-                'Finished jobs and what you earned from them will be listed here.',
+                l10n.jobsEmptyCompleted,
+                l10n.jobsEmptyCompletedBody,
               ),
             JobListFilter.cancelled => (
-                'Nothing cancelled',
-                'Cancelled jobs will be listed here.',
+                l10n.jobsEmptyCancelled,
+                l10n.jobsEmptyCancelledBody,
               ),
-            JobListFilter.offers => ('No offers', 'New jobs will appear here.'),
+            JobListFilter.offers => (l10n.jobsEmptyOffers, l10n.jobsEmptyOffersBody),
           };
 
           return EmptyStateView(

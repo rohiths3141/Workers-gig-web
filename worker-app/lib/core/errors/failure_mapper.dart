@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseException;
 import 'package:supabase_flutter/supabase_flutter.dart'
     show AuthException, FunctionException, PostgrestException, StorageException;
 
+import '../localization/app_locale.dart';
 import 'app_failure.dart';
 
 /// Turns whatever an SDK or the database threw into an [AppFailure].
@@ -33,7 +34,7 @@ abstract final class FailureMapper {
     if (error is FunctionException) return _fromEdgeFunction(error);
     if (error is AuthException) {
       return AuthFailure(
-        message: 'Your session has ended. Please sign in again.',
+        message: AppStrings.current.errorSessionEnded,
         debugDetail: error.message,
         cause: error,
         requiresReauthentication: true,
@@ -41,7 +42,7 @@ abstract final class FailureMapper {
     }
     if (error is StorageException) {
       return UploadFailure(
-        message: 'That file could not be uploaded. Try again.',
+        message: AppStrings.current.errorUploadFailed,
         debugDetail: error.message,
         cause: error,
       );
@@ -49,7 +50,7 @@ abstract final class FailureMapper {
     if (error is FirebaseAuthException) return _fromFirebaseAuth(error);
     if (error is FirebaseException) {
       return UploadFailure(
-        message: 'That file could not be uploaded. Try again.',
+        message: AppStrings.current.errorUploadFailed,
         debugDetail: '${error.plugin}/${error.code}: ${error.message}',
         cause: error,
         isResumable: error.code == 'retry-limit-exceeded' || error.code == 'canceled',
@@ -94,7 +95,7 @@ abstract final class FailureMapper {
     // 401/403 is this caller's token, not the function being unavailable.
     if (error.status == 401 || error.status == 403) {
       return AuthFailure(
-        message: message ?? 'Please sign in again to continue.',
+        message: message ?? AppStrings.current.authErrorSignInAgain,
         debugDetail: detail,
         cause: error,
         requiresReauthentication: error.status == 401,
@@ -102,7 +103,7 @@ abstract final class FailureMapper {
     }
 
     return ServerFailure(
-      message: message ?? 'That service is unavailable right now. Try again shortly.',
+      message: message ?? AppStrings.current.errorServiceUnavailable,
       debugDetail: detail,
       cause: error,
     );
@@ -118,7 +119,7 @@ abstract final class FailureMapper {
     // wrong at our end". Say what it is instead.
     if (error.code == '401' && raw.contains('42501')) {
       return PermissionFailure(
-        message: 'Your sign-in is not fully set up yet. Try again in a moment.',
+        message: AppStrings.current.errorSignInNotReady,
         debugDetail: raw,
         cause: error,
       );
@@ -162,7 +163,7 @@ abstract final class FailureMapper {
       // Referenced row missing — a stale id on the client.
       case '23503':
         return NotFoundFailure(
-          message: 'That is no longer available.',
+          message: AppStrings.current.errorNoLongerAvailable,
           debugDetail: raw,
           cause: error,
         );
@@ -171,7 +172,7 @@ abstract final class FailureMapper {
       case '42P01':
       case 'PGRST301':
         return PermissionFailure(
-          message: 'You are not able to see that.',
+          message: AppStrings.current.errorNotAllowedToSee,
           debugDetail: raw,
           cause: error,
         );
@@ -200,26 +201,23 @@ abstract final class FailureMapper {
   }
 
   static AppFailure _fromFirebaseAuth(FirebaseAuthException error) {
+    final l10n = AppStrings.current;
     final message = switch (error.code) {
-      'invalid-phone-number' => 'That phone number does not look right.',
-      'invalid-verification-code' => 'That code is not correct. Check and try again.',
+      'invalid-phone-number' => l10n.authErrorInvalidPhone,
+      'invalid-verification-code' => l10n.authErrorWrongCode,
       'invalid-verification-id' ||
       'session-expired' =>
-        'That code has expired. Ask for a new one.',
-      'too-many-requests' =>
-        'Too many attempts. Wait a few minutes before trying again.',
-      'quota-exceeded' => 'We cannot send a code right now. Try again shortly.',
-      'user-disabled' => 'This account has been disabled. Contact support.',
-      'network-request-failed' =>
-        'No internet connection. Check your network and try again.',
-      'operation-not-allowed' =>
-        'Phone sign-in is not enabled, or SMS to this region is blocked. '
-        'Check Firebase Console settings.',
+        l10n.authErrorCodeExpired,
+      'too-many-requests' => l10n.authErrorTooManyAttempts,
+      'quota-exceeded' => l10n.authErrorQuota,
+      'user-disabled' => l10n.authErrorDisabled,
+      'network-request-failed' => l10n.errorNoInternet,
+      'operation-not-allowed' => l10n.authErrorPhoneNotEnabledRegion,
       'credential-already-in-use' ||
       'account-exists-with-different-credential' =>
-        'That number is already registered to another account.',
-      'requires-recent-login' => 'Please sign in again to continue.',
-      _ => 'Sign-in failed. Please try again.',
+        l10n.authErrorNumberInUse,
+      'requires-recent-login' => l10n.authErrorSignInAgain,
+      _ => l10n.authErrorSignInFailed,
     };
 
     if (error.code == 'network-request-failed') {
@@ -249,7 +247,7 @@ abstract final class FailureMapper {
     if (context > 0) text = text.substring(0, context);
 
     text = text.trim();
-    if (text.isEmpty) return 'That did not work. Please try again.';
+    if (text.isEmpty) return AppStrings.current.errorDidNotWork;
 
     // Capitalise, and end the sentence, so server text reads as UI copy.
     final capitalised = text[0].toUpperCase() + text.substring(1);

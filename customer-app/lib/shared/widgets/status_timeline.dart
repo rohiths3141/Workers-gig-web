@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../app/theme/app_colors.dart';
 import '../../domain/entities/enums.dart';
+import '../../core/localization/l10n.dart';
 
 /// The reference-style vertical timeline: "Booking Confirmed" → "Provider
 /// on the way" → "Service in Progress" → "Completed", each dot filled once
@@ -16,7 +17,7 @@ class StatusTimeline extends StatelessWidget {
   final BookingStatus status;
 
   static const _stages = [
-    _Stage('Booking Confirmed', {
+    _Stage(_StageName.confirmed, {
       BookingStatus.confirmed,
       BookingStatus.traveling,
       BookingStatus.arrived,
@@ -27,7 +28,7 @@ class StatusTimeline extends StatelessWidget {
       BookingStatus.paid,
       BookingStatus.closed,
     }),
-    _Stage('Provider on the way', {
+    _Stage(_StageName.onTheWay, {
       BookingStatus.traveling,
       BookingStatus.arrived,
       BookingStatus.inProgress,
@@ -37,7 +38,7 @@ class StatusTimeline extends StatelessWidget {
       BookingStatus.paid,
       BookingStatus.closed,
     }),
-    _Stage('Service in Progress', {
+    _Stage(_StageName.inProgress, {
       BookingStatus.inProgress,
       BookingStatus.awaitingApproval,
       BookingStatus.completed,
@@ -45,7 +46,7 @@ class StatusTimeline extends StatelessWidget {
       BookingStatus.paid,
       BookingStatus.closed,
     }),
-    _Stage('Completed', {
+    _Stage(_StageName.completed, {
       BookingStatus.completed,
       BookingStatus.paymentPending,
       BookingStatus.paid,
@@ -55,6 +56,7 @@ class StatusTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: List.generate(_stages.length, (i) {
@@ -93,7 +95,7 @@ class StatusTimeline extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
                   child: Text(
-                    stage.label,
+                    stage.name.label(l10n),
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: reached ? FontWeight.w600 : FontWeight.w400,
@@ -111,7 +113,21 @@ class StatusTimeline extends StatelessWidget {
 }
 
 class _Stage {
-  const _Stage(this.label, this.reachedAt);
-  final String label;
+  const _Stage(this.name, this.reachedAt);
+  final _StageName name;
   final Set<BookingStatus> reachedAt;
+}
+
+enum _StageName {
+  confirmed,
+  onTheWay,
+  inProgress,
+  completed;
+
+  String label(AppLocalizations l10n) => switch (this) {
+        _StageName.confirmed => l10n.timelineBookingConfirmed,
+        _StageName.onTheWay => l10n.timelineProviderOnTheWay,
+        _StageName.inProgress => l10n.timelineServiceInProgress,
+        _StageName.completed => l10n.timelineCompleted,
+      };
 }

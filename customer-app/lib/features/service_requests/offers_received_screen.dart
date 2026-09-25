@@ -7,6 +7,7 @@ import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
 import '../../domain/entities/service_request_offer.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../core/localization/l10n.dart';
 
 /// Displays all offers received for a service request.
 /// Customer can compare offers and accept/reject them.
@@ -18,19 +19,19 @@ class OffersReceivedScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final offersAsync = ref.watch(offersForRequestStreamProvider(requestId));
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Offers Received'),
+        title: Text(l10n.offersTitle),
       ),
       body: offersAsync.when(
         data: (offers) {
           if (offers.isEmpty) {
-            return const EmptyState(
+            return EmptyState(
               icon: Icons.local_offer_outlined,
-              title: 'No offers yet',
-              message:
-                  'Workers are reviewing your request. You\'ll be notified when someone responds.',
+              title: l10n.offerCount(0),
+              message: l10n.offersEmptyMessage,
             );
           }
 
@@ -41,9 +42,9 @@ class OffersReceivedScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             children: [
               if (pending.isNotEmpty) ...[
-                const Text(
-                  'Pending Offers',
-                  style: TextStyle(
+                Text(
+                  l10n.offersPending,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppColors.ink,
@@ -55,9 +56,9 @@ class OffersReceivedScreen extends ConsumerWidget {
               ],
               if (other.isNotEmpty) ...[
                 const SizedBox(height: 20),
-                const Text(
-                  'Past Offers',
-                  style: TextStyle(
+                Text(
+                  l10n.offersPast,
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     color: AppColors.inkSecondary,
@@ -71,7 +72,7 @@ class OffersReceivedScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text(l10n.commonErrorDetail('$e'))),
       ),
     );
   }
@@ -93,6 +94,7 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
   @override
   Widget build(BuildContext context) {
     final o = widget.offer;
+    final l10n = context.l10n;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -157,7 +159,7 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
                         ],
                         if (o.workerJobsCompleted != null)
                           Text(
-                            '${o.workerJobsCompleted} jobs',
+                            l10n.offersJobsCount(o.workerJobsCompleted!),
                             style: const TextStyle(
                                 fontSize: 12, color: AppColors.inkSecondary),
                           ),
@@ -204,10 +206,10 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
             runSpacing: 4,
             children: [
               if (o.isKycVerified)
-                _badge(Icons.verified_user, 'KYC Verified'),
+                _badge(Icons.verified_user, l10n.gigKycVerified),
               if (o.isBackgroundVerified)
-                _badge(Icons.shield, 'Background Verified'),
-              if (o.isInsured) _badge(Icons.health_and_safety, 'Insured'),
+                _badge(Icons.shield, l10n.gigBackgroundVerified),
+              if (o.isInsured) _badge(Icons.health_and_safety, l10n.offersInsured),
               if (o.gigTitle != null)
                 _badge(Icons.work_outline, o.gigTitle!),
             ],
@@ -270,7 +272,7 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
                     ),
-                    child: const Text('Decline'),
+                    child: Text(l10n.offersDecline),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -290,7 +292,7 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
                             child: CircularProgressIndicator(
                                 strokeWidth: 2, color: Colors.white),
                           )
-                        : const Text('Accept Offer'),
+                        : Text(l10n.offersAcceptOffer),
                   ),
                 ),
               ],
@@ -322,22 +324,22 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
   }
 
   Future<void> _accept(String offerId) async {
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Accept this offer?'),
-        content: Text(
-            'A booking will be created with ${widget.offer.workerDisplayName} '
-            'at ${widget.offer.priceLabel}. All other offers will be closed.'),
+        title: Text(l10n.offersAcceptDialogTitle),
+        content: Text(l10n.offersAcceptDialogBody(
+            widget.offer.workerDisplayName, widget.offer.priceLabel)),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Cancel')),
+              child: Text(l10n.commonCancel)),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(
                 backgroundColor: AppColors.primary),
-            child: const Text('Accept'),
+            child: Text(l10n.offersAccept),
           ),
         ],
       ),
@@ -356,8 +358,7 @@ class _OfferCardState extends ConsumerState<_OfferCard> {
       case Ok(value: final booking):
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(
-                'Booking ${booking.bookingCode} created!'),
+            content: Text(l10n.offersBookingCreated(booking.bookingCode)),
             backgroundColor: AppColors.successGreen,
           ),
         );

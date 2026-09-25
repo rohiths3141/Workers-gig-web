@@ -10,6 +10,7 @@ import '../../../app/theme/app_typography.dart';
 import '../../../domain/entities/support.dart';
 import '../../../shared/widgets/async_value_view.dart';
 import '../../../shared/widgets/common_widgets.dart';
+import '../../../core/localization/l10n.dart';
 
 final notificationsProvider =
     StreamProvider.autoDispose<List<AppNotification>>((ref) {
@@ -31,14 +32,14 @@ class NotificationsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        title: Text(context.l10n.homeNotifications),
         actions: [
           TextButton(
             onPressed: () async {
               await ref.read(notificationRepositoryProvider).markAllRead();
               ref.invalidate(notificationsProvider);
             },
-            child: const Text('Mark all read'),
+            child: Text(context.l10n.notificationsMarkAllRead),
           ),
         ],
       ),
@@ -48,11 +49,10 @@ class NotificationsScreen extends ConsumerWidget {
         loading: const ListSkeleton(itemHeight: 80),
         onData: (items) {
           if (items.isEmpty) {
-            return const EmptyStateView(
+            return EmptyStateView(
               icon: Icons.notifications_none_rounded,
-              title: 'You are all caught up',
-              message:
-                  'Job offers, payment updates and verification results will appear here.',
+              title: context.l10n.notificationsEmpty,
+              message: context.l10n.notificationsEmptyBody,
             );
           }
 

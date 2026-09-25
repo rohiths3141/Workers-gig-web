@@ -1,5 +1,8 @@
-import 'package:flutter/material.dart' show DayPeriod, TimeOfDay;
+import 'package:flutter/material.dart' show TimeOfDay;
+import 'package:intl/intl.dart';
 
+import '../../core/localization/app_locale.dart';
+import '../../core/localization/l10n.dart' show dateLocaleFor;
 import 'enums.dart';
 
 /// Customer-side view of a service request they posted.
@@ -137,12 +140,12 @@ class ServiceRequest {
   String get budgetLabel {
     switch (budgetType) {
       case BudgetType.none:
-        return 'Flexible budget';
+        return AppStrings.current.budgetFlexible;
       case BudgetType.fixed:
         if (budgetMinMinor != null) {
           return '₹${(budgetMinMinor! / 100).toStringAsFixed(0)}';
         }
-        return 'Fixed budget';
+        return AppStrings.current.budgetFixed;
       case BudgetType.range:
         final min = budgetMinMinor != null
             ? '₹${(budgetMinMinor! / 100).toStringAsFixed(0)}'
@@ -155,18 +158,19 @@ class ServiceRequest {
   }
 
   String get scheduleLabel {
+    final l10n = AppStrings.current;
     switch (scheduleType) {
       case ScheduleType.asap:
-        return 'As soon as possible';
+        return l10n.scheduleAsap;
       case ScheduleType.today:
-        return 'Today';
+        return l10n.scheduleToday;
       case ScheduleType.tomorrow:
-        return 'Tomorrow';
+        return l10n.scheduleTomorrow;
       case ScheduleType.specificDate:
         if (scheduledDate != null) {
           return '${scheduledDate!.day}/${scheduledDate!.month}/${scheduledDate!.year}';
         }
-        return 'Scheduled';
+        return l10n.scheduleScheduled;
     }
   }
 
@@ -177,11 +181,7 @@ class ServiceRequest {
     return '$start$end';
   }
 
-  String get offerCountLabel {
-    if (offerCount == 0) return 'No offers yet';
-    if (offerCount == 1) return '1 offer';
-    return '$offerCount offers';
-  }
+  String get offerCountLabel => AppStrings.current.offerCount(offerCount);
 
   static TimeOfDay? _parseTime(String? raw) {
     if (raw == null) return null;
@@ -194,9 +194,7 @@ class ServiceRequest {
   }
 
   static String _formatTime(TimeOfDay t) {
-    final h = t.hourOfPeriod == 0 ? 12 : t.hourOfPeriod;
-    final m = t.minute.toString().padLeft(2, '0');
-    final p = t.period == DayPeriod.am ? 'AM' : 'PM';
-    return '$h:$m $p';
+    final locale = dateLocaleFor(AppStrings.current.localeName);
+    return DateFormat('h:mm a', locale).format(DateTime(2000, 1, 1, t.hour, t.minute));
   }
 }

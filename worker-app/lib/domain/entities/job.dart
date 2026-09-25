@@ -1,5 +1,6 @@
 import '../../core/money/money.dart';
 import 'enums.dart';
+import '../../core/localization/app_locale.dart';
 
 /// A booking, from the worker's side.
 ///
@@ -128,7 +129,7 @@ class Job {
   /// The area shown before the job is assigned. Never the full address.
   String get approximateArea {
     final parts = [city, pincode].where((p) => p != null && p.isNotEmpty);
-    return parts.isEmpty ? 'Nearby' : parts.join(' · ');
+    return parts.isEmpty ? AppStrings.current.jobAreaNearby : parts.join(' · ');
   }
 }
 
@@ -256,10 +257,13 @@ class CompletionReadiness {
       isArrivalVerified && hasAfterWorkEvidence && pendingMaterialCount == 0;
 
   /// Ordered so the worker fixes the earliest blocker first.
-  List<String> get blockers => [
-        if (!isArrivalVerified) 'Verify arrival with the customer\'s code',
-        if (!hasAfterWorkEvidence) 'Add a photo of the finished work',
-        if (pendingMaterialCount > 0)
-          '$pendingMaterialCount material request${pendingMaterialCount == 1 ? '' : 's'} still waiting on the customer',
-      ];
+  List<String> get blockers {
+    final l10n = AppStrings.current;
+    return [
+      if (!isArrivalVerified) l10n.jobBlockerVerifyArrival,
+      if (!hasAfterWorkEvidence) l10n.jobBlockerAfterPhoto,
+      if (pendingMaterialCount > 0)
+        l10n.jobBlockerMaterialsPending(pendingMaterialCount),
+    ];
+  }
 }

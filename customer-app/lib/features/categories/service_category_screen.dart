@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 /// Shows common problems for a service category as a quick-pick starting
 /// point for the service request form. No pricing is shown here — price is
@@ -21,11 +23,15 @@ class ServiceCategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final title = serviceName.isEmpty ? 'Service Details' : serviceName;
+    final l10n = context.l10n;
+    // Passed on in English: the next screen and the request itself carry the
+    // catalogue's name, and each screen translates it for display.
+    final title = serviceName.isEmpty ? l10n.categoryServiceDetails : serviceName;
+    final displayTitle = localizedServiceName(l10n, title);
     final problemsAsync = ref.watch(serviceProblemsProvider(serviceId));
 
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(title: Text(displayTitle)),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -43,20 +49,20 @@ class ServiceCategoryScreen extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
+                      displayTitle,
                       style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.ink),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Book verified, background-checked local experts with upfront pricing & service guarantee.',
-                      style: TextStyle(color: AppColors.inkSecondary, fontSize: 13),
+                    Text(
+                      l10n.categoryTagline,
+                      style: const TextStyle(color: AppColors.inkSecondary, fontSize: 13),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 24),
               Text(
-                'What do you need help with?',
+                l10n.categoryWhatHelp,
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: AppColors.ink,
@@ -96,7 +102,7 @@ class ServiceCategoryScreen extends ConsumerWidget {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(12),
                             leading: const Icon(Icons.edit_note, color: AppColors.primary),
-                            title: const Text('Describe something else', style: TextStyle(fontWeight: FontWeight.bold)),
+                            title: Text(l10n.categoryDescribeElse, style: const TextStyle(fontWeight: FontWeight.bold)),
                             trailing: const Icon(Icons.chevron_right, color: AppColors.primary),
                             onTap: () => context.push('/service-request/$serviceId?name=${Uri.encodeComponent(title)}'),
                           ),
@@ -106,7 +112,7 @@ class ServiceCategoryScreen extends ConsumerWidget {
                   },
                   loading: () => const Center(child: CircularProgressIndicator()),
                   error: (err, _) => ErrorState(
-                    message: 'Could not load this service.',
+                    message: l10n.categoryLoadFailed,
                     onRetry: () => ref.invalidate(serviceProblemsProvider(serviceId)),
                   ),
                 ),

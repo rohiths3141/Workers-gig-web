@@ -7,6 +7,8 @@ import '../../app/theme/app_colors.dart';
 import '../../domain/entities/enums.dart';
 import '../../domain/entities/service_request.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 /// Lists the customer's own service requests with tab filtering.
 class MyServiceRequestsScreen extends ConsumerWidget {
@@ -15,20 +17,21 @@ class MyServiceRequestsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final requestsAsync = ref.watch(myServiceRequestsStreamProvider);
+    final l10n = context.l10n;
 
     return DefaultTabController(
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('My Service Requests'),
-          bottom: const TabBar(
+          title: Text(l10n.myRequestsTitle),
+          bottom: TabBar(
             indicatorColor: AppColors.primary,
             labelColor: AppColors.primary,
             unselectedLabelColor: AppColors.inkSecondary,
             tabs: [
-              Tab(text: 'Active'),
-              Tab(text: 'Completed'),
-              Tab(text: 'All'),
+              Tab(text: l10n.bookingsTabActive),
+              Tab(text: l10n.bookingsTabCompleted),
+              Tab(text: l10n.myRequestsTabAll),
             ],
           ),
         ),
@@ -36,8 +39,8 @@ class MyServiceRequestsScreen extends ConsumerWidget {
           onPressed: () => context.push('/post-request'),
           backgroundColor: AppColors.primary,
           icon: const Icon(Icons.add, color: Colors.white),
-          label: const Text('New Request',
-              style: TextStyle(color: Colors.white)),
+          label: Text(l10n.myRequestsNew,
+              style: const TextStyle(color: Colors.white)),
         ),
         body: requestsAsync.when(
           data: (requests) {
@@ -47,15 +50,15 @@ class MyServiceRequestsScreen extends ConsumerWidget {
 
             return TabBarView(
               children: [
-                _buildList(context, active, 'No active requests'),
-                _buildList(context, completed, 'No completed requests'),
-                _buildList(context, requests, 'No service requests yet'),
+                _buildList(context, active, l10n.myRequestsNoActive),
+                _buildList(context, completed, l10n.myRequestsNoCompleted),
+                _buildList(context, requests, l10n.myRequestsNone),
               ],
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) =>
-              Center(child: Text('Failed to load: $e')),
+              Center(child: Text(l10n.commonLoadFailedDetail('$e'))),
         ),
       ),
     );
@@ -67,7 +70,7 @@ class MyServiceRequestsScreen extends ConsumerWidget {
       return EmptyState(
         icon: Icons.post_add_rounded,
         title: emptyText,
-        message: 'Post a requirement and let workers come to you.',
+        message: context.l10n.myRequestsEmptyMessage,
       );
     }
 
@@ -88,6 +91,7 @@ class _RequestCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return GestureDetector(
       onTap: () => context.push('/my-requests/${request.id}'),
       child: Container(
@@ -134,7 +138,8 @@ class _RequestCard extends StatelessWidget {
             const SizedBox(height: 12),
             Row(
               children: [
-                _infoChip(Icons.category_rounded, request.categoryName),
+                _infoChip(Icons.category_rounded,
+                    localizedServiceName(l10n, request.categoryName)),
                 const SizedBox(width: 8),
                 _infoChip(Icons.currency_rupee, request.budgetLabel),
                 const Spacer(),

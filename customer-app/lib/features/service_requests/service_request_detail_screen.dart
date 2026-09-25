@@ -6,6 +6,8 @@ import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
 import '../../domain/entities/enums.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 /// Detail view for a single service request. Shows live offer count,
 /// status, and a CTA to view offers.
@@ -17,10 +19,11 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final requestAsync = ref.watch(serviceRequestStreamProvider(requestId));
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Request Details'),
+        title: Text(l10n.requestDetailTitle),
       ),
       body: requestAsync.when(
         data: (request) {
@@ -62,7 +65,7 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
                             const Icon(Icons.timer, color: Colors.white70, size: 16),
                             const SizedBox(width: 4),
                             Text(
-                              'Expires ${_timeUntil(request.expiresAt!)}',
+                              _expiresLabel(l10n, request.expiresAt!),
                               style: const TextStyle(
                                   color: Colors.white70, fontSize: 12),
                             ),
@@ -102,16 +105,16 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
                   ),
                   child: Column(
                     children: [
-                      _detailRow(
-                          Icons.category_rounded, 'Category', request.categoryName),
-                      _detailRow(Icons.currency_rupee, 'Budget', request.budgetLabel),
-                      _detailRow(Icons.schedule, 'Schedule', request.scheduleLabel),
+                      _detailRow(Icons.category_rounded, l10n.supportCategory,
+                          localizedServiceName(l10n, request.categoryName)),
+                      _detailRow(Icons.currency_rupee, l10n.requestDetailBudget, request.budgetLabel),
+                      _detailRow(Icons.schedule, l10n.requestDetailSchedule, request.scheduleLabel),
                       if (request.timeWindowLabel.isNotEmpty)
-                        _detailRow(Icons.access_time, 'Time', request.timeWindowLabel),
-                      _detailRow(Icons.location_on, 'Location',
+                        _detailRow(Icons.access_time, l10n.paymentTime, request.timeWindowLabel),
+                      _detailRow(Icons.location_on, l10n.requestDetailLocation,
                           '${request.addressLine}${request.city != null ? ', ${request.city}' : ''}'),
                       if (request.additionalNotes != null)
-                        _detailRow(Icons.note, 'Notes', request.additionalNotes!),
+                        _detailRow(Icons.note, l10n.requestDetailNotes, request.additionalNotes!),
                     ],
                   ),
                 ),
@@ -129,8 +132,8 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
                     child: OutlinedButton.icon(
                       onPressed: () => _confirmCancel(context, ref),
                       icon: const Icon(Icons.cancel_outlined, color: Colors.red),
-                      label: const Text('Cancel Request',
-                          style: TextStyle(color: Colors.red)),
+                      label: Text(l10n.requestDetailCancel,
+                          style: const TextStyle(color: Colors.red)),
                       style: OutlinedButton.styleFrom(
                         side: const BorderSide(color: Colors.red),
                         shape: RoundedRectangleBorder(
@@ -144,13 +147,14 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
+        error: (e, _) => Center(child: Text(l10n.commonErrorDetail('$e'))),
       ),
     );
   }
 
   Widget _buildOffersCard(
       BuildContext context, int offerCount, ServiceRequestStatus status) {
+    final l10n = context.l10n;
     return GestureDetector(
       onTap: offerCount > 0
           ? () => context.push('/my-requests/$requestId/offers')
@@ -185,9 +189,7 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    offerCount == 0
-                        ? 'No offers yet'
-                        : '$offerCount offer${offerCount > 1 ? 's' : ''} received',
+                    l10n.requestDetailOffersReceived(offerCount),
                     style: TextStyle(
                       color:
                           offerCount > 0 ? Colors.white : AppColors.ink,
@@ -197,8 +199,8 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
                   ),
                   Text(
                     offerCount > 0
-                        ? 'Tap to view and compare'
-                        : 'Workers will start responding soon',
+                        ? l10n.requestDetailTapToCompare
+                        : l10n.requestDetailWorkersSoon,
                     style: TextStyle(
                       color: offerCount > 0
                           ? Colors.white70
@@ -245,20 +247,20 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmCancel(BuildContext context, WidgetRef ref) async {
+    final l10n = context.l10n;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Cancel this request?'),
-        content:
-            const Text('All pending offers will be closed. This cannot be undone.'),
+        title: Text(l10n.requestCancelDialogTitle),
+        content: Text(l10n.requestCancelDialogBody),
         actions: [
           TextButton(
               onPressed: () => Navigator.pop(ctx, false),
-              child: const Text('Keep it')),
+              child: Text(l10n.requestCancelKeep)),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Cancel request',
-                style: TextStyle(color: Colors.red)),
+            child: Text(l10n.requestCancelConfirm,
+                style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -271,8 +273,8 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
       if (context.mounted) {
         switch (result) {
           case Ok():
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Request cancelled'),
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(l10n.requestCancelled),
               backgroundColor: AppColors.success,
             ));
           case Err(:final failure):
@@ -285,11 +287,15 @@ class ServiceRequestDetailScreen extends ConsumerWidget {
     }
   }
 
-  String _timeUntil(DateTime target) {
+  String _expiresLabel(AppLocalizations l10n, DateTime target) {
     final diff = target.difference(DateTime.now());
-    if (diff.inDays > 0) return 'in ${diff.inDays}d ${diff.inHours % 24}h';
-    if (diff.inHours > 0) return 'in ${diff.inHours}h ${diff.inMinutes % 60}m';
-    if (diff.inMinutes > 0) return 'in ${diff.inMinutes}m';
-    return 'soon';
+    if (diff.inDays > 0) {
+      return l10n.requestExpiresInDaysHours(diff.inDays, diff.inHours % 24);
+    }
+    if (diff.inHours > 0) {
+      return l10n.requestExpiresInHoursMinutes(diff.inHours, diff.inMinutes % 60);
+    }
+    if (diff.inMinutes > 0) return l10n.requestExpiresInMinutes(diff.inMinutes);
+    return l10n.requestExpiresSoon;
   }
 }

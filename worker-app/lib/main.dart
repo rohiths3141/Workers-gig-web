@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/config/app_config.dart';
@@ -9,7 +8,7 @@ import 'app/providers/push_registration_provider.dart';
 import 'app/router/app_router.dart';
 import 'app/theme/app_theme.dart';
 import 'core/firebase/firebase_initializer.dart';
-import 'core/localization/app_locale.dart';
+import 'core/localization/l10n.dart';
 import 'core/supabase/supabase_client_provider.dart';
 import 'data/repositories/firebase_auth_repository.dart';
 
@@ -17,6 +16,12 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final config = AppConfig.fromEnvironment();
+
+  // Read before the first frame, so a worker who chose Tamil never sees the
+  // app flash up in English first — and so even the start-up error screens
+  // below are in their language.
+  final initialLocale = await LocaleController.loadInitial();
+  AppStrings.use(initialLocale);
 
   // Missing configuration fails visibly at launch rather than surfacing much
   // later as a confusing network error in front of a worker mid-job.
@@ -50,6 +55,7 @@ Future<void> main() async {
       ProviderScope(
         overrides: [
           appConfigProvider.overrideWithValue(config),
+          initialAppLocaleProvider.overrideWithValue(initialLocale),
           // The same instance the Supabase client reads its token from, so there
           // is exactly one auth object in the process.
           authRepositoryProvider.overrideWithValue(auth),
@@ -80,11 +86,7 @@ class WorkerApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       locale: locale.locale,
       supportedLocales: AppLocale.supportedLocales,
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
+      localizationsDelegates: appLocalizationsDelegates,
       builder: (context, child) {
         // Respects the worker's system text size, which many use turned up,
         // but stops a 2x setting from breaking every layout in the app.
@@ -112,6 +114,7 @@ class _ConfigurationError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppStrings.current;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -123,14 +126,14 @@ class _ConfigurationError extends StatelessWidget {
               children: [
                 const Icon(Icons.settings_outlined, size: 48),
                 const SizedBox(height: 16),
-                const Text(
-                  'This build is missing its configuration.',
+                Text(
+                  l10n.startupMissingConfig,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Pass these with --dart-define:\n\n${missing.join('\n')}',
+                  l10n.startupPassDartDefine(missing.join('\n')),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -164,10 +167,10 @@ class _InitializationError extends StatelessWidget {
               children: [
                 const Icon(Icons.error_outline, size: 48, color: Colors.red),
                 const SizedBox(height: 16),
-                const Text(
-                  'The app could not start.',
+                Text(
+                  AppStrings.current.startupCouldNotStart,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 8),
                 Text(

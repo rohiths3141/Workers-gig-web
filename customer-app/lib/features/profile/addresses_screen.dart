@@ -8,7 +8,11 @@ import '../../app/theme/app_colors.dart';
 import '../../domain/entities/customer_address.dart';
 import '../../domain/repositories/repositories.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
+/// Stored in English and shown through [localizedAddressLabel], so an address
+/// saved in one language still reads correctly in another.
 const _labelOptions = ['Home', 'Work', 'Other'];
 
 class AddressesScreen extends ConsumerWidget {
@@ -30,10 +34,11 @@ class AddressesScreen extends ConsumerWidget {
 
     Future<void> refresh() async =>
         ref.invalidate(customerAddressesProvider(customerId));
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Saved Service Addresses'),
+        title: Text(l10n.profileAddresses),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _addOrEdit(
@@ -44,16 +49,16 @@ class AddressesScreen extends ConsumerWidget {
         ),
         backgroundColor: AppColors.primary,
         icon: const Icon(Icons.add_location_alt_outlined, color: Colors.white),
-        label: const Text('Add New Address', style: TextStyle(color: Colors.white)),
+        label: Text(l10n.addressesAdd, style: const TextStyle(color: Colors.white)),
       ),
       body: SafeArea(
         child: addressesAsync.when(
           data: (addresses) {
             if (addresses.isEmpty) {
-              return const EmptyState(
+              return EmptyState(
                 icon: Icons.location_off_outlined,
-                title: 'You haven\'t saved any addresses yet',
-                message: 'Add a service address to book faster next time.',
+                title: l10n.addressesEmpty,
+                message: l10n.addressesEmptyMessage,
               );
             }
 
@@ -85,9 +90,11 @@ class AddressesScreen extends ConsumerWidget {
                     ),
                     title: Row(
                       children: [
-                        Text(
-                          addr.label,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Flexible(
+                          child: Text(
+                            localizedAddressLabel(l10n, addr.label),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
                         ),
                         if (addr.isDefault) ...[
                           const SizedBox(width: 8),
@@ -97,9 +104,9 @@ class AddressesScreen extends ConsumerWidget {
                               color: AppColors.primary,
                               borderRadius: BorderRadius.circular(4),
                             ),
-                            child: const Text(
-                              'DEFAULT',
-                              style: TextStyle(
+                            child: Text(
+                              l10n.addressesDefaultBadge,
+                              style: const TextStyle(
                                 fontSize: 9,
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -144,11 +151,11 @@ class AddressesScreen extends ConsumerWidget {
                         }
                       },
                       itemBuilder: (context) => [
-                        const PopupMenuItem(value: 'edit', child: Text('Edit')),
+                        PopupMenuItem(value: 'edit', child: Text(l10n.commonEdit)),
                         if (!addr.isDefault)
-                          const PopupMenuItem(
-                              value: 'default', child: Text('Set as default')),
-                        const PopupMenuItem(value: 'delete', child: Text('Delete')),
+                          PopupMenuItem(
+                              value: 'default', child: Text(l10n.addressesSetDefault)),
+                        PopupMenuItem(value: 'delete', child: Text(l10n.commonDelete)),
                       ],
                     ),
                   ),
@@ -158,7 +165,7 @@ class AddressesScreen extends ConsumerWidget {
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (err, _) => ErrorState(
-            message: 'Could not load addresses.',
+            message: l10n.addressesLoadFailed,
             onRetry: () => ref.invalidate(customerAddressesProvider(customerId)),
           ),
         ),
@@ -182,20 +189,21 @@ class AddressesScreen extends ConsumerWidget {
     var label = existing?.label ?? 'Home';
     if (!_labelOptions.contains(label)) label = 'Other';
 
+    final l10n = context.l10n;
     final selectedLabel = await showModalBottomSheet<String>(
       context: context,
       builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Label this address', style: TextStyle(fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(l10n.addressesLabelSheet, style: const TextStyle(fontWeight: FontWeight.bold)),
             ),
             for (final option in _labelOptions)
               ListTile(
                 leading: Icon(_iconFor(option)),
-                title: Text(option),
+                title: Text(localizedAddressLabel(l10n, option)),
                 onTap: () => Navigator.of(sheetContext).pop(option),
               ),
           ],

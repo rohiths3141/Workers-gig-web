@@ -12,7 +12,9 @@ import '../../domain/entities/booking.dart';
 import '../../domain/entities/enums.dart';
 import '../../domain/entities/worker_location.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../shared/widgets/service_icon.dart';
 import '../../shared/widgets/status_timeline.dart';
+import '../../core/localization/l10n.dart';
 
 class ActiveBookingScreen extends ConsumerWidget {
   final String bookingId;
@@ -22,16 +24,17 @@ class ActiveBookingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final bookingAsync = ref.watch(bookingStreamProvider(bookingId));
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Live Booking & Worker Tracking'),
+        title: Text(l10n.activeBookingTitle),
       ),
       body: bookingAsync.when(
         data: (booking) => _buildForBooking(context, ref, booking),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => ErrorState(
-          message: 'Failed to load this booking.',
+          message: l10n.activeBookingLoadFailed,
           onRetry: () => ref.invalidate(bookingStreamProvider(bookingId)),
         ),
       ),
@@ -54,6 +57,7 @@ class ActiveBookingScreen extends ConsumerWidget {
   }
 
   Widget _buildPreTravelView(BuildContext context, Booking booking, {bool mapUnavailable = false}) {
+    final l10n = context.l10n;
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -67,7 +71,7 @@ class ActiveBookingScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              booking.serviceName,
+              localizedServiceName(l10n, booking.serviceName),
               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
             ),
             const SizedBox(height: 8),
@@ -77,15 +81,15 @@ class ActiveBookingScreen extends ConsumerWidget {
             ),
             if (mapUnavailable) ...[
               const SizedBox(height: 8),
-              const Text(
-                'Live map unavailable for this booking.',
-                style: TextStyle(color: AppColors.inkSecondary, fontSize: 12),
+              Text(
+                l10n.activeBookingMapUnavailable,
+                style: const TextStyle(color: AppColors.inkSecondary, fontSize: 12),
               ),
             ],
             const SizedBox(height: 24),
             OutlinedButton(
               onPressed: () => context.push('/bookings/${booking.id}'),
-              child: const Text('View Booking Details'),
+              child: Text(l10n.activeBookingViewDetails),
             ),
           ],
         ),
@@ -99,6 +103,7 @@ class ActiveBookingScreen extends ConsumerWidget {
     Booking booking,
     AsyncValue<WorkerLocation?> workerLocationAsync,
   ) {
+    final l10n = context.l10n;
     final customerLatLng = LatLng(booking.latitude!, booking.longitude!);
     final workerLocation = workerLocationAsync.valueOrNull;
     final hasFreshLocation = workerLocation != null && !workerLocation.isStale;
@@ -117,7 +122,7 @@ class ActiveBookingScreen extends ConsumerWidget {
               markerId: const MarkerId('customer'),
               position: customerLatLng,
               icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-              infoWindow: const InfoWindow(title: 'Service location'),
+              infoWindow: InfoWindow(title: l10n.activeBookingServiceLocation),
             ),
             // Only ever render a worker marker for a real, received
             // location ping — never a synthesized/fake position.
@@ -129,8 +134,8 @@ class ActiveBookingScreen extends ConsumerWidget {
                   hasFreshLocation ? BitmapDescriptor.hueAzure : BitmapDescriptor.hueOrange,
                 ),
                 infoWindow: InfoWindow(
-                  title: booking.workerName ?? 'Your professional',
-                  snippet: hasFreshLocation ? 'Live' : 'Last known location',
+                  title: booking.workerName ?? l10n.activeBookingYourProfessional,
+                  snippet: hasFreshLocation ? l10n.activeBookingLive : l10n.activeBookingLastKnown,
                 ),
               ),
           },
@@ -195,7 +200,7 @@ class ActiveBookingScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              booking.workerName ?? booking.serviceName,
+                              booking.workerName ?? localizedServiceName(l10n, booking.serviceName),
                               style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             Text(
@@ -219,7 +224,7 @@ class ActiveBookingScreen extends ConsumerWidget {
                               ? AppColors.inkSecondary.withOpacity(0.4)
                               : AppColors.statusSuccess,
                         ),
-                        tooltip: booking.workerPhone == null ? 'Phone not shared yet' : 'Call professional',
+                        tooltip: booking.workerPhone == null ? l10n.activeBookingPhoneNotShared : l10n.activeBookingCallProfessional,
                       ),
                     ],
                   ),
@@ -237,7 +242,7 @@ class ActiveBookingScreen extends ConsumerWidget {
                         child: OutlinedButton.icon(
                           onPressed: () => context.push('/bookings/${booking.id}/materials'),
                           icon: const Icon(Icons.build, size: 16),
-                          label: const Text('Materials'),
+                          label: Text(l10n.activeBookingMaterials),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -248,7 +253,7 @@ class ActiveBookingScreen extends ConsumerWidget {
                             backgroundColor: AppColors.primary,
                             foregroundColor: Colors.white,
                           ),
-                          child: const Text('View Details'),
+                          child: Text(l10n.activeBookingViewDetailsShort),
                         ),
                       ),
                     ],
@@ -295,6 +300,7 @@ class _LocationStatusBannerState extends State<_LocationStatusBanner> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final workerLocation = widget.workerLocation;
     final isLoading = widget.isLoading;
     final String text;
@@ -302,25 +308,25 @@ class _LocationStatusBannerState extends State<_LocationStatusBanner> {
     final Color color;
 
     if (isLoading) {
-      text = 'Connecting to live location...';
+      text = l10n.locationConnecting;
       icon = Icons.sync;
       color = AppColors.inkSecondary;
     } else if (workerLocation == null) {
-      text = 'Live location temporarily unavailable';
+      text = l10n.locationLiveUnavailable;
       icon = Icons.location_off_outlined;
       color = AppColors.statusError;
     } else {
       switch (workerLocation.freshness) {
         case LocationFreshness.live:
-          text = 'Live location active';
+          text = l10n.locationLiveActive;
           icon = Icons.gps_fixed;
           color = AppColors.statusSuccess;
         case LocationFreshness.updating:
-          text = 'Updating...';
+          text = l10n.locationUpdating;
           icon = Icons.sync;
           color = AppColors.accentGold;
         case LocationFreshness.unavailable:
-          text = 'Location temporarily unavailable';
+          text = l10n.locationUnavailable;
           icon = Icons.location_off_outlined;
           color = AppColors.statusError;
       }
@@ -370,7 +376,9 @@ class _ArrivalCodeCard extends ConsumerWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Worker Arrived! Share Start Code:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+            Flexible(
+              child: Text(context.l10n.activeBookingShareStartCode, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+            ),
             codeAsync.when(
               data: (code) => Text(
                 code ?? '—',

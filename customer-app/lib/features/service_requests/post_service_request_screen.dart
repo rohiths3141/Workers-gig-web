@@ -7,6 +7,8 @@ import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
 import '../../domain/entities/enums.dart';
 import '../../domain/entities/service_category.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 /// Multi-step wizard for posting a customer service request.
 ///
@@ -67,6 +69,8 @@ class _PostServiceRequestScreenState
   double? _longitude;
 
   static const _totalSteps = 5;
+
+  AppLocalizations get l10n => context.l10n;
 
   @override
   void initState() {
@@ -171,8 +175,7 @@ class _PostServiceRequestScreenState
       case Ok(value: final request):
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content:
-                Text('Service request ${request.requestCode} posted!'),
+            content: Text(l10n.postRequestPosted(request.requestCode)),
             backgroundColor: AppColors.successGreen,
           ),
         );
@@ -192,7 +195,7 @@ class _PostServiceRequestScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Post a Service Request'),
+        title: Text(l10n.postRequestTitle),
       ),
       body: Column(
         children: [
@@ -256,17 +259,17 @@ class _PostServiceRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'What service do you need?',
-            style: TextStyle(
+          Text(
+            l10n.postRequestWhatService,
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.ink),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Select the category that best describes your need.',
-            style: TextStyle(color: AppColors.inkSecondary),
+          Text(
+            l10n.postRequestSelectCategory,
+            style: const TextStyle(color: AppColors.inkSecondary),
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -275,7 +278,7 @@ class _PostServiceRequestScreenState
               loading: () =>
                   const Center(child: CircularProgressIndicator()),
               error: (e, _) =>
-                  Center(child: Text('Error loading categories: $e')),
+                  Center(child: Text(l10n.homeCategoriesLoadFailed('$e'))),
             ),
           ),
         ],
@@ -301,7 +304,7 @@ class _PostServiceRequestScreenState
             ),
           ),
           title: Text(
-            cat.name,
+            localizedServiceName(l10n, cat.name, slug: cat.slug),
             style: TextStyle(
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               color: isSelected ? AppColors.primary : AppColors.ink,
@@ -337,9 +340,9 @@ class _PostServiceRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Describe your requirement',
-            style: TextStyle(
+          Text(
+            l10n.postRequestDescribe,
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.ink),
@@ -347,36 +350,36 @@ class _PostServiceRequestScreenState
           const SizedBox(height: 8),
           Text(
             _categoryName != null
-                ? 'Service: $_categoryName'
-                : 'What do you need done?',
+                ? l10n.postRequestServiceLabel(localizedServiceName(l10n, _categoryName!))
+                : l10n.postRequestWhatDone,
             style: const TextStyle(color: AppColors.inkSecondary),
           ),
           const SizedBox(height: 24),
           TextFormField(
             controller: _titleController,
-            decoration: _inputDecor('Title', 'e.g. Fix leaking kitchen tap'),
+            decoration: _inputDecor(l10n.postRequestFieldTitle, l10n.postRequestTitleHint),
             maxLength: 200,
             validator: (v) =>
-                (v == null || v.trim().length < 6) ? 'Enter at least 6 characters' : null,
+                (v == null || v.trim().length < 6) ? l10n.postRequestMinChars(6) : null,
           ),
           const SizedBox(height: 16),
           TextFormField(
             controller: _descController,
             decoration: _inputDecor(
-              'Description',
-              'Describe the problem in detail…',
+              l10n.postRequestFieldDescription,
+              l10n.postRequestDescriptionHint,
             ),
             maxLines: 5,
             maxLength: 1000,
             validator: (v) =>
-                (v == null || v.trim().length < 10) ? 'Enter at least 10 characters' : null,
+                (v == null || v.trim().length < 10) ? l10n.postRequestMinChars(10) : null,
           ),
           const SizedBox(height: 16),
           TextFormField(
             controller: _notesController,
             decoration: _inputDecor(
-              'Additional notes (optional)',
-              'Gate code, preferred timing, etc.',
+              l10n.postRequestFieldNotes,
+              l10n.postRequestNotesHint,
             ),
             maxLines: 3,
           ),
@@ -393,17 +396,17 @@ class _PostServiceRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Your budget',
-            style: TextStyle(
+          Text(
+            l10n.postRequestBudgetTitle,
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.ink),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Give workers an idea of what you\'re willing to pay.',
-            style: TextStyle(color: AppColors.inkSecondary),
+          Text(
+            l10n.postRequestBudgetHint,
+            style: const TextStyle(color: AppColors.inkSecondary),
           ),
           const SizedBox(height: 24),
           ...BudgetType.values.map((bt) => RadioListTile<BudgetType>(
@@ -419,7 +422,7 @@ class _PostServiceRequestScreenState
             const SizedBox(height: 16),
             TextFormField(
               controller: _budgetMinController,
-              decoration: _inputDecor('Fixed price (₹)', 'e.g. 500'),
+              decoration: _inputDecor(l10n.postRequestFixedPrice, l10n.postRequestExample('500')),
               keyboardType: TextInputType.number,
             ),
           ],
@@ -430,7 +433,7 @@ class _PostServiceRequestScreenState
                 Expanded(
                   child: TextFormField(
                     controller: _budgetMinController,
-                    decoration: _inputDecor('Min (₹)', 'e.g. 300'),
+                    decoration: _inputDecor(l10n.postRequestMin, l10n.postRequestExample('300')),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -438,7 +441,7 @@ class _PostServiceRequestScreenState
                 Expanded(
                   child: TextFormField(
                     controller: _budgetMaxController,
-                    decoration: _inputDecor('Max (₹)', 'e.g. 800'),
+                    decoration: _inputDecor(l10n.postRequestMax, l10n.postRequestExample('800')),
                     keyboardType: TextInputType.number,
                   ),
                 ),
@@ -458,9 +461,9 @@ class _PostServiceRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'When do you need this?',
-            style: TextStyle(
+          Text(
+            l10n.postRequestWhenTitle,
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.ink),
@@ -481,7 +484,7 @@ class _PostServiceRequestScreenState
               title: Text(
                 _scheduledDate != null
                     ? '${_scheduledDate!.day}/${_scheduledDate!.month}/${_scheduledDate!.year}'
-                    : 'Pick a date',
+                    : l10n.postRequestPickDate,
                 style: const TextStyle(color: AppColors.ink),
               ),
               trailing:
@@ -514,25 +517,25 @@ class _PostServiceRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Service location',
-            style: TextStyle(
+          Text(
+            l10n.postRequestLocationTitle,
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.ink),
           ),
           const SizedBox(height: 8),
-          const Text(
-            'Your exact address is only shared once you accept an offer.',
-            style: TextStyle(color: AppColors.inkSecondary, fontSize: 13),
+          Text(
+            l10n.postRequestAddressPrivate,
+            style: const TextStyle(color: AppColors.inkSecondary, fontSize: 13),
           ),
           const SizedBox(height: 24),
           TextFormField(
             controller: _addressController,
-            decoration: _inputDecor('Address', 'Full address'),
+            decoration: _inputDecor(l10n.paymentAddress, l10n.postRequestFullAddress),
             maxLines: 2,
             validator: (v) =>
-                (v == null || v.trim().length < 5) ? 'Enter a valid address' : null,
+                (v == null || v.trim().length < 5) ? l10n.postRequestValidAddress : null,
           ),
           const SizedBox(height: 16),
           Row(
@@ -540,14 +543,14 @@ class _PostServiceRequestScreenState
               Expanded(
                 child: TextFormField(
                   controller: _cityController,
-                  decoration: _inputDecor('City', 'e.g. Bangalore'),
+                  decoration: _inputDecor(l10n.postRequestCity, l10n.postRequestCityHint),
                 ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: TextFormField(
                   controller: _pincodeController,
-                  decoration: _inputDecor('Pincode', 'e.g. 560001'),
+                  decoration: _inputDecor(l10n.postRequestPincode, l10n.postRequestExample('560001')),
                   keyboardType: TextInputType.number,
                 ),
               ),
@@ -575,7 +578,7 @@ class _PostServiceRequestScreenState
             },
             icon: const Icon(Icons.my_location),
             label: Text(
-              _latitude != null ? 'Location set ✓' : 'Set location on map',
+              _latitude != null ? l10n.postRequestLocationSet : l10n.postRequestSetOnMap,
             ),
             style: OutlinedButton.styleFrom(
               foregroundColor: AppColors.primary,
@@ -599,34 +602,36 @@ class _PostServiceRequestScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Review your request',
-            style: TextStyle(
+          Text(
+            l10n.postRequestReviewTitle,
+            style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: AppColors.ink),
           ),
           const SizedBox(height: 20),
-          _reviewRow(Icons.category_rounded, 'Category',
-              _categoryName ?? 'Not selected'),
-          _reviewRow(Icons.title, 'Title',
+          _reviewRow(Icons.category_rounded, l10n.supportCategory,
+              _categoryName != null
+                  ? localizedServiceName(l10n, _categoryName!)
+                  : l10n.postRequestNotSelected),
+          _reviewRow(Icons.title, l10n.postRequestFieldTitle,
               _titleController.text.isEmpty ? '—' : _titleController.text),
-          _reviewRow(Icons.description, 'Description',
+          _reviewRow(Icons.description, l10n.postRequestFieldDescription,
               _descController.text.isEmpty ? '—' : _descController.text),
-          _reviewRow(Icons.currency_rupee, 'Budget',
+          _reviewRow(Icons.currency_rupee, l10n.requestDetailBudget,
               _budgetType == BudgetType.none
-                  ? 'Flexible'
+                  ? l10n.budgetTypeFlexible
                   : _budgetType == BudgetType.fixed
                       ? '₹${_budgetMinController.text}'
                       : '₹${_budgetMinController.text} – ₹${_budgetMaxController.text}'),
-          _reviewRow(Icons.schedule, 'When', _scheduleType.label),
+          _reviewRow(Icons.schedule, l10n.postRequestWhen, _scheduleType.label),
           if (_scheduledDate != null)
-            _reviewRow(Icons.calendar_today, 'Date',
+            _reviewRow(Icons.calendar_today, l10n.paymentDate,
                 '${_scheduledDate!.day}/${_scheduledDate!.month}/${_scheduledDate!.year}'),
-          _reviewRow(Icons.location_on, 'Location',
+          _reviewRow(Icons.location_on, l10n.requestDetailLocation,
               _addressController.text.isEmpty ? '—' : _addressController.text),
           if (_notesController.text.isNotEmpty)
-            _reviewRow(Icons.note, 'Notes', _notesController.text),
+            _reviewRow(Icons.note, l10n.requestDetailNotes, _notesController.text),
           const SizedBox(height: 12),
           Container(
             padding: const EdgeInsets.all(12),
@@ -635,14 +640,14 @@ class _PostServiceRequestScreenState
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.accentGold.withOpacity(0.3)),
             ),
-            child: const Row(
+            child: Row(
               children: [
-                Icon(Icons.info_outline, color: AppColors.accentGold, size: 20),
-                SizedBox(width: 8),
+                const Icon(Icons.info_outline, color: AppColors.accentGold, size: 20),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Your exact address stays private until you accept an offer and a booking is created.',
-                    style: TextStyle(fontSize: 12, color: AppColors.inkSecondary),
+                    l10n.postRequestPrivacyNote,
+                    style: const TextStyle(fontSize: 12, color: AppColors.inkSecondary),
                   ),
                 ),
               ],
@@ -701,7 +706,7 @@ class _PostServiceRequestScreenState
               TextButton.icon(
                 onPressed: _prevStep,
                 icon: const Icon(Icons.arrow_back_ios, size: 16),
-                label: const Text('Back'),
+                label: Text(l10n.commonBack),
                 style: TextButton.styleFrom(
                     foregroundColor: AppColors.inkSecondary),
               ),
@@ -727,7 +732,7 @@ class _PostServiceRequestScreenState
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white),
                     )
-                  : Text(isLast ? 'Submit Request' : 'Next'),
+                  : Text(isLast ? l10n.postRequestSubmit : l10n.commonNext),
             ),
           ],
         ),

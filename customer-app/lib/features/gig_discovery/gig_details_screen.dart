@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/localization/l10n.dart';
 
 class GigDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> gigCard;
@@ -11,7 +12,8 @@ class GigDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final workerName = gigCard['workerName'] as String? ?? 'Unknown professional';
+    final l10n = context.l10n;
+    final workerName = gigCard['workerName'] as String? ?? l10n.gigUnknownProfessional;
     final serviceTitle = gigCard['serviceTitle'] as String? ?? '';
     final priceLabel = gigCard['priceLabel'] as String? ?? '—';
     final rating = (gigCard['rating'] as num?)?.toDouble();
@@ -76,8 +78,8 @@ class GigDetailsScreen extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               rating == null
-                                  ? 'New professional'
-                                  : '$rating ($ratingCount reviews)',
+                                  ? l10n.gigNewProfessional
+                                  : l10n.gigRatingWithCount(rating.toString(), ratingCount),
                               style: const TextStyle(
                                 fontWeight: FontWeight.w600,
                                 fontSize: 13,
@@ -111,15 +113,15 @@ class GigDetailsScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Pricing',
-                                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.ink),
+                              Text(
+                                l10n.gigPricing,
+                                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.ink),
                               ),
                               const SizedBox(height: 12),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text('Service Rate', style: TextStyle(color: AppColors.inkSecondary)),
+                                  Text(l10n.gigServiceRate, style: const TextStyle(color: AppColors.inkSecondary)),
                                   Text(
                                     priceLabel,
                                     style: const TextStyle(
@@ -131,10 +133,9 @@ class GigDetailsScreen extends StatelessWidget {
                                 ],
                               ),
                               const SizedBox(height: 8),
-                              const Text(
-                                'The final amount is confirmed by your professional and shown '
-                                'on your booking once created.',
-                                style: TextStyle(fontSize: 11, color: AppColors.inkTertiary),
+                              Text(
+                                l10n.gigFinalAmountNote,
+                                style: const TextStyle(fontSize: 11, color: AppColors.inkTertiary),
                               ),
                             ],
                           ),
@@ -143,16 +144,16 @@ class GigDetailsScreen extends StatelessWidget {
 
                         // Real verification badges only — no invented skill tags.
                         if (isKycVerified || isBackgroundVerified) ...[
-                          const Text(
-                            'Verification',
-                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.ink),
+                          Text(
+                            l10n.supportCategoryVerification,
+                            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, color: AppColors.ink),
                           ),
                           const SizedBox(height: 8),
                           Wrap(
                             spacing: 8,
                             children: [
-                              if (isKycVerified) _verifiedChip('KYC Verified'),
-                              if (isBackgroundVerified) _verifiedChip('Background Verified'),
+                              if (isKycVerified) _verifiedChip(l10n.gigKycVerified),
+                              if (isBackgroundVerified) _verifiedChip(l10n.gigBackgroundVerified),
                             ],
                           ),
                         ],
@@ -188,9 +189,9 @@ class GigDetailsScreen extends StatelessWidget {
                         minimumSize: const Size(0, 52),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                       ),
-                      child: const Text(
-                        'Book Now →',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+                      child: Text(
+                        l10n.gigBookNow,
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
                       ),
                     ),
                   ),

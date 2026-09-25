@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../shared/widgets/service_icon.dart';
+import '../../core/localization/l10n.dart';
 
 /// Shown once a booking's review has actually been submitted and accepted
 /// by the backend — never shown speculatively.
@@ -19,9 +21,10 @@ class ServiceCompletedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     final summaryParts = [
       if (workerName != null) workerName!,
-      serviceName,
+      localizedServiceName(l10n, serviceName),
       if (amountLabel != null) amountLabel!,
     ];
 
@@ -40,14 +43,14 @@ class ServiceCompletedScreen extends StatelessWidget {
                 child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 64),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Service Completed!',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.ink),
+              Text(
+                l10n.completedTitle,
+                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700, color: AppColors.ink),
               ),
               const SizedBox(height: 8),
-              const Text(
-                'Thanks for using our services.',
-                style: TextStyle(color: AppColors.inkSecondary, fontSize: 13),
+              Text(
+                l10n.completedThanks,
+                style: const TextStyle(color: AppColors.inkSecondary, fontSize: 13),
               ),
               const SizedBox(height: 8),
               if (summaryParts.isNotEmpty)
@@ -66,9 +69,9 @@ class ServiceCompletedScreen extends StatelessWidget {
                     backgroundColor: AppColors.primary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: const Text(
-                    'View Bookings',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
+                  child: Text(
+                    l10n.completedViewBookings,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
                   ),
                 ),
               ),
@@ -81,9 +84,9 @@ class ServiceCompletedScreen extends StatelessWidget {
                   style: OutlinedButton.styleFrom(
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                   ),
-                  child: const Text(
-                    'Back to Home',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  child: Text(
+                    l10n.completedBackHome,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                 ),
               ),

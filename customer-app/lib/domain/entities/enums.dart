@@ -1,5 +1,7 @@
 library;
 
+import '../../core/localization/app_locale.dart';
+
 /// Enumerations mirroring the Postgres types.
 ///
 /// Customer-app enums that are shared with the worker side (BookingStatus,
@@ -105,23 +107,26 @@ enum BookingStatus {
 
   String get displayName => customerLabel;
 
-  /// Friendly one-line label for the customer.
-  String get customerLabel => switch (this) {
-        BookingStatus.requested => 'Finding a professional…',
-        BookingStatus.accepted => 'Professional found',
-        BookingStatus.confirmed => 'Confirmed',
-        BookingStatus.traveling => 'On the way',
-        BookingStatus.arrived => 'Arrived — enter your code',
-        BookingStatus.inProgress => 'Work in progress',
-        BookingStatus.awaitingApproval => 'Work done — approve to proceed',
-        BookingStatus.completed => 'Completed',
-        BookingStatus.paymentPending => 'Payment pending',
-        BookingStatus.paid => 'Paid',
-        BookingStatus.closed => 'Closed',
-        BookingStatus.cancelled => 'Cancelled',
-        BookingStatus.disputed => 'Disputed',
-        BookingStatus.expired => 'Expired — no one was available',
-      };
+  /// Friendly one-line label for the customer, in the language on screen.
+  String get customerLabel {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      BookingStatus.requested => l10n.bookingStatusRequested,
+      BookingStatus.accepted => l10n.bookingStatusAccepted,
+      BookingStatus.confirmed => l10n.bookingStatusConfirmed,
+      BookingStatus.traveling => l10n.bookingStatusTraveling,
+      BookingStatus.arrived => l10n.bookingStatusArrived,
+      BookingStatus.inProgress => l10n.bookingStatusInProgress,
+      BookingStatus.awaitingApproval => l10n.bookingStatusAwaitingApproval,
+      BookingStatus.completed => l10n.bookingStatusCompleted,
+      BookingStatus.paymentPending => l10n.bookingStatusPaymentPending,
+      BookingStatus.paid => l10n.bookingStatusPaid,
+      BookingStatus.closed => l10n.bookingStatusClosed,
+      BookingStatus.cancelled => l10n.bookingStatusCancelled,
+      BookingStatus.disputed => l10n.bookingStatusDisputed,
+      BookingStatus.expired => l10n.bookingStatusExpired,
+    };
+  }
 }
 
 /// public.gig_status — customer only reads ACTIVE gigs
@@ -181,13 +186,16 @@ enum PricingUnit {
       _parse(_byWire, raw, 'pricing_unit');
   static final _byWire = {for (final v in PricingUnit.values) v.wire: v};
 
-  String get label => switch (this) {
-        PricingUnit.perJob => 'per job',
-        PricingUnit.perHour => 'per hour',
-        PricingUnit.perDay => 'per day',
-        PricingUnit.perUnit => 'per unit',
-        PricingUnit.perSqft => 'per sq ft',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      PricingUnit.perJob => l10n.pricingPerJob,
+      PricingUnit.perHour => l10n.pricingPerHour,
+      PricingUnit.perDay => l10n.pricingPerDay,
+      PricingUnit.perUnit => l10n.pricingPerUnit,
+      PricingUnit.perSqft => l10n.pricingPerSqft,
+    };
+  }
 }
 
 /// public.support_category
@@ -225,17 +233,20 @@ enum SupportCategory {
     SupportCategory.other,
   ];
 
-  String get label => switch (this) {
-        SupportCategory.booking => 'Booking issue',
-        SupportCategory.payment => 'Payment',
-        SupportCategory.payout => 'Payout',
-        SupportCategory.verification => 'Verification',
-        SupportCategory.account => 'My account',
-        SupportCategory.safety => 'Safety concern',
-        SupportCategory.claim => 'Insurance claim',
-        SupportCategory.appIssue => 'App problem',
-        SupportCategory.other => 'Other',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      SupportCategory.booking => l10n.supportCategoryBooking,
+      SupportCategory.payment => l10n.supportCategoryPayment,
+      SupportCategory.payout => l10n.supportCategoryPayout,
+      SupportCategory.verification => l10n.supportCategoryVerification,
+      SupportCategory.account => l10n.supportCategoryAccount,
+      SupportCategory.safety => l10n.supportCategorySafety,
+      SupportCategory.claim => l10n.supportCategoryClaim,
+      SupportCategory.appIssue => l10n.supportCategoryAppIssue,
+      SupportCategory.other => l10n.supportCategoryOther,
+    };
+  }
 }
 
 /// public.support_status
@@ -289,16 +300,19 @@ enum ServiceRequestStatus {
         ServiceRequestStatus.workerSelected,
       }.contains(this);
 
-  String get customerLabel => switch (this) {
-        ServiceRequestStatus.draft => 'Draft',
-        ServiceRequestStatus.open => 'Open — waiting for offers',
-        ServiceRequestStatus.receivingOffers => 'Receiving offers',
-        ServiceRequestStatus.workerSelected => 'Professional selected',
-        ServiceRequestStatus.booked => 'Booked',
-        ServiceRequestStatus.cancelled => 'Cancelled',
-        ServiceRequestStatus.expired => 'Expired',
-        ServiceRequestStatus.closed => 'Closed',
-      };
+  String get customerLabel {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      ServiceRequestStatus.draft => l10n.requestStatusDraft,
+      ServiceRequestStatus.open => l10n.requestStatusOpen,
+      ServiceRequestStatus.receivingOffers => l10n.requestStatusReceivingOffers,
+      ServiceRequestStatus.workerSelected => l10n.requestStatusWorkerSelected,
+      ServiceRequestStatus.booked => l10n.requestStatusBooked,
+      ServiceRequestStatus.cancelled => l10n.requestStatusCancelled,
+      ServiceRequestStatus.expired => l10n.requestStatusExpired,
+      ServiceRequestStatus.closed => l10n.requestStatusClosed,
+    };
+  }
 }
 
 /// public.budget_type
@@ -313,11 +327,14 @@ enum BudgetType {
   static BudgetType parse(String? raw) => _parse(_byWire, raw, 'budget_type');
   static final _byWire = {for (final v in BudgetType.values) v.wire: v};
 
-  String get label => switch (this) {
-        BudgetType.none => 'Flexible',
-        BudgetType.fixed => 'Fixed price',
-        BudgetType.range => 'Price range',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      BudgetType.none => l10n.budgetTypeFlexible,
+      BudgetType.fixed => l10n.budgetTypeFixed,
+      BudgetType.range => l10n.budgetTypeRange,
+    };
+  }
 }
 
 /// public.schedule_type
@@ -334,12 +351,15 @@ enum ScheduleType {
       _parse(_byWire, raw, 'schedule_type');
   static final _byWire = {for (final v in ScheduleType.values) v.wire: v};
 
-  String get label => switch (this) {
-        ScheduleType.asap => 'As soon as possible',
-        ScheduleType.today => 'Today',
-        ScheduleType.tomorrow => 'Tomorrow',
-        ScheduleType.specificDate => 'On a specific date',
-      };
+  String get label {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      ScheduleType.asap => l10n.scheduleAsap,
+      ScheduleType.today => l10n.scheduleToday,
+      ScheduleType.tomorrow => l10n.scheduleTomorrow,
+      ScheduleType.specificDate => l10n.scheduleSpecificDate,
+    };
+  }
 }
 
 /// public.offer_status
@@ -374,16 +394,19 @@ enum OfferStatus {
         OfferStatus.closed,
       }.contains(this);
 
-  String get customerLabel => switch (this) {
-        OfferStatus.submitted => 'New offer',
-        OfferStatus.viewed => 'Viewed',
-        OfferStatus.shortlisted => 'Shortlisted',
-        OfferStatus.accepted => 'Accepted',
-        OfferStatus.rejected => 'Rejected',
-        OfferStatus.withdrawn => 'Withdrawn by worker',
-        OfferStatus.expired => 'Expired',
-        OfferStatus.closed => 'Closed',
-      };
+  String get customerLabel {
+    final l10n = AppStrings.current;
+    return switch (this) {
+      OfferStatus.submitted => l10n.offerStatusSubmitted,
+      OfferStatus.viewed => l10n.offerStatusViewed,
+      OfferStatus.shortlisted => l10n.offerStatusShortlisted,
+      OfferStatus.accepted => l10n.offerStatusAccepted,
+      OfferStatus.rejected => l10n.offerStatusRejected,
+      OfferStatus.withdrawn => l10n.offerStatusWithdrawn,
+      OfferStatus.expired => l10n.offerStatusExpired,
+      OfferStatus.closed => l10n.offerStatusClosed,
+    };
+  }
 }
 
 /// public.booking_source

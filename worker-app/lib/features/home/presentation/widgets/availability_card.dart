@@ -10,6 +10,7 @@ import '../../../../domain/entities/enums.dart';
 import '../../../../domain/entities/worker.dart';
 import '../../../../shared/widgets/common_widgets.dart';
 import '../home_controller.dart';
+import '../../../../core/localization/l10n.dart';
 
 /// The availability control.
 ///
@@ -38,25 +39,26 @@ class AvailabilityCard extends ConsumerWidget {
     final isBusy = ref.watch(availabilityControllerProvider).isLoading;
     final isAvailable = availability.isAvailable;
     final isOnJob = availability == WorkerAvailability.busy;
+    final l10n = context.l10n;
 
     final (accent, surface, label, explanation) = switch (availability) {
       WorkerAvailability.available => (
           AppColors.available,
           AppColors.available.withValues(alpha: 0.10),
-          'AVAILABLE',
-          'You can receive new jobs.',
+          l10n.availabilityAvailable.toUpperCase(),
+          l10n.availabilityAvailableBody,
         ),
       WorkerAvailability.busy => (
           AppColors.busy,
           AppColors.busy.withValues(alpha: 0.10),
-          'ON A JOB',
-          'You will not be offered new work until this job is done.',
+          l10n.availabilityOnJob.toUpperCase(),
+          l10n.availabilityOnJobBody,
         ),
       WorkerAvailability.offline => (
           AppColors.offline,
           AppColors.offline.withValues(alpha: 0.08),
-          'OFF',
-          'You will not receive new jobs.',
+          l10n.availabilityOff.toUpperCase(),
+          l10n.availabilityOffBody,
         ),
     };
 
@@ -89,7 +91,7 @@ class AvailabilityCard extends ConsumerWidget {
           // worker had done something wrong.
           if (isOnJob)
             Text(
-              'Finish your current job to become available again.',
+              l10n.availabilityFinishJob,
               style:
                   AppTypography.bodyMedium.copyWith(color: context.inkSecondary),
             )
@@ -111,7 +113,7 @@ class AvailabilityCard extends ConsumerWidget {
                           valueColor: AlwaysStoppedAnimation(Colors.white),
                         ),
                       )
-                    : Text(isAvailable ? 'Go off duty' : 'Go available'),
+                    : Text(isAvailable ? l10n.availabilityGoOff : l10n.availabilityGoOn),
               ),
             ),
 
@@ -121,7 +123,7 @@ class AvailabilityCard extends ConsumerWidget {
             const Divider(),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'Before you can receive jobs',
+              l10n.availabilityBeforeJobs,
               style: AppTypography.label.copyWith(color: context.inkSecondary),
             ),
             const SizedBox(height: AppSpacing.sm),
@@ -178,8 +180,8 @@ class AvailabilityCard extends ConsumerWidget {
       (updated) => showSuccess(
         context,
         updated.availability.isAvailable
-            ? 'You are available for work.'
-            : 'You are off duty.',
+            ? context.l10n.availabilityNowOn
+            : context.l10n.availabilityNowOff,
       ),
       (failure) {
         if (failure is PermissionFailure) {

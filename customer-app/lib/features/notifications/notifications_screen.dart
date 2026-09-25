@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../shared/widgets/empty_state.dart';
+import '../../core/localization/l10n.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
@@ -12,17 +13,18 @@ class NotificationsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationsAsync = ref.watch(notificationsProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications & Alerts'),
+        title: Text(l10n.notificationsTitle),
       ),
       body: notificationsAsync.when(
         data: (notifications) {
           if (notifications.isEmpty) {
-            return const EmptyState(
+            return EmptyState(
               icon: Icons.notifications_none,
-              title: "You're all caught up",
+              title: l10n.notificationsEmpty,
             );
           }
           return ListView.separated(
@@ -53,7 +55,7 @@ class NotificationsScreen extends ConsumerWidget {
                   style: const TextStyle(fontSize: 12, color: AppColors.ink),
                 ),
                 trailing: Text(
-                  _relativeTime(item.queuedAt),
+                  _relativeTime(context, item.queuedAt),
                   style: const TextStyle(fontSize: 10, color: AppColors.inkSecondary),
                 ),
                 contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -66,7 +68,7 @@ class NotificationsScreen extends ConsumerWidget {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, _) => ErrorState(
-          message: 'Could not load notifications.',
+          message: l10n.notificationsLoadFailed,
           onRetry: () => ref.invalidate(notificationsProvider),
         ),
       ),
@@ -82,12 +84,13 @@ class NotificationsScreen extends ConsumerWidget {
     return Icons.notifications_none;
   }
 
-  String _relativeTime(DateTime time) {
+  String _relativeTime(BuildContext context, DateTime time) {
+    final l10n = context.l10n;
     final diff = DateTime.now().difference(time);
-    if (diff.inMinutes < 1) return 'Just now';
-    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
-    if (diff.inHours < 24) return '${diff.inHours}h ago';
-    if (diff.inDays < 2) return 'Yesterday';
-    return DateFormat('d MMM').format(time);
+    if (diff.inMinutes < 1) return l10n.timeJustNow;
+    if (diff.inMinutes < 60) return l10n.timeMinutesAgo(diff.inMinutes);
+    if (diff.inHours < 24) return l10n.timeHoursAgo(diff.inHours);
+    if (diff.inDays < 2) return l10n.timeYesterday;
+    return DateFormat('d MMM', context.dateLocale).format(time);
   }
 }

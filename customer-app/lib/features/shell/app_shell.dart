@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/localization/l10n.dart';
 
 class AppShell extends StatelessWidget {
   final Widget child;
@@ -41,6 +42,7 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateSelectedIndex(context);
+    final l10n = context.l10n;
 
     return Scaffold(
       body: child,
@@ -59,31 +61,31 @@ class AppShell extends StatelessWidget {
           selectedFontSize: 12,
           unselectedFontSize: 12,
           elevation: 0,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home_rounded),
-              label: 'Home',
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: const Icon(Icons.home_rounded),
+              label: l10n.navHome,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.explore_outlined),
-              activeIcon: Icon(Icons.explore_rounded),
-              label: 'Explore',
+              icon: const Icon(Icons.explore_outlined),
+              activeIcon: const Icon(Icons.explore_rounded),
+              label: l10n.navExplore,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today_outlined),
-              activeIcon: Icon(Icons.calendar_month_rounded),
-              label: 'Bookings',
+              icon: const Icon(Icons.calendar_today_outlined),
+              activeIcon: const Icon(Icons.calendar_month_rounded),
+              label: l10n.navBookings,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.notifications_outlined),
-              activeIcon: Icon(Icons.notifications_rounded),
-              label: 'Alerts',
+              icon: const Icon(Icons.notifications_outlined),
+              activeIcon: const Icon(Icons.notifications_rounded),
+              label: l10n.navAlerts,
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person_rounded),
-              label: 'Profile',
+              icon: const Icon(Icons.person_outline),
+              activeIcon: const Icon(Icons.person_rounded),
+              label: l10n.navProfile,
             ),
           ],
         ),

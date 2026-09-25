@@ -8,6 +8,7 @@ import '../../domain/entities/service_category.dart';
 import '../../shared/widgets/service_icon.dart';
 import 'assistant_controller.dart';
 import 'assistant_message.dart';
+import '../../core/localization/l10n.dart';
 
 /// The assistant: describe a problem in plain words, get the right service.
 ///
@@ -58,37 +59,41 @@ class _AssistantScreenState extends ConsumerState<AssistantScreen> {
   Widget build(BuildContext context) {
     ref.listen(assistantControllerProvider, (_, __) => _scrollToLatest());
     final state = ref.watch(assistantControllerProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           children: [
-            _AssistantAvatar(size: 32),
-            SizedBox(width: 10),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  'Service Assistant',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.ink,
+            const _AssistantAvatar(size: 32),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    l10n.assistantTitle,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.ink,
+                    ),
                   ),
-                ),
-                Text(
-                  'Finds the right trade for your problem',
-                  style: TextStyle(fontSize: 11, color: AppColors.inkSecondary),
-                ),
-              ],
+                  Text(
+                    l10n.assistantSubtitle,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(fontSize: 11, color: AppColors.inkSecondary),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
         actions: [
           IconButton(
-            tooltip: 'Start over',
+            tooltip: l10n.assistantStartOver,
             icon: const Icon(Icons.refresh_rounded),
             onPressed: () {
               _input.clear();
@@ -220,7 +225,7 @@ class _AssistantBubble extends ConsumerWidget {
                           .read(assistantControllerProvider.notifier)
                           .retry(turn.retryMessage!),
                       icon: const Icon(Icons.refresh_rounded, size: 16),
-                      label: const Text('Try again'),
+                      label: Text(context.l10n.commonTryAgain),
                       style: OutlinedButton.styleFrom(
                         minimumSize: const Size(0, 36),
                         padding: const EdgeInsets.symmetric(horizontal: 14),
@@ -340,6 +345,7 @@ class _ServiceOfferCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final service = turn.match.service;
+    final l10n = context.l10n;
     final catalogue = ref.watch(serviceCategoriesProvider).valueOrNull;
     final accent = serviceAccentAt(
       catalogue?.indexWhere((s) => s.id == service.id) ?? -1,
@@ -375,7 +381,7 @@ class _ServiceOfferCard extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        service.name,
+                        localizedServiceName(l10n, service.name, slug: service.slug),
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
@@ -412,7 +418,7 @@ class _ServiceOfferCard extends ConsumerWidget {
               // Shown so the customer can check the reasoning instead of
               // taking it on trust — and correct it in one tap if it is wrong.
               Text(
-                'Matched on: ${turn.match.matchedTerms.join(', ')}',
+                l10n.assistantMatchedOn(turn.match.matchedTerms.join(', ')),
                 style: const TextStyle(
                   fontSize: 11,
                   color: AppColors.inkTertiary,
@@ -432,8 +438,8 @@ class _ServiceOfferCard extends ConsumerWidget {
                       minimumSize: const Size(0, 44),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    child: const Text('Find workers',
-                        style: TextStyle(fontSize: 13)),
+                    child: Text(l10n.assistantFindWorkers,
+                        style: const TextStyle(fontSize: 13)),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -444,8 +450,8 @@ class _ServiceOfferCard extends ConsumerWidget {
                       minimumSize: const Size(0, 44),
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    child: const Text('Post a request',
-                        style: TextStyle(fontSize: 13)),
+                    child: Text(l10n.assistantPostRequest,
+                        style: const TextStyle(fontSize: 13)),
                   ),
                 ),
               ],
@@ -525,7 +531,9 @@ class _CatalogueChoiceGrid extends ConsumerWidget {
             ActionChip(
               avatar: Icon(serviceIconFor(service.slug),
                   size: 16, color: AppColors.primary),
-              label: Text(service.name, style: const TextStyle(fontSize: 12)),
+              label: Text(
+                  localizedServiceName(context.l10n, service.name, slug: service.slug),
+                  style: const TextStyle(fontSize: 12)),
               onPressed: () => ref
                   .read(assistantControllerProvider.notifier)
                   .choose(service, turn.customerWords),
@@ -569,7 +577,7 @@ class _ChoiceTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    service.name,
+                    localizedServiceName(context.l10n, service.name, slug: service.slug),
                     style: const TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
@@ -716,7 +724,7 @@ class _Composer extends StatelessWidget {
               textCapitalization: TextCapitalization.sentences,
               onSubmitted: (_) => onSend(),
               decoration: InputDecoration(
-                hintText: 'Describe the problem...',
+                hintText: context.l10n.assistantInputHint,
                 filled: true,
                 fillColor: AppColors.surfaceMuted,
                 contentPadding:
@@ -745,7 +753,8 @@ class _Composer extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 minimumSize: const Size(48, 48),
               ),
-              child: const Icon(Icons.arrow_upward_rounded, size: 20),
+              child: Icon(Icons.arrow_upward_rounded,
+                  size: 20, semanticLabel: context.l10n.supportSend),
             ),
           ),
         ],

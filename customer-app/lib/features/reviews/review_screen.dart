@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../app/providers/providers.dart';
 import '../../app/theme/app_colors.dart';
 import '../../core/errors/result.dart';
+import '../../core/localization/l10n.dart';
 
 class ReviewScreen extends ConsumerStatefulWidget {
   final String bookingId;
@@ -43,7 +44,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
         context.go(
           '/bookings/${widget.bookingId}/completed',
           extra: {
-            'serviceName': booking?.serviceName ?? 'Service',
+            'serviceName': booking?.serviceName ?? context.l10n.paymentService,
             'workerName': booking?.workerName,
             'amountLabel': booking?.amountLabel,
           },
@@ -61,9 +62,10 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('Rate Your Experience')),
+      appBar: AppBar(title: Text(l10n.reviewTitle)),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -78,15 +80,15 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 child: const Icon(Icons.thumb_up_alt_rounded, color: AppColors.primary, size: 44),
               ),
               const SizedBox(height: 20),
-              const Text(
-                'Great Service!',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.ink),
+              Text(
+                l10n.reviewHeading,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: AppColors.ink),
               ),
               const SizedBox(height: 6),
-              const Text(
-                'How was your experience with your professional?',
+              Text(
+                l10n.reviewQuestion,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.inkSecondary, fontSize: 13),
+                style: const TextStyle(color: AppColors.inkSecondary, fontSize: 13),
               ),
               const SizedBox(height: 24),
 
@@ -100,6 +102,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                     duration: const Duration(milliseconds: 150),
                     child: IconButton(
                       iconSize: 40,
+                      tooltip: l10n.reviewStars(starNum),
                       icon: Icon(
                         starNum <= _rating ? Icons.star_rounded : Icons.star_border_rounded,
                         color: AppColors.star,
@@ -116,7 +119,7 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                 controller: _commentController,
                 maxLines: 4,
                 decoration: InputDecoration(
-                  hintText: 'Tell us about your experience...',
+                  hintText: l10n.reviewCommentHint,
                   filled: true,
                   fillColor: AppColors.surfaceMuted,
                   border: OutlineInputBorder(
@@ -163,9 +166,9 @@ class _ReviewScreenState extends ConsumerState<ReviewScreen> {
                           height: 22,
                           child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2.5),
                         )
-                      : const Text(
-                          'Submit Review →',
-                          style: TextStyle(
+                      : Text(
+                          l10n.reviewSubmit,
+                          style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,

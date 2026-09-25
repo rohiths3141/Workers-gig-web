@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../app/theme/app_colors.dart';
+import '../../core/localization/l10n.dart';
 
 /// Shown while the session is resolving at startup.
 class SplashScreen extends ConsumerWidget {
@@ -42,9 +43,9 @@ class SplashScreen extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 6),
-              const Text(
-                'Home services, done right.',
-                style: TextStyle(
+              Text(
+                context.l10n.splashTagline,
+                style: const TextStyle(
                   color: AppColors.inkSecondary,
                   fontSize: 14,
                 ),
