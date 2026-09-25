@@ -3,9 +3,10 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, LogOut, Menu, ShieldCheck, X } from 'lucide-react';
+import { ChevronRight, LogOut, Menu, X } from 'lucide-react';
 
 import { visibleNavigation } from '@/components/admin/navigation';
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { publicRoutes } from '@/lib/config/routes';
 import { signOutEverywhere } from '@/lib/firebase/sign-in';
 import { ROLE_LABELS } from '@/lib/permissions/permissions';
@@ -114,8 +115,9 @@ export function AdminShell({
           --------------------------------------------------------------- */}
       <aside className="hidden w-64 shrink-0 flex-col border-r border-ink-800 bg-ink-900 lg:flex">
         <div className="flex h-14 shrink-0 items-center gap-2 border-b border-ink-800 px-4">
-          <span className="flex size-7 items-center justify-center rounded-lg bg-brand-600 text-white">
-            <ShieldCheck aria-hidden className="size-4" />
+          {/* The mark sits on a white tile: the dark sidebar would swallow it. */}
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-white">
+            <BrandLogo name="" variant="mark" className="h-4" />
           </span>
           <span className="truncate text-sm font-semibold text-white">{brandName}</span>
           <span className="ml-auto rounded bg-ink-800 px-1.5 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wide text-ink-400">

@@ -1,6 +1,7 @@
 import Link from 'next/link';
-import { Mail, Phone, ShieldCheck } from 'lucide-react';
+import { Mail, Phone } from 'lucide-react';
 
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { publicEnv } from '@/lib/config/env';
 import { publicRoutes } from '@/lib/config/routes';
 
@@ -55,12 +56,7 @@ export function SiteFooter() {
       <div className="container-page py-12 md:py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2">
-            <div className="flex items-center gap-2 text-lg font-semibold tracking-tight text-ink-900">
-              <span className="flex size-8 items-center justify-center rounded-lg bg-brand-700 text-white">
-                <ShieldCheck aria-hidden className="size-4.5" />
-              </span>
-              {brand.name}
-            </div>
+            <BrandLogo name={brand.name} />
 
             <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink-600">
               {brand.tagline}. Every professional completes identity and background verification

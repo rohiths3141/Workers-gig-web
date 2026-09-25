@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, ShieldCheck, X } from 'lucide-react';
+import { LogIn, Menu, X } from 'lucide-react';
 
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { ButtonLink } from '@/components/ui/button';
 import { publicRoutes } from '@/lib/config/routes';
 import { cn } from '@/lib/utils/cn';
@@ -12,10 +13,10 @@ import { cn } from '@/lib/utils/cn';
 /**
  * Public website header.
  *
- * Note what is absent: there is no link to the admin panel. The admin surface is
- * reachable by people who know the URL and hold an administrator account; it is
- * not advertised to every visitor, and the public navigation has no awareness of
- * it at all.
+ * Carries an "Admin login" link to the sign-in page, which suits a prototype
+ * that people evaluate from the home page. Hiding the link was never the
+ * security boundary: every admin page and API route checks the session and the
+ * admin_users row itself.
  */
 
 const NAV_ITEMS = [
@@ -53,17 +54,11 @@ export function SiteHeader({ brandName }: { brandName: string }) {
     <header className="sticky top-0 z-40 border-b border-ink-200 bg-white/95 backdrop-blur-sm">
       <div className="container-page">
         <div className="flex h-16 items-center justify-between gap-4">
-          <Link
-            href={publicRoutes.home}
-            className="flex shrink-0 items-center gap-2 text-lg font-semibold tracking-tight text-ink-900"
-          >
-            <span className="flex size-8 items-center justify-center rounded-lg bg-brand-700 text-white">
-              <ShieldCheck aria-hidden className="size-4.5" />
-            </span>
-            {brandName}
+          <Link href={publicRoutes.home} className="flex shrink-0 items-center">
+            <BrandLogo name={brandName} priority />
           </Link>
 
-          <nav aria-label="Primary" className="hidden lg:block">
+          <nav aria-label="Primary" className="hidden xl:block">
             <ul className="flex items-center gap-1">
               {NAV_ITEMS.map((item) => (
                 <li key={item.href}>
@@ -84,12 +79,16 @@ export function SiteHeader({ brandName }: { brandName: string }) {
             </ul>
           </nav>
 
-          <div className="hidden shrink-0 items-center gap-2 lg:flex">
-            <ButtonLink href={publicRoutes.forWorkers} variant="ghost" size="sm">
-              Join as a worker
-            </ButtonLink>
+          {/* Logo, eight links and three buttons do not fit the 1216px row, so the
+              desktop bar has no "Join as a worker": the "For workers" link and the
+              hero already lead there. The mobile menu keeps it. */}
+          <div className="hidden shrink-0 items-center gap-2 xl:flex">
             <ButtonLink href={publicRoutes.forCustomers} size="sm">
               Book a service
+            </ButtonLink>
+            <ButtonLink href={publicRoutes.login} variant="outline" size="sm">
+              <LogIn aria-hidden className="size-4" />
+              Admin login
             </ButtonLink>
           </div>
 
@@ -98,7 +97,7 @@ export function SiteHeader({ brandName }: { brandName: string }) {
             onClick={() => setMenuOpen((open) => !open)}
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
-            className="-mr-2 rounded-lg p-2 text-ink-700 hover:bg-ink-100 lg:hidden"
+            className="-mr-2 rounded-lg p-2 text-ink-700 hover:bg-ink-100 xl:hidden"
           >
             {menuOpen ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
             <span className="sr-only">{menuOpen ? 'Close menu' : 'Open menu'}</span>
@@ -109,7 +108,7 @@ export function SiteHeader({ brandName }: { brandName: string }) {
       {menuOpen && (
         <div
           id="mobile-navigation"
-          className="border-t border-ink-200 bg-white lg:hidden"
+          className="border-t border-ink-200 bg-white xl:hidden"
         >
           <nav aria-label="Primary mobile" className="container-page py-3">
             <ul className="space-y-0.5">
@@ -137,6 +136,10 @@ export function SiteHeader({ brandName }: { brandName: string }) {
               </ButtonLink>
               <ButtonLink href={publicRoutes.forWorkers} variant="outline" fullWidth>
                 Join as a worker
+              </ButtonLink>
+              <ButtonLink href={publicRoutes.login} variant="ghost" fullWidth>
+                <LogIn aria-hidden className="size-4" />
+                Admin login
               </ButtonLink>
             </div>
           </nav>

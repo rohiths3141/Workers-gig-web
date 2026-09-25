@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ShieldCheck } from 'lucide-react';
 
 import { LoginForm } from '@/app/login/login-form';
+import { BrandLogo } from '@/components/shared/brand-logo';
 import { getAdminSession } from '@/lib/auth/admin-session';
 import { demoAdminLogin, publicEnv } from '@/lib/config/env';
 import { safeRedirect } from '@/lib/auth/safe-redirect';
@@ -42,14 +42,8 @@ export default async function LoginPage({
     <main className="flex min-h-dvh flex-col bg-ink-50">
       <div className="flex flex-1 items-center justify-center px-5 py-12">
         <div className="w-full max-w-md">
-          <Link
-            href={publicRoutes.home}
-            className="mx-auto flex w-fit items-center gap-2 text-lg font-semibold tracking-tight text-ink-900"
-          >
-            <span className="flex size-8 items-center justify-center rounded-lg bg-brand-700 text-white">
-              <ShieldCheck aria-hidden className="size-4.5" />
-            </span>
-            {brand.name}
+          <Link href={publicRoutes.home} className="mx-auto flex w-fit">
+            <BrandLogo name={brand.name} variant="stacked" priority className="h-24" />
           </Link>
 
           <div className="mt-7 rounded-2xl border border-ink-200 bg-white p-6 shadow-card sm:p-8">
