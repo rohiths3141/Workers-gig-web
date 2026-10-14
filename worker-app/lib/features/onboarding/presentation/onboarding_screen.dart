@@ -12,6 +12,7 @@ import '../../../app/theme/app_spacing.dart';
 import '../../../app/theme/app_typography.dart';
 import '../../../core/localization/l10n.dart';
 import '../../../domain/entities/gig.dart';
+import '../../../domain/entities/worker.dart';
 import '../../../shared/widgets/common_widgets.dart';
 import '../../../shared/widgets/service_names.dart';
 import '../../profile/presentation/profile_controller.dart';
@@ -95,13 +96,19 @@ class OnboardingScreen extends ConsumerWidget {
             isDone: progress.hasSkills,
             isNext: progress.nextStep == OnboardingStep.skills,
             // Says the quiet part out loud: this platform does not tie a worker
-            // to one trade, and the earlier they know it the better. Picking a
-            // main trade adds it as a skill, so this step can tick itself —
-            // the copy then has to say there is still something worth opening.
+            // to one trade, and the earlier they know it the better.
+            //
+            // This used to push the Edit Profile screen, which the router does
+            // not allow during onboarding, so every tap bounced straight back
+            // here. The trade list is picked in a sheet on this screen instead,
+            // like the main trade. The main trade has to come first: it is the
+            // one trade every list starts from.
             description: progress.hasSkills
                 ? l10n.onboardingSkillsDoneBody
                 : l10n.onboardingSkillsBody,
-            onTap: () => context.push(Routes.editProfile),
+            onTap: () => progress.hasTrade
+                ? _chooseSkills(context)
+                : _chooseTrade(context, ref),
           ),
           _Step(
             step: OnboardingStep.serviceArea,
@@ -228,6 +235,17 @@ class OnboardingScreen extends ConsumerWidget {
     );
   }
 
+  Future<void> _chooseSkills(BuildContext context) async {
+    final saved = await showModalBottomSheet<bool>(
+      context: context,
+      isScrollControlled: true,
+      builder: (sheetContext) => const _TradesSheet(),
+    );
+    if (saved == true && context.mounted) {
+      showSuccess(context, context.l10n.onboardingSkillsSaved);
+    }
+  }
+
   Future<void> _serviceArea(BuildContext context, WidgetRef ref) async {
     var radius = 10.0;
     var isSaving = false;
@@ -301,6 +319,11 @@ class OnboardingScreen extends ConsumerWidget {
                           });
 
                           final position = await _currentPosition();
+                          // The permission prompt and GPS fix can take 15s,
+                          // and the back button closes the sheet even with
+                          // isDismissible off. setSheetState on a closed sheet
+                          // is a null-check crash in release builds.
+                          if (!builderContext.mounted) return;
                           if (position == null) {
                             setSheetState(() {
                               isSaving = false;
@@ -454,10 +477,14 @@ class _NotificationPrimerState extends ConsumerState<_NotificationPrimer> {
             const SizedBox(height: AppSpacing.md),
             Row(
               children: [
-                BusyFilledButton(
-                  label: l10n.notificationsTurnOn,
-                  busy: _busy,
-                  onPressed: _enable,
+                // The filled button theme asks for infinite minimum width,
+                // which a Row cannot give: let it take what "Not now" leaves.
+                Expanded(
+                  child: BusyFilledButton(
+                    label: l10n.notificationsTurnOn,
+                    busy: _busy,
+                    onPressed: _enable,
+                  ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 TextButton(
@@ -525,6 +552,213 @@ class _Step extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Every trade the worker works in, the main one included.
+///
+/// Trades already on the profile are shown ticked and cannot be unticked:
+/// there is no way to withdraw a trade request, and a checkbox that does
+/// nothing is worse than one that is plainly locked. Saving requests each
+/// newly ticked trade and then records that the list was reviewed, which is
+/// what completes the step — the worker may well work in one trade only.
+class _TradesSheet extends ConsumerStatefulWidget {
+  const _TradesSheet();
+
+  @override
+  ConsumerState<_TradesSheet> createState() => _TradesSheetState();
+}
+
+class _TradesSheetState extends ConsumerState<_TradesSheet> {
+  final _selected = <String>{};
+  bool _isSaving = false;
+  String? _error;
+
+  Future<void> _save(List<ServiceCategory> services) async {
+    setState(() {
+      _isSaving = true;
+      _error = null;
+    });
+    final controller = ref.read(profileControllerProvider.notifier);
+
+    // In catalogue order, so a failure part-way leaves a predictable list.
+    for (final service in services.where((s) => _selected.contains(s.id))) {
+      final result = await controller.addSkill(service.id);
+      if (!mounted) return;
+      final failure = result.failureOrNull;
+      if (failure != null) {
+        setState(() {
+          _isSaving = false;
+          _error = failure.message;
+        });
+        return;
+      }
+      // Requested; it shows as added once the trade list reloads.
+      setState(() => _selected.remove(service.id));
+    }
+
+    final result = await controller.confirmTrades();
+    if (!mounted) return;
+    result.fold(
+      (_) => Navigator.of(context).pop(true),
+      (failure) => setState(() {
+        _isSaving = false;
+        _error = failure.message;
+      }),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    // Keeps the autoDispose controller alive across the awaits in _save.
+    ref.watch(profileControllerProvider);
+    final services = ref.watch(allServicesProvider);
+    final skills = ref.watch(skillsProvider);
+    final primaryId = ref.watch(currentWorkerProvider)?.primaryServiceId;
+
+    final Widget content;
+    if (services.hasError || skills.hasError) {
+      content = Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(l10n.onboardingTradesLoadFailed,
+              style: AppTypography.bodyMedium.copyWith(color: AppColors.danger)),
+          const SizedBox(height: AppSpacing.sm),
+          TextButton(
+            onPressed: () => ref
+              ..invalidate(allServicesProvider)
+              ..invalidate(skillsProvider),
+            child: Text(l10n.commonTryAgain),
+          ),
+        ],
+      );
+    } else if (!services.hasValue || !skills.hasValue) {
+      content = const Padding(
+        padding: EdgeInsets.symmetric(vertical: AppSpacing.xl),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    } else {
+      final all = services.requireValue;
+      final added = {
+        for (final skill in skills.requireValue) skill.serviceId: skill,
+      };
+
+      content = Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Flexible(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                for (final service in all)
+                  _TradeTile(
+                    name: localizedServiceName(l10n, service.name),
+                    description: service.shortDescription,
+                    isMain: service.id == primaryId,
+                    existing: added[service.id],
+                    selected: _selected.contains(service.id),
+                    onChanged: _isSaving
+                        ? null
+                        : (value) => setState(() => value
+                            ? _selected.add(service.id)
+                            : _selected.remove(service.id)),
+                  ),
+              ],
+            ),
+          ),
+          if (_error != null) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Text(_error!,
+                style: AppTypography.bodySmall.copyWith(color: AppColors.danger)),
+          ],
+          const SizedBox(height: AppSpacing.lg),
+          BusyFilledButton(
+            label: l10n.commonSave,
+            busy: _isSaving,
+            busyLabel: l10n.commonSaving,
+            // Nothing to confirm while the list is empty.
+            onPressed:
+                added.isEmpty && _selected.isEmpty ? null : () => _save(all),
+          ),
+        ],
+      );
+    }
+
+    return SafeArea(
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.85,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.xl),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(l10n.onboardingSkillsTitle,
+                  style:
+                      AppTypography.headlineMedium.copyWith(color: context.ink)),
+              const SizedBox(height: AppSpacing.sm),
+              Text(
+                l10n.onboardingSkillsSheetBody,
+                style: AppTypography.bodyMedium
+                    .copyWith(color: context.inkSecondary),
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Flexible(child: content),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TradeTile extends StatelessWidget {
+  const _TradeTile({
+    required this.name,
+    required this.description,
+    required this.isMain,
+    required this.existing,
+    required this.selected,
+    required this.onChanged,
+  });
+
+  final String name;
+  final String description;
+  final bool isMain;
+  final WorkerSkill? existing;
+  final bool selected;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = context.l10n;
+    final skill = existing;
+    final locked = isMain || skill != null;
+    final onChanged = this.onChanged;
+
+    return CheckboxListTile(
+      contentPadding: EdgeInsets.zero,
+      controlAffinity: ListTileControlAffinity.leading,
+      value: locked || selected,
+      onChanged: locked || onChanged == null
+          ? null
+          : (value) => onChanged(value ?? false),
+      title: Text(name),
+      subtitle: Text(isMain ? l10n.onboardingStepTrade : description),
+      secondary: skill == null
+          ? null
+          : StatusBadge(
+              label: skill.isApproved
+                  ? l10n.materialStatusApproved
+                  : l10n.tradePending,
+              color: skill.isApproved ? AppColors.success : AppColors.warning,
+            ),
     );
   }
 }

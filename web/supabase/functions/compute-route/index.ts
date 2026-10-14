@@ -37,15 +37,14 @@ const FIREBASE_JWKS = createRemoteJWKSet(
  */
 function firebaseProjectId(): string | null {
   const explicit = Deno.env.get("FIREBASE_PROJECT_ID");
-  if (explicit) return explicit;
-  try {
-    const account = JSON.parse(
-      Deno.env.get("FIREBASE_SERVICE_ACCOUNT_JSON") ?? "",
-    );
-    return typeof account.project_id === "string" ? account.project_id : null;
-  } catch {
-    return null;
-  }
+  if (explicit) return explicit.trim();
+  // Not JSON.parse: the live secret does not parse to an object with a
+  // project_id (real newlines inside private_key, or the whole thing stored as
+  // a JSON string), which left every call failing with "project id not set".
+  // project_id is a plain field, so read it straight out of the text.
+  const raw = Deno.env.get("FIREBASE_SERVICE_ACCOUNT_JSON") ?? "";
+  const match = raw.match(/project_id\\?"\s*:\s*\\?"([^"\\]+)/);
+  return match ? match[1] : null;
 }
 
 async function isValidFirebaseToken(

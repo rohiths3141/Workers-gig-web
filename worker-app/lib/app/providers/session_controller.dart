@@ -387,7 +387,10 @@ class SessionController extends AsyncNotifier<Session> {
           (worker.pincode ?? '').isNotEmpty &&
           (worker.gender ?? '').isNotEmpty,
       hasTrade: worker.primaryServiceId != null,
-      hasSkills: skills.fold((s) => s.isNotEmpty, (_) => false),
+      // Having a trade is not enough: picking the main trade adds one, and
+      // that ticked this step before the worker had ever opened it.
+      hasSkills: worker.tradesConfirmedAt != null &&
+          skills.fold((s) => s.isNotEmpty, (_) => false),
       hasServiceArea: worker.hasServiceArea,
       hasSubmittedKyc: hasSubmittedKyc,
     );

@@ -157,7 +157,7 @@ class _JobRecord extends ConsumerWidget {
 
         SectionHeader(title: context.l10n.jobHistory, subtitle: job.bookingCode),
         timeline.when(
-          loading: () => const ListSkeleton(itemCount: 3, itemHeight: 48),
+          loading: () => const ListSkeleton.inline(itemCount: 3, itemHeight: 48),
           error: (error, _) => Text(
             context.l10n.jobHistoryLoadFailed,
             style: AppTypography.bodySmall.copyWith(color: AppColors.danger),

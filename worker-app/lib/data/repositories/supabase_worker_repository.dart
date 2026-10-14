@@ -38,7 +38,7 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
     latitude, longitude, service_radius_km, rating_avg, rating_count,
     jobs_completed, jobs_cancelled, is_kyc_verified, is_qualification_verified,
     is_skill_verified, is_background_verified, is_insured, verified_at,
-    restriction_reason, created_at, updated_at
+    restriction_reason, trades_confirmed_at, created_at, updated_at
   ''';
 
 
@@ -283,6 +283,16 @@ final class SupabaseWorkerRepository extends SupabaseRepositoryBase
               .single();
 
           return WorkerMapper.skillFromRow(row);
+        },
+      );
+
+  @override
+  Future<Result<Worker>> confirmTrades() => guard(
+        operation: 'confirmTrades',
+        () async {
+          // Stamped by the server, which also refuses an empty trade list.
+          final row = await db.rpc<Map<String, dynamic>>('worker_confirm_trades');
+          return WorkerMapper.fromRow(row);
         },
       );
 

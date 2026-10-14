@@ -2307,11 +2307,21 @@ class AppLocalizationsMr extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'तुमचे मुख्य काम एक म्हणून गणले जाते. इतर सर्व कामे जोडण्यासाठी हे उघडा.';
+      'सेव्ह झाले. आणखी एखादे काम जोडण्यासाठी हे उघडा.';
 
   @override
   String get onboardingSkillsBody =>
       'तुम्ही करता ती सर्व कामे जोडा. तुम्ही एकाच कामापुरते मर्यादित नाही.';
+
+  @override
+  String get onboardingSkillsTitle => 'तुम्ही कोणकोणती कामे करता?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'फक्त मुख्य काम नव्हे, तुम्ही करू शकता ती सर्व कामे टिक करा. प्रत्येक नवीन कामाची तपासणी आमची टीम करते, त्यानंतरच तुम्हाला त्या कामाचे जॉब मिळतात.';
+
+  @override
+  String get onboardingSkillsSaved => 'तुमची कामे सेव्ह झाली.';
 
   @override
   String get onboardingAreaBody =>

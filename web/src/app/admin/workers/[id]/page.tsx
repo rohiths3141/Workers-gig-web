@@ -87,7 +87,7 @@ export default async function WorkerDetailPage({
   }
 
   // Everything else in parallel — the page should not build itself in stages.
-  const [verifications, wallet, documents, recentRatings, activeBookings] = await Promise.all([
+  const [verifications, wallet, documents, recentRatings, activeBookings, eligibility] = await Promise.all([
     session.db
       .from('worker_verifications')
       .select('id, type, status, submitted_at, reviewed_at, expires_at, rejection_reason, info_requested')
@@ -128,6 +128,10 @@ export default async function WorkerDetailPage({
           .eq('worker_id', id)
           .in('status', ['ACCEPTED', 'CONFIRMED', 'TRAVELING', 'ARRIVED', 'IN_PROGRESS'])
       : Promise.resolve({ count: null }),
+
+    // The same answer the worker app shows the worker: what still stops them
+    // taking jobs, after everything an operator can approve.
+    session.db.rpc('worker_eligibility', { p_worker_id: id }),
   ]);
 
   const backgroundCheck = verifications.data?.find((v) => v.type === 'BACKGROUND_CHECK');
@@ -148,6 +152,9 @@ export default async function WorkerDetailPage({
   const awaitingActivation =
     worker.status === WorkerStatus.REGISTERED || worker.status === WorkerStatus.VERIFICATION_PENDING;
   const checksApproved = worker.is_kyc_verified && worker.is_background_verified;
+  const canApproveAll =
+    session.permissions.includes('verification.approve') &&
+    session.permissions.includes('workers.restrict');
 
   const isRestricted = (
     [
@@ -189,6 +196,20 @@ export default async function WorkerDetailPage({
               />
             ) : (
               <>
+                {canApproveAll && (awaitingActivation || !checksApproved) && (
+                  <ActionButton
+                    endpoint={apiRoutes.adminWorkerApproveAll(worker.id)}
+                    label="Approve everything"
+                    variant="success"
+                    tone="success"
+                    confirmTitle="Approve everything for this worker?"
+                    confirmDescription="Approves identity (KYC) and the background check, even if they were never submitted, plus every other check waiting for review, every trade they have asked for and every service waiting for review, then activates the account. Each step is recorded in the audit trail. The worker can take jobs straight away once they have set a service area and published a service."
+                    confirmLabel="Approve everything"
+                    requireReason
+                    reasonLabel="Why is this worker being approved without individual review?"
+                    successMessage="Worker approved and activated"
+                  />
+                )}
                 {awaitingActivation && (
                   <ActionButton
                     endpoint={apiRoutes.adminWorkerStatus(worker.id)}
@@ -573,6 +594,37 @@ export default async function WorkerDetailPage({
             </Card>
           </PermissionGuard>
 
+          <Card>
+            <CardHeader
+              title="Ready for jobs"
+              description={
+                eligibility.data?.eligible
+                  ? 'Nothing stops this worker taking jobs.'
+                  : 'What still stops this worker taking jobs'
+              }
+            />
+            <CardBody>
+              {eligibility.error || !eligibility.data ? (
+                <p className="text-sm text-ink-500">Could not check this worker&apos;s eligibility.</p>
+              ) : eligibility.data.eligible ? (
+                <Badge tone="success" dot>
+                  Can take jobs
+                </Badge>
+              ) : (
+                <ul className="space-y-2">
+                  {eligibility.data.reasons.map((reason, index) => (
+                    <li key={`${reason.code}-${index}`} className="flex items-start gap-2 text-sm">
+                      <Badge tone={WORKER_OWN_STEPS.has(reason.code) ? 'neutral' : 'warning'}>
+                        {WORKER_OWN_STEPS.has(reason.code) ? 'Worker' : 'Admin'}
+                      </Badge>
+                      <span className="text-ink-700">{reason.message}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </CardBody>
+          </Card>
+
           <PageSection title="Verification summary">
             <Card>
               <CardBody className="space-y-2.5">
@@ -598,6 +650,9 @@ export default async function WorkerDetailPage({
     </>
   );
 }
+
+/** Eligibility reasons only the worker can clear, from the worker app. */
+const WORKER_OWN_STEPS = new Set(['SERVICE_AREA_REQUIRED', 'TRADE_REQUIRED', 'NO_ACTIVE_GIG']);
 
 const VERIFICATION_LABELS: Record<string, string> = {
   IDENTITY_KYC: 'Identity (KYC)',

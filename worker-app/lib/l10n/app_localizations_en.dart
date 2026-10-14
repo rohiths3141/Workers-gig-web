@@ -2309,11 +2309,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'Your main trade counts as one. Open this to add every other trade you work in.';
+      'Saved. Open this to add another trade you work in.';
 
   @override
   String get onboardingSkillsBody =>
       'Add every trade you work in. You are not limited to one.';
+
+  @override
+  String get onboardingSkillsTitle => 'Which trades do you work in?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'Tick every trade you can do, not just your main one. Our team checks each new trade before you get jobs in it.';
+
+  @override
+  String get onboardingSkillsSaved => 'Your trades are saved.';
 
   @override
   String get onboardingAreaBody =>

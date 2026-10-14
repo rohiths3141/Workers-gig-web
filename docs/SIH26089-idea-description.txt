@@ -1,0 +1,290 @@
+WERVEXA: A COOPERATIVE-OWNED GIG SERVICES PLATFORM FOR HOUSEHOLD AND COMMUNITY SERVICES
+
+Problem Statement: SIH26089 - Cooperative Gig Services Platform for Household & Community Services
+Organisation: Ministry of Cooperation - National Council for Cooperative Training (NCCT)
+Theme: Agriculture, FoodTech & Rural Development | Category: Software
+
+
+1. THE IDEA IN BRIEF
+
+Wervexa is a digital service marketplace owned and run by the cooperative. Through it, Labour Cooperative Federations and their member Societies offer verified household and community services straight to households, housing societies, institutions and panchayats. The services are electrical work, plumbing, AC and appliance repair, carpentry, painting, cleaning and other trades, and no private company sits in the middle taking a share.
+
+The solution has four parts that share one backend:
+
+- Customer App (Flutter, Android and iOS): the customer describes the problem in their own words and language, picks a verified member worker or posts a requirement, pays digitally, tracks the worker live during travel, approves any material before it is bought, rates the work and raises a claim if something goes wrong.
+
+- Member Worker App (Flutter, Android and iOS): the worker signs in with a mobile OTP, verifies identity through DigiLocker and proves their trade qualification (ITI, diploma or Recognition of Prior Learning). They can publish several services, receive nearby jobs, run each job step by step, and get paid into a ledger-backed wallet that pays out to their verified bank account.
+
+- Federation and Society Administration Panel (web): the verification queue, member and customer management, bookings with their full timeline, matching inspection, payments, wallets, payouts, insurance, claims, support and an audit log that cannot be altered. Access is controlled by role-based permissions.
+
+- Public Website: the service catalogue, how verification works, safety information, policies and app download.
+
+A working prototype of all four parts already exists. It has been tested end to end on Android phones. The tested flow ran from phone login, through booking, a Razorpay payment (test mode), the job being offered to the chosen worker, acceptance, travel with live location and a door-step arrival code, to the work itself, the customer's approval of completion and the credit to the worker's wallet. Both apps are available in English and ten Indian languages.
+
+Three principles drive the design:
+(a) The cooperative owns the platform, its rules and its data.
+(b) The worker keeps the full amount paid for their labour. The platform commission is a setting the cooperative controls, and in the prototype it is zero.
+(c) Every trust claim the platform shows, such as a "verified" badge, a price or an earning, is backed by a record on the server. Nothing is shown that has not happened.
+
+
+2. THE PROBLEM, AS WE UNDERSTAND IT
+
+2.1 For cooperative member workers
+- Labour cooperatives have large networks of skilled workers, including electricians, plumbers, carpenters, painters, domestic helpers, caregivers, drivers, gardeners, cleaners and technicians. These workers have no structured digital channel of their own, so work still comes mainly through word of mouth and local contacts, and their income is irregular.
+- Private aggregator platforms dominate the market. They charge commission, control ranking through opaque algorithms and can deactivate a worker without explanation. The worker owns nothing on them.
+- A worker's formal qualifications, such as an ITI certificate or a Recognition of Prior Learning (RPL) certificate under Skill India, are invisible to a customer. A skilled worker has no way to prove their skill to a stranger.
+- Cash payments lead to disputes and delays. Because earnings are not recorded, a worker cannot use their work history to get credit or to connect to social security schemes.
+- Most service apps are designed in English first, which shuts out many workers.
+
+2.2 For households and communities
+- A customer rarely knows who is coming to their home, whether that person is trained for the job, what the job should cost, or what happens if something goes wrong.
+- Surprise bills for materials, overcharging and damage are common, and there is no structured way to seek redress.
+- Emergencies such as a short circuit, a burst pipe or a failed water motor have no dependable, verified and fast response.
+
+2.3 For federations and societies
+- Member registers are kept on paper or in spreadsheets. Leadership cannot see demand, member utilisation, earnings, complaint rates or skill gaps, so it cannot plan training, allocate the workforce or show members' value to the market.
+
+
+3. HOW THE SOLUTION WORKS: ONE JOB FROM START TO FINISH
+
+Step 1 - Describe the need. The customer opens the app and either chooses a category or types the problem in plain words, for example "AC not cooling", "bijli nahi aa rahi" or "geyser se paani leak ho raha hai". The built-in assistant identifies the right trade and the common problem, and it asks one clarifying question rather than guessing when it is unsure.
+
+Step 2 - Choose how to book. There are two booking models.
+  Model A (fixed service): the customer picks a nearby verified member's listed service at its published price and chooses a date and time slot.
+  Model B (post a requirement): the customer posts the job with photos, a budget (none, fixed or a range) and a schedule (as soon as possible, today, tomorrow or a specific date). Nearby verified members respond with offers. The customer's exact address stays hidden from workers until a booking is made.
+
+Step 3 - Pay securely. The customer pays through Razorpay by UPI, card or netbanking. The payment is verified on the server against the gateway's signature and then held. The worker is credited only after the customer approves the finished work. If a paid booking is cancelled or expires, a refund record is created automatically.
+
+Step 4 - The job is offered. Workers are offered the job in real time. When several workers respond, the first valid acceptance wins and the booking is locked, so a job can never be assigned twice.
+
+Step 5 - Travel and arrival. When the worker starts travelling, their live location becomes visible to that customer, for that booking only. At the door, the customer gives the worker a one-time arrival code, which is checked on the server with a limited number of attempts. Work cannot be marked as started until the arrival is verified.
+
+Step 6 - Materials, with approval first. If parts are needed, the worker raises a material request with an estimated cost and the customer approves or rejects it in the app before anything is bought. The worker then uploads the receipt and records the actual cost. A job cannot be closed while a material request is still waiting for the customer's answer.
+
+Step 7 - Completion and settlement. The worker can attach before and after photos as their own protection. The customer approves completion, and at that moment the worker's share is credited to their wallet ledger and the booking settles as paid.
+
+Step 8 - Rating, feedback and redress. Both sides rate each other, and only after a completed job. Complaints go through threaded support tickets. A structured claim can be raised with evidence for property damage, theft, injury, poor workmanship or overcharging, and an authorised officer decides it with a full audit trail.
+
+Step 9 - Payout. After a configurable cooling period, the worker withdraws their available balance to a bank account that has been verified. Every payout needs a finance officer's approval and can only be processed once.
+
+
+4. HOW WE MEET EACH EXPECTED FEATURE IN SIH26089
+
+Each feature below lists what is already built in the working prototype and what we will add during the hackathon.
+
+4.1 Service provider registration and verification
+Built:
+- Sign-in uses the mobile number and a one-time password only, so there are no passwords to leak or share.
+- Onboarding is saved on the server one step at a time: personal details, main trade, other skills, experience, service area, identity check and qualification. A worker who reinstalls the app resumes exactly where they left off.
+- Identity is verified through a DigiLocker consent flow (Aadhaar-based e-KYC). The worker does not photograph or upload an ID document, because the result comes from the provider itself.
+- Background checks run through a pluggable provider adapter, and operations staff review each case. Each verification can expire, so background checks are renewed before they lapse.
+- A bank account must be verified before any payout.
+- Every decision is made by an authorised officer in the verification queue. No one can approve their own case, and the audit log records who decided what and when.
+- A worker cannot go online for jobs until the identity and background checks have passed. The app shows a clear checklist of what is still missing, instead of failing silently.
+To add:
+- A society-endorsement step, in which the member's primary society confirms their membership number before federation-level verification.
+- Bulk import of existing member registers, so a society can onboard its members in one go.
+- Assisted onboarding by a society facilitator for members who are not comfortable with smartphones.
+
+4.2 Worker skill profiling and certification
+Built:
+- One worker can hold many trades. Each additional trade is approved by an administrator, so a worker is never locked into one kind of work.
+- Within each approved trade, the worker publishes one or more services with their own title, price, duration and photos. A service cannot be created under a trade that has not been approved, and the server enforces this.
+- ITI certificates, diplomas and RPL skill assessments are verified separately. Each appears on the worker's profile as a badge only while it is approved and still valid.
+- The profile also records years of experience, service radius, ratings and completed jobs.
+To add:
+- Credential lookup through Skill India Digital and NCVET, so that a certificate can be confirmed at its source.
+- NCCT and society training records shown as profile badges.
+- A per-member skill-gap report that feeds the training recommendations in section 4.11.
+
+4.3 Customer booking and scheduling
+Built:
+- The two booking models, fixed service and post-a-requirement, described in section 3.
+- Date and time slot selection, with scheduling options for as soon as possible, today, tomorrow or a specific date.
+- A booking lifecycle enforced by the database: Requested, Accepted, Confirmed, Travelling, Arrived, In Progress, Awaiting Approval, Completed, Paid and Closed, plus Cancelled, Disputed and Expired. Neither app can push a booking into an illegal state.
+- Cancellation with a stated reason, and a clear refund message when the booking has already been paid.
+- A problem-description assistant that turns a plain-language description into the right trade and problem.
+To add:
+- Recurring bookings, such as a monthly AC service or weekly cleaning.
+- Community and bulk bookings for Resident Welfare Associations, schools, hostels, offices and panchayats, with an agreed rate card per society.
+
+4.4 Geo-location based service matching
+Built:
+- Each worker declares a service location and a travel radius.
+- The matching engine runs inside the database and computes the real distance. It first applies hard eligibility gates: the account must be active, identity and background must be verified, the trade must be approved, and the customer must be within both the platform's maximum radius and the worker's own chosen radius.
+- Eligible workers are ranked by a transparent weighted score:
+    trade match 24%, qualification (ITI or diploma) 16%, identity verification 12%, skill certification (RPL) 10%, background verification 10%, current availability 8%, rating 8%, proximity 8%, insurance 4%.
+  A new worker who has no ratings yet gets a neutral score, so newcomers are not shut out of their first job. Administrators can see the score breakdown for every candidate on every booking.
+- Live tracking is active only while the worker is travelling to that booking. Only the two parties can see it, and only the latest point is kept, so no movement history builds up. Routes and arrival estimates come from a server-side routing function, so the paid mapping API key never sits on a phone. Older location records are deleted automatically after seven days.
+To add:
+- A cooperative fairness factor, so that work is spread across members instead of piling up on a few. It takes each member's recent jobs and earnings within their society into account.
+- A preference for members of the customer's local society.
+- Service zones by ward, village or pincode for federations that organise work geographically.
+
+4.5 Digital payments and invoicing
+Built:
+- Razorpay checkout (UPI, cards and netbanking), with the gateway signature verified on the server. A payment is marked successful only when the gateway's signature has been checked.
+- The payment is taken upfront and held until the customer approves the work. The worker is then credited automatically.
+- The wallet runs on an append-only ledger in which past entries are never edited. The balance is always calculated from that ledger, and all amounts are whole paise, with no decimal rounding in the money path.
+- The worker app shows three separate figures: available to withdraw, still being processed, and lifetime earnings.
+- Payouts go only to a verified bank account, need approval and cannot be paid twice.
+- Material costs are reimbursed against the uploaded receipt and the amount the customer approved.
+- Refund records are created automatically for paid bookings that are cancelled.
+To add:
+- A GST-ready invoice (PDF) for every job, issued in the name of the member's society, with any service charge shown as a separate line.
+- Split settlement directly into each society's bank account, using Razorpay Route.
+- Society-level statements and an end-of-year calculation of each member's share of the cooperative surplus.
+
+4.6 Rating and feedback
+Built:
+- Two-way ratings (customer rates worker, worker rates customer), allowed only after a completed job.
+- Threaded support tickets between users and the support team.
+- Structured claims with evidence, covering property damage, theft, injury, poor workmanship and overcharging. An authorised officer decides each claim, and approved or partly approved outcomes are recorded in the ledger.
+- Optional before and after work photos kept as evidence.
+To add:
+- Rating moderation, and an escalation path from society to federation for grievances.
+- A public scorecard for each society, showing its completion rate, response time and complaint rate.
+
+4.7 Worker welfare and insurance integration
+Built:
+- An insurance record for each worker, recorded by an authorised officer, with automatic expiry. A worker with no policy is shown as "No active policy" and the app never implies cover that does not exist. Insurance also counts in matching.
+- A default of zero commission, so the full labour amount reaches the worker.
+- Complete, trustworthy earnings records.
+To add:
+- A member welfare fund ledger. The cooperative's general body decides a contribution per job, which the platform collects automatically and reports on transparently. The fund can support accident relief, health emergencies and small emergency advances.
+- Help for members to register on the e-Shram portal, and prompts to enrol in government social security schemes (PMSBY accident cover, PMJJBY life cover and the PM-SYM pension scheme), with the enrolment status shown on the profile.
+- Group accident and liability cover arranged at federation level and recorded against each member.
+- An earnings statement that the member can use as proof of income when borrowing from cooperative credit societies.
+- A worker safety alert that reaches the member's society contact as well as 112.
+
+4.8 Emergency and on-demand service booking
+Built:
+- "As soon as possible" bookings.
+- Real-time job offers to eligible workers.
+- First-valid-acceptance assignment with a lock on the booking.
+- A support screen that places real calls to emergency numbers. The prototype does not pretend to dispatch help that does not exist.
+To add:
+- A dedicated emergency lane for urgent problems such as a short circuit or sparking board, a burst pipe, a water motor failure or a flooded bathroom. An emergency request widens the search radius, goes to the top-ranked eligible members at the same time, sends high-priority notifications and falls back to the society's on-call roster.
+- A configurable emergency surcharge that goes to the worker.
+- Society on-call rosters kept in the administration panel.
+
+4.9 Cooperative federation administration dashboard
+Built:
+- A web administration panel with six roles: super admin, admin, verification, operations, finance and support. Each role has fine-grained permissions.
+- Every administrative action is checked at five levels: route guard, panel layout, page, API and database. The database itself refuses any action the officer is not permitted to take.
+- Every sensitive action is written to an audit log that cannot be altered. Sensitive documents such as identity documents and claim evidence open through links that expire after five minutes, and each access is logged.
+- Modules: dashboard, workers, customers, bookings with a full event timeline, matching scores, materials, verification queue, insurance, payments, wallets and ledgers, payouts, claims, support, notification log, audit log and platform settings.
+- Every figure on the dashboard is a live count from the database. Nothing is padded or estimated.
+To add:
+- A three-level cooperative structure: Federation, Society, Member. A society administrator sees and manages only their own members, the federation sees totals across all its societies, and the database enforces that separation.
+- Key indicators for leadership: member utilisation, earnings per member, response time, completion rate, complaint rate, welfare fund balance, and a map of demand against supply by pincode.
+- Downloadable reports for general body meetings and for filing with the Registrar of Cooperative Societies.
+
+4.10 Multilingual mobile application
+Built:
+- Both apps are fully available in 11 languages: English, Hindi, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia and Malayalam. The language can be switched at any time inside the app.
+- The worker app is designed for use in the field, with large touch targets and plain-language error messages.
+- The assistant understands English, Hinglish and common local words for household problems.
+To add:
+- Voice input and read-aloud through Bhashini, the national language translation platform, for workers and customers who prefer speaking to typing.
+- An assistant vocabulary for every supported language.
+- Further scheduled Indian languages, added in order of demand.
+
+4.11 AI-based demand forecasting and workforce allocation
+Built:
+- An explainable matching engine (section 4.4).
+- An on-device problem-understanding assistant. It combines a curated vocabulary of trade words with an index built from the live service catalogue, and it has a confidence threshold below which it asks the customer instead of guessing. Services added to the catalogue later are understood without an app update.
+To add (the main AI work for the hackathon):
+- Demand forecasting: forecast bookings for each service, area (pincode or ward) and time window (day or week). The inputs are booking history, seasonal patterns (AC in summer, plumbing and damp in the monsoon, electrical work around festivals), weather, holidays and local events. We will start from a seasonal baseline, move to gradient-boosted models, measure accuracy against the baseline, and pool similar areas so that new areas with little history still get useful forecasts.
+- Workforce allocation: compare forecast demand with member supply (declared availability, service radius and approved trades) to find shortages early. The system then recommends which members to notify before a peak, when to share workers between neighbouring societies, and which skills to train. That last recommendation goes straight into NCCT and society training plans.
+- Learned match ranking: over time, tune the matching weights from real outcomes such as acceptance, completion, ratings and complaints, while keeping the fairness factor. Every score will still show the reasons behind it.
+- A smarter assistant: multilingual intent classification using Indian-language models, plus hints from photos (for example, a picture of a leaking joint), while still asking the customer when unsure.
+- Safeguards: all AI output is advisory. AI never decides a verification, a payment, a payout or a claim. Those decisions stay with authorised people and are logged.
+
+
+5. WHY THIS IS A COOPERATIVE PLATFORM AND NOT ANOTHER AGGREGATOR
+
+- Ownership and governance: the federation runs the platform. Commission, welfare contribution, matching radius, payout cooling period and maximum active services are all settings the cooperative controls, and changing them needs no new software release.
+- Fair pay: the worker keeps the labour amount. Any service charge is decided by the members' general body and shown on every invoice.
+- No hidden ranking: the matching factors are published and explainable, and the fairness factor spreads work across members.
+- Members, not gig IDs: one member has one identity and one wallet but can offer as many trades and services as they are approved for.
+- Community services: bulk and recurring bookings serve housing societies, schools, institutions and panchayats, which extends the cooperative's reach beyond single households.
+- Data stays with the cooperative: members' work and earnings records belong to the cooperative. With the member's consent, the records can be used for credit, training and social security linkage.
+- The catalogue can grow to cover domestic help, caregiving, driving, gardening and any other trade a federation's members offer. A new trade is added as data, with its own verification requirements, and no code change is needed.
+
+
+6. TRUST, SAFETY AND DATA PROTECTION
+
+- The server has the final say. The apps request actions and show the server's answer. Neither app can set a booking status, a verification result, a wallet balance or a payment state, because the database refuses those writes from a phone.
+- Proof of arrival: the one-time door-step code is checked on the server with a limit on attempts.
+- Cost control: materials are approved before they are bought, receipts are uploaded, and the recorded amounts cannot be changed afterwards.
+- Private files: identity documents, certificates, receipts and evidence are stored privately. They open only through short-lived signed links for the people entitled to see them, and access to sensitive files is logged.
+- Location privacy: the worker's location is shared only while they are travelling to a job, only with that customer, and older records are deleted automatically.
+- Correct money: amounts are held in whole paise, the ledger is append-only, payments are verified by the gateway, and payouts cannot be processed twice.
+- Accountability: the audit log cannot be edited or deleted, and no officer can approve their own case.
+- Alignment with the Digital Personal Data Protection Act, 2023: data is collected with consent and only for a stated purpose, kept to the minimum needed and deleted on a schedule.
+- Honest interface: the platform never shows placeholder badges, invented ratings, fake counts or dummy data when a request fails. It shows an error and a retry option.
+
+
+7. TECHNOLOGY STACK
+
+- Mobile apps: Flutter (Dart) for Android and iOS, with a layered architecture (screens, controllers, domain, data). Automated architecture tests stop screens from talking to the database directly.
+- Web (public website and administration panel): Next.js 15 with React 19 and strict TypeScript, deployed on Vercel.
+- Database and business rules: PostgreSQL on Supabase. It provides row-level security on every table, transactional server functions for every business action, a booking state machine table, distance matching, scheduled jobs and real-time change feeds.
+- Real-time updates: Supabase Realtime, scoped to each user's own records, for job offers, booking status, wallet updates and live location.
+- Server functions: Supabase Edge Functions for DigiLocker e-KYC, the background-check provider adapter, route calculation and push notification delivery.
+- Identity and files: Firebase Authentication (phone OTP; the admin panel also supports Google and email sign-in), Firebase Storage (private, signed links only), Firebase Cloud Messaging, Crashlytics and Analytics.
+- Payments: Razorpay (UPI, cards, netbanking), with Razorpay Route planned for settlement to each society.
+- Maps and location: the Google Maps SDK on the phone, and the Google Routes API behind a server function.
+- Planned AI and language stack: Python (pandas, scikit-learn, LightGBM) for forecasting and allocation, served as a scheduled job that writes forecasts back to the database. Indian-language models for intent classification, and Bhashini for speech and translation.
+- Quality: automated tests for the booking state machine, permission consistency between the web panel and the database, input safety, security rules, app architecture and API contracts.
+
+
+8. FEASIBILITY AND CURRENT STATUS
+
+The idea is feasible because most of it is already running.
+- Working now: all four parts are built. The complete customer-to-worker job lifecycle, including payment, live location, arrival code, material approval, completion and wallet credit, has been tested on real Android devices, and both Android apps are packaged for installation. The database schema has grown through 61 versioned migrations.
+- Known gaps, stated plainly:
+  - Refunds are recorded automatically but processed with the gateway by a finance officer.
+  - The background-check vendor integration is an adapter awaiting a production provider, so today operations staff review each case.
+  - In-app emergency dispatch is not yet built; the app places calls to real emergency numbers instead.
+  - Settings are currently read-only in the administration panel.
+  All of these are covered in the plan below.
+- What the hackathon adds: the Federation-Society-Member structure, society-wise invoicing and settlement, the welfare fund, the emergency lane, AI demand forecasting and workforce allocation, voice-first multilingual input, and a pilot with a real labour cooperative society.
+
+
+9. IMPLEMENTATION PLAN
+
+Phase 1 - Cooperative foundation: Federation, Society and Member records; society-level access control; society endorsement in onboarding; bulk member import; society administrator role.
+Phase 2 - Money for cooperatives: GST-ready invoices in the society's name, split settlement to society accounts, the welfare fund ledger, society statements and the surplus-share report.
+Phase 3 - Emergency and community services: the emergency lane with widened radius, simultaneous offers and on-call rosters; recurring and bulk bookings for housing societies, institutions and panchayats.
+Phase 4 - AI: demand forecasting by service, area and week; supply-gap alerts; recommendations for member notifications, cross-society sharing and training; the fairness factor in matching.
+Phase 5 - Welfare and social security: help with e-Shram registration, prompts to enrol in PMSBY, PMJJBY and PM-SYM, federation group cover, and income statements for credit.
+Phase 6 - Voice and language: Bhashini voice input and read-aloud, and assistant vocabulary for every supported language.
+Phase 7 - Pilot and hardening: onboard one labour cooperative society, collect feedback from members and customers, and run load, security and accessibility testing.
+
+
+10. EXPECTED IMPACT
+
+For member workers: steady access to paid work under their own cooperative's name. They keep their full labour earnings, their skills and certificates count with customers, they are paid digitally with a clear record, and they have a route to insurance, welfare, credit and social security.
+For households and communities: verified and qualified workers, prices known in advance, materials approved before purchase, live visibility of the job, protection when things go wrong, and a fast response in emergencies.
+For federations and societies: a digital channel owned by the cooperative, a live view of demand and member utilisation, and data-driven workforce and training planning, including input for NCCT training programmes. This makes cooperatives competitive with private aggregators.
+For the nation: the platform puts into practice the Ministry of Cooperation's vision of "Sahakar se Samriddhi" (prosperity through cooperation). It links Skill India certification to real earning opportunities, brings unorganised workers into the formal digital economy with social security linkage, and uses Digital India infrastructure (DigiLocker, UPI, Bhashini) throughout.
+
+
+11. SCALABILITY AND SUSTAINABILITY
+
+- Technical scale: the platform runs on managed cloud services (a PostgreSQL database, a serverless web tier and cloud storage) that grow with demand. Real-time updates are scoped to each user, and the apps do no constant background polling.
+- Organisational scale: onboarding a new federation or society is a configuration task, not a new deployment. New trades and their verification rules are added as catalogue data.
+- Geographic scale: 11 languages from day one, a design that tolerates poor connectivity (saved data with a "last updated" note, uploads that resume after interruption), and area-based matching that works equally well in towns and villages.
+- Financial sustainability: running costs can be met by a small service charge or a society subscription, both decided democratically by the cooperative's members. Any surplus returns to members, as the cooperative model intends.
+
+
+12. RISKS AND HOW WE ADDRESS THEM
+
+- Low digital literacy: voice input, local languages, large and simple screens, and assisted onboarding by society facilitators.
+- Worker and customer safety: verification before any job, a verified arrival code, location shared only during travel, structured claims and safety alerts.
+- Disputes over price or quality: prices agreed upfront, material approval before purchase, receipts and optional photo evidence, and a decision process with an audit trail.
+- Privacy and data misuse: private storage, short-lived links, logged access to sensitive files, minimal data collection and scheduled deletion.
+- Competing with established private platforms: zero or low commission, members owning the platform, fair allocation of work, and bulk and community contracts that private platforms do not serve well.
+- Unreliable connectivity: data saved on the phone, uploads that resume after interruption, and important actions that are never replayed blindly after reconnecting.

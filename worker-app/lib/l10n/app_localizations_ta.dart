@@ -2332,11 +2332,22 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'உங்கள் முக்கியத் தொழில் ஒன்றாகக் கணக்கிடப்படும். நீங்கள் செய்யும் மற்ற எல்லாத் தொழில்களையும் சேர்க்க இதைத் திறக்கவும்.';
+      'சேமிக்கப்பட்டது. வேறு தொழிலைச் சேர்க்க இதைத் திறக்கவும்.';
 
   @override
   String get onboardingSkillsBody =>
       'நீங்கள் செய்யும் எல்லாத் தொழில்களையும் சேர்க்கவும். நீங்கள் ஒரே தொழிலுக்குக் கட்டுப்பட்டவர் அல்ல.';
+
+  @override
+  String get onboardingSkillsTitle =>
+      'நீங்கள் எந்தெந்தத் தொழில்களைச் செய்கிறீர்கள்?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'உங்கள் முக்கியத் தொழில் மட்டுமல்ல, நீங்கள் செய்யக்கூடிய எல்லாத் தொழில்களையும் டிக் செய்யவும். ஒவ்வொரு புதிய தொழிலையும் எங்கள் குழு சரிபார்த்த பிறகே அதில் உங்களுக்கு வேலைகள் கிடைக்கும்.';
+
+  @override
+  String get onboardingSkillsSaved => 'உங்கள் தொழில்கள் சேமிக்கப்பட்டன.';
 
   @override
   String get onboardingAreaBody =>

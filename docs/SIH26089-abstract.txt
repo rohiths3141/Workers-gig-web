@@ -1,0 +1,64 @@
+WERVEXA: A COOPERATIVE-OWNED GIG SERVICES PLATFORM FOR HOUSEHOLD AND COMMUNITY SERVICES
+(SIH26089 - Ministry of Cooperation, National Council for Cooperative Training)
+
+PROBLEM
+
+Labour Cooperative Federations and Societies have large networks of skilled workers: electricians, plumbers, carpenters, painters, technicians, cleaners, domestic helpers, caregivers, drivers and gardeners. They have no structured digital channel of their own, so work still arrives mostly by word of mouth and income stays irregular. Private aggregator platforms dominate the market. They charge commission, rank workers with opaque algorithms and give workers no ownership. A worker's ITI certificate or Recognition of Prior Learning (RPL) certificate is invisible to customers, cash payments cause disputes, and earnings leave no record that could support credit or social security. Households, for their part, rarely know who is coming, whether that person is qualified, what the job will cost, or what happens if something goes wrong. Federations cannot see demand, member utilisation or skill gaps, so they cannot plan training or allocate their workforce.
+
+PROPOSED SOLUTION
+
+Wervexa is a digital service marketplace that the cooperative owns and runs. Federations and their member Societies use it to offer verified household and community services directly, with no private intermediary taking a share. It has four parts built on one shared backend:
+
+1. Customer App (Android and iOS): the customer describes the problem in their own words and language, books a verified member at a fixed listed price or posts a requirement for nearby members to make offers on, pays digitally, tracks the worker live during travel, approves materials before they are bought, rates the work and raises claims.
+
+2. Member Worker App (Android and iOS): the worker signs in with a mobile OTP, verifies identity through DigiLocker e-KYC, proves ITI, diploma or RPL qualifications, offers several trades and services, receives nearby jobs in real time, runs each job step by step, and is paid into a ledger-backed wallet that pays out to a verified bank account.
+
+3. Federation and Society Administration Panel (web): the verification queue, member management, bookings with a full timeline, explainable matching scores, payments, payouts, insurance, claims, support and an audit log that cannot be altered. Access is controlled by roles.
+
+4. Public Website: services, how verification works, safety information and policies.
+
+HOW A JOB WORKS
+
+The customer describes the problem. An assistant that understands English, Hinglish and local words for household problems identifies the trade, and it asks the customer instead of guessing when it is unsure. The customer pays upfront through UPI, card or netbanking. The payment is verified on the server against the gateway's signature and held until the work is approved. The job is offered in real time to eligible members nearby, and the first valid acceptance locks the booking. The worker's live location is shared with that customer only while the worker is travelling. At the door, a one-time arrival code checked on the server confirms the worker is really there. Any material is approved by the customer before it is bought, and the receipt is recorded. When the customer approves completion, the worker's full share is credited automatically. Both sides rate each other, and structured claims cover damage, theft, injury, poor workmanship and overcharging.
+
+HOW IT MEETS THE EXPECTED FEATURES
+
+- Registration and verification: mobile OTP sign-in, onboarding saved on the server step by step, DigiLocker identity check, background check, bank account verification, and an officer review in which no one can approve their own case. A worker cannot take jobs until the identity and background checks have passed.
+- Skill profiling and certification: one member can hold many approved trades and many services. ITI, diploma and RPL credentials are verified separately and shown as badges only while they are valid.
+- Booking and scheduling: fixed-service booking and post-a-requirement booking, with slots or "as soon as possible", today, tomorrow or a chosen date. The database enforces the booking lifecycle, so no app can move a booking into an illegal state.
+- Geo-location matching: distance-based eligibility within both the platform's radius and the worker's own chosen radius. Workers are ranked by a transparent weighted score: trade 24%, qualification 16%, identity 12%, RPL skill 10%, background 10%, availability 8%, rating 8%, proximity 8%, insurance 4%. New workers get a fair neutral starting score.
+- Digital payments and invoicing: Razorpay checkout with gateway verification, an append-only wallet ledger kept in whole paise, approved payouts that cannot be paid twice, material reimbursement against receipts, and refund records created automatically for cancelled bookings.
+- Rating and feedback: two-way ratings allowed only after a completed job, threaded support tickets, and evidence-based claims.
+- Welfare and insurance: insurance records for each member, zero commission by default, and complete earnings records.
+- Emergency and on-demand: "as soon as possible" booking with real-time offers to nearby members.
+- Federation dashboard: role-based administration with checks at five levels and live figures taken straight from the database.
+- Multilingual: both apps run fully in 11 languages: English, Hindi, Bengali, Marathi, Telugu, Tamil, Gujarati, Urdu, Kannada, Odia and Malayalam.
+
+WHAT THE HACKATHON ADDS
+
+- A cooperative structure of Federation, Society and Member, with each society seeing only its own members and the federation seeing totals across all its societies.
+- GST-ready invoices in the society's name, split settlement into society bank accounts, and a member welfare fund whose contribution is set by the general body.
+- An emergency lane that widens the search radius, sends simultaneous priority offers and falls back to a society on-call roster.
+- A fairness factor in matching that spreads work across members.
+- AI demand forecasting by service, area and week, using booking history, seasonality, weather and holidays. It drives workforce allocation: which members to alert before a demand peak, when to share workers between societies, and which skills NCCT and societies should train for.
+- Help with e-Shram registration and enrolment in PMSBY, PMJJBY and PM-SYM.
+- Voice input and read-aloud through Bhashini.
+- A pilot with a real labour cooperative society.
+
+All AI output is advisory. Verification, payment and claim decisions stay with authorised people, and every decision is logged.
+
+TECHNOLOGY
+
+Flutter mobile apps; a Next.js and TypeScript web panel and public website; PostgreSQL on Supabase with row-level security, business rules enforced in the database, real-time updates and Edge Functions; Firebase Authentication, private Storage and push notifications; Razorpay; Google Maps and the Routes API; DigiLocker e-KYC; and Python forecasting models (planned). Files are private and open only through links that expire in minutes. Location data is deleted on a schedule. The design follows the Digital Personal Data Protection Act, 2023.
+
+CURRENT STATUS
+
+A working prototype of all four parts exists. The full customer-to-worker job lifecycle has been tested on real Android devices: booking, payment, real-time offer, live tracking, arrival code, material approval, completion and wallet credit. Known gaps are stated openly:
+- Refunds are recorded automatically but processed with the gateway manually.
+- The background-check vendor integration is still a stand-in, so operations staff review each case.
+- In-app emergency dispatch is not yet built.
+Each gap is covered in the hackathon plan.
+
+IMPACT
+
+Member workers get steady work under their own cooperative's name, keep their full labour earnings, have their skills recognised, and gain a path to insurance, welfare and credit. Households get verified professionals, prices known in advance and protection when things go wrong. Federations get a digital channel they own, plus the data they need for workforce and training planning. The platform puts into practice the vision of "Sahakar se Samriddhi" (prosperity through cooperation), connects Skill India certification to real earnings, and builds on Digital India infrastructure: DigiLocker, UPI and Bhashini.

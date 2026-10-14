@@ -150,6 +150,7 @@ export const apiRoutes = {
   adminWorker: (id: string) => `/api/admin/workers/${id}`,
   adminWorkerStatus: (id: string) => `/api/admin/workers/${id}/status`,
   adminWorkerBackgroundCheck: (id: string) => `/api/admin/workers/${id}/background-check`,
+  adminWorkerApproveAll: (id: string) => `/api/admin/workers/${id}/approve-all`,
   adminGigDecision: (id: string) => `/api/admin/gigs/${id}/decision`,
 
   adminCustomers: '/api/admin/customers',

@@ -2327,11 +2327,21 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'നിങ്ങളുടെ പ്രധാന ജോലി ഒന്നായി കണക്കാക്കും. നിങ്ങൾ ചെയ്യുന്ന മറ്റെല്ലാ ജോലികളും ചേർക്കാൻ ഇത് തുറക്കുക.';
+      'സേവ് ചെയ്തു. മറ്റൊരു ജോലി ചേർക്കാൻ ഇത് തുറക്കുക.';
 
   @override
   String get onboardingSkillsBody =>
       'നിങ്ങൾ ചെയ്യുന്ന എല്ലാ ജോലികളും ചേർക്കുക. നിങ്ങൾ ഒരു ജോലിയിൽ മാത്രം ഒതുങ്ങുന്നില്ല.';
+
+  @override
+  String get onboardingSkillsTitle => 'നിങ്ങൾ ഏതൊക്കെ ജോലികൾ ചെയ്യുന്നു?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'പ്രധാന ജോലി മാത്രമല്ല, നിങ്ങൾക്ക് ചെയ്യാനാകുന്ന എല്ലാ ജോലികളും ടിക്ക് ചെയ്യുക. ഓരോ പുതിയ ജോലിയും ഞങ്ങളുടെ ടീം പരിശോധിച്ച ശേഷമേ അതിൽ നിങ്ങൾക്ക് ജോലികൾ ലഭിക്കൂ.';
+
+  @override
+  String get onboardingSkillsSaved => 'നിങ്ങളുടെ ജോലികൾ സേവ് ചെയ്തു.';
 
   @override
   String get onboardingAreaBody =>

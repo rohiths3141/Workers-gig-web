@@ -4217,7 +4217,7 @@ abstract class AppLocalizations {
   /// No description provided for @onboardingSkillsDoneBody.
   ///
   /// In en, this message translates to:
-  /// **'Your main trade counts as one. Open this to add every other trade you work in.'**
+  /// **'Saved. Open this to add another trade you work in.'**
   String get onboardingSkillsDoneBody;
 
   /// No description provided for @onboardingSkillsBody.
@@ -4225,6 +4225,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add every trade you work in. You are not limited to one.'**
   String get onboardingSkillsBody;
+
+  /// No description provided for @onboardingSkillsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which trades do you work in?'**
+  String get onboardingSkillsTitle;
+
+  /// No description provided for @onboardingSkillsSheetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Tick every trade you can do, not just your main one. Our team checks each new trade before you get jobs in it.'**
+  String get onboardingSkillsSheetBody;
+
+  /// No description provided for @onboardingSkillsSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trades are saved.'**
+  String get onboardingSkillsSaved;
 
   /// No description provided for @onboardingAreaBody.
   ///

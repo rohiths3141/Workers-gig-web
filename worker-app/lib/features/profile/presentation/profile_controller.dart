@@ -91,6 +91,9 @@ class ProfileController extends AutoDisposeAsyncNotifier<void> {
     return result;
   }
 
+  Future<Result<Worker>> confirmTrades() =>
+      _run(() => ref.read(workerRepositoryProvider).confirmTrades());
+
   Future<Result<Worker>> _run(Future<Result<Worker>> Function() action) async {
     state = const AsyncLoading();
     final result = await action();

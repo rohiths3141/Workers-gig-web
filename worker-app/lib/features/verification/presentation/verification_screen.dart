@@ -60,7 +60,7 @@ class VerificationScreen extends ConsumerWidget {
               SectionHeader(title: l10n.verificationInsurance),
 
               policies.when(
-                loading: () => const ListSkeleton(itemCount: 1, itemHeight: 88),
+                loading: () => const ListSkeleton.inline(itemCount: 1, itemHeight: 88),
                 error: (error, _) => FailureView(
                   failure: asFailure(error),
                   onRetry: () => ref.invalidate(insurancePoliciesProvider),

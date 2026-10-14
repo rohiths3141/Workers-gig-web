@@ -40,6 +40,7 @@ class Worker {
     this.ratingAvg,
     this.verifiedAt,
     this.restrictionReason,
+    this.tradesConfirmedAt,
     this.profilePhotoUrl,
   });
 
@@ -86,6 +87,11 @@ class Worker {
   /// Set by trust and safety alongside a status change. Shown verbatim so a
   /// restricted worker knows what happened rather than finding features missing.
   final String? restrictionReason;
+
+  /// When the worker last reviewed their trade list. Null until they do:
+  /// choosing a main trade adds that trade, but it is not the worker saying
+  /// "these are all the trades I work in".
+  final DateTime? tradesConfirmedAt;
 
   /// Resolved from a signed URL, not stored on the row.
   final String? profilePhotoUrl;
@@ -168,6 +174,7 @@ class Worker {
       isInsured: isInsured,
       verifiedAt: verifiedAt,
       restrictionReason: restrictionReason,
+      tradesConfirmedAt: tradesConfirmedAt,
       profilePhotoUrl: profilePhotoUrl ?? this.profilePhotoUrl,
     );
   }

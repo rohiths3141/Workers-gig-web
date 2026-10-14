@@ -2311,11 +2311,21 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'آپ کا بنیادی کام ان میں سے ایک شمار ہوتا ہے۔ باقی تمام کام شامل کرنے کے لیے اسے کھولیں۔';
+      'محفوظ ہو گیا۔ کوئی اور کام شامل کرنے کے لیے اسے کھولیں۔';
 
   @override
   String get onboardingSkillsBody =>
       'آپ جو بھی کام کرتے ہیں سب شامل کریں۔ آپ ایک کام تک محدود نہیں ہیں۔';
+
+  @override
+  String get onboardingSkillsTitle => 'آپ کون کون سے کام کرتے ہیں؟';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'صرف بنیادی کام نہیں، آپ جو بھی کام کر سکتے ہیں سب پر ٹک کریں۔ ہر نئے کام کی جانچ ہماری ٹیم کرتی ہے، اس کے بعد ہی آپ کو اس میں کام ملتا ہے۔';
+
+  @override
+  String get onboardingSkillsSaved => 'آپ کے کام محفوظ ہو گئے۔';
 
   @override
   String get onboardingAreaBody =>

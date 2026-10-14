@@ -170,6 +170,16 @@ export type CustomerRow = {
   updated_at: string;
 };
 
+/** The worker_eligibility() payload: what still stops a worker taking jobs. */
+export type WorkerEligibility = {
+  worker_id: string;
+  eligible: boolean;
+  account_status: string;
+  availability: string;
+  active_gig_count: number;
+  reasons: { code: string; message: string; status?: string; action?: string }[];
+};
+
 export type WorkerRow = {
   id: string;
   profile_id: string;
@@ -816,6 +826,19 @@ export interface Database {
       admin_open_background_check: {
         Args: { p_worker_id: string };
         Returns: WorkerVerificationRow;
+      };
+      admin_approve_worker_all: {
+        Args: { p_worker_id: string; p_reason: string };
+        Returns: {
+          approved_verifications: string[];
+          approved_trades: number;
+          approved_gigs: number;
+          eligibility: WorkerEligibility;
+        };
+      };
+      worker_eligibility: {
+        Args: { p_worker_id?: string | null };
+        Returns: WorkerEligibility;
       };
       decide_verification: {
         Args: {

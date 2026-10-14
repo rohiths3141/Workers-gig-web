@@ -49,6 +49,11 @@ export const workerStatusSchema = z.object({
   reason,
 });
 
+/** Approve every check, trade and pending service, then activate. */
+export const workerApproveAllSchema = z.object({
+  reason,
+});
+
 export const customerStatusSchema = z.object({
   status: z.nativeEnum(CustomerStatus),
   reason,

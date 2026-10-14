@@ -128,6 +128,7 @@ abstract final class WorkerMapper {
         isInsured: row['is_insured'] == true,
         verifiedAt: parseDate(row['verified_at']),
         restrictionReason: row['restriction_reason'] as String?,
+        tradesConfirmedAt: parseDate(row['trades_confirmed_at']),
         profilePhotoUrl: profilePhotoUrl,
       );
 

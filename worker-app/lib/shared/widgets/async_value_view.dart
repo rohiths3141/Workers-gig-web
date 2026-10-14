@@ -219,24 +219,48 @@ class _CentredLoader extends StatelessWidget {
 /// A placeholder shown while a list loads, shaped like the content that will
 /// replace it so the layout does not jump.
 class ListSkeleton extends StatelessWidget {
-  const ListSkeleton({this.itemCount = 3, this.itemHeight = 96, super.key});
+  const ListSkeleton({this.itemCount = 3, this.itemHeight = 96, super.key})
+      : inline = false;
+
+  /// For a section inside a list that already scrolls. The full-screen form
+  /// is its own ListView, and a ListView inside another is given unbounded
+  /// height and throws during layout.
+  const ListSkeleton.inline({
+    this.itemCount = 3,
+    this.itemHeight = 96,
+    super.key,
+  }) : inline = true;
 
   final int itemCount;
   final double itemHeight;
+  final bool inline;
 
   @override
   Widget build(BuildContext context) {
+    Widget placeholder() => Container(
+          height: itemHeight,
+          decoration: BoxDecoration(
+            color: context.surfaceMuted,
+            borderRadius: BorderRadius.circular(AppRadius.lg),
+          ),
+        );
+
+    if (inline) {
+      return Column(
+        children: [
+          for (var i = 0; i < itemCount; i++) ...[
+            if (i > 0) const SizedBox(height: AppSpacing.md),
+            placeholder(),
+          ],
+        ],
+      );
+    }
+
     return ListView.separated(
       padding: const EdgeInsets.all(AppSpacing.screenPadding),
       itemCount: itemCount,
       separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.md),
-      itemBuilder: (_, __) => Container(
-        height: itemHeight,
-        decoration: BoxDecoration(
-          color: context.surfaceMuted,
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-        ),
-      ),
+      itemBuilder: (_, __) => placeholder(),
     );
   }
 }

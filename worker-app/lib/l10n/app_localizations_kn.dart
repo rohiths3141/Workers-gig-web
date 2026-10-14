@@ -2313,11 +2313,21 @@ class AppLocalizationsKn extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'ನಿಮ್ಮ ಮುಖ್ಯ ಕೆಲಸ ಒಂದಾಗಿ ಎಣಿಕೆಯಾಗುತ್ತದೆ. ನೀವು ಮಾಡುವ ಇತರ ಎಲ್ಲಾ ಕೆಲಸಗಳನ್ನು ಸೇರಿಸಲು ಇದನ್ನು ತೆರೆಯಿರಿ.';
+      'ಉಳಿಸಲಾಗಿದೆ. ಇನ್ನೊಂದು ಕೆಲಸ ಸೇರಿಸಲು ಇದನ್ನು ತೆರೆಯಿರಿ.';
 
   @override
   String get onboardingSkillsBody =>
       'ನೀವು ಮಾಡುವ ಎಲ್ಲಾ ಕೆಲಸಗಳನ್ನು ಸೇರಿಸಿ. ನೀವು ಒಂದೇ ಕೆಲಸಕ್ಕೆ ಸೀಮಿತರಲ್ಲ.';
+
+  @override
+  String get onboardingSkillsTitle => 'ನೀವು ಯಾವ ಯಾವ ಕೆಲಸಗಳನ್ನು ಮಾಡುತ್ತೀರಿ?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'ಮುಖ್ಯ ಕೆಲಸ ಮಾತ್ರವಲ್ಲ, ನೀವು ಮಾಡಬಲ್ಲ ಎಲ್ಲಾ ಕೆಲಸಗಳನ್ನು ಟಿಕ್ ಮಾಡಿ. ಪ್ರತಿ ಹೊಸ ಕೆಲಸವನ್ನು ನಮ್ಮ ತಂಡ ಪರಿಶೀಲಿಸಿದ ನಂತರವೇ ಅದರಲ್ಲಿ ನಿಮಗೆ ಕೆಲಸಗಳು ಸಿಗುತ್ತವೆ.';
+
+  @override
+  String get onboardingSkillsSaved => 'ನಿಮ್ಮ ಕೆಲಸಗಳನ್ನು ಉಳಿಸಲಾಗಿದೆ.';
 
   @override
   String get onboardingAreaBody =>

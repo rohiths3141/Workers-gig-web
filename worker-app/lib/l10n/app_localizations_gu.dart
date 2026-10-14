@@ -2298,11 +2298,21 @@ class AppLocalizationsGu extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'તમારું મુખ્ય કામ એક તરીકે ગણાય છે. તમે કરો છો તે બાકીનાં બધાં કામ ઉમેરવા આ ખોલો.';
+      'સેવ થઈ ગયું. બીજું કોઈ કામ ઉમેરવા આ ખોલો.';
 
   @override
   String get onboardingSkillsBody =>
       'તમે કરો છો તે બધાં કામ ઉમેરો. તમે એક જ કામ સુધી મર્યાદિત નથી.';
+
+  @override
+  String get onboardingSkillsTitle => 'તમે કયાં કયાં કામ કરો છો?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'ફક્ત મુખ્ય કામ નહીં, તમે કરી શકો તે બધાં કામ પર ટિક કરો. દરેક નવા કામની તપાસ અમારી ટીમ કરે છે, તે પછી જ તમને તેમાં કામ મળે છે.';
+
+  @override
+  String get onboardingSkillsSaved => 'તમારાં કામ સેવ થઈ ગયાં.';
 
   @override
   String get onboardingAreaBody => 'કોઈ કામ માટે તમે કેટલું દૂર જવા તૈયાર છો.';

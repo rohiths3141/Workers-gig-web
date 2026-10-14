@@ -158,6 +158,10 @@ abstract interface class WorkerRepository {
   /// request, not a grant.
   Future<Result<WorkerSkill>> requestSkill(String serviceId);
 
+  /// Records that the worker has reviewed their trade list. Completes the
+  /// "What you can do" onboarding step.
+  Future<Result<Worker>> confirmTrades();
+
   Future<Result<EarningsSummary>> getEarningsSummary();
 
   Future<Result<RatingSummary>> getRatingSummary();

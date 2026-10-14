@@ -109,7 +109,7 @@ class WalletScreen extends ConsumerWidget {
               ),
 
               breakdowns.when(
-                loading: () => const ListSkeleton(itemCount: 2, itemHeight: 90),
+                loading: () => const ListSkeleton.inline(itemCount: 2, itemHeight: 90),
                 error: (error, _) => FailureView(
                   failure: asFailure(error),
                   onRetry: () => ref.invalidate(earningBreakdownsProvider),

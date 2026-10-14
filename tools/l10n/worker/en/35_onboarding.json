@@ -7,14 +7,21 @@
   "onboardingStepCount": "{done} of {total}",
   "@onboardingStepCount": {
     "placeholders": {
-      "done": {"type": "int"},
-      "total": {"type": "int"}
+      "done": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
     }
   },
   "onboardingBasicBody": "Your city and PIN code, so we can find work near you.",
   "onboardingTradeBody": "The trade you mainly work in.",
-  "onboardingSkillsDoneBody": "Your main trade counts as one. Open this to add every other trade you work in.",
+  "onboardingSkillsDoneBody": "Saved. Open this to add another trade you work in.",
   "onboardingSkillsBody": "Add every trade you work in. You are not limited to one.",
+  "onboardingSkillsTitle": "Which trades do you work in?",
+  "onboardingSkillsSheetBody": "Tick every trade you can do, not just your main one. Our team checks each new trade before you get jobs in it.",
+  "onboardingSkillsSaved": "Your trades are saved.",
   "onboardingAreaBody": "How far you are willing to travel for a job.",
   "onboardingKycBody": "A government ID. Customers are letting you into their homes.",
   "onboardingReviewNotice": "Once you have finished these, our team checks your documents. You can carry on setting up your services while you wait.",

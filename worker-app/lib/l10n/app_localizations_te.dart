@@ -2318,11 +2318,21 @@ class AppLocalizationsTe extends AppLocalizations {
 
   @override
   String get onboardingSkillsDoneBody =>
-      'మీ ప్రధాన పని ఒకటిగా లెక్కించబడుతుంది. మీరు చేసే మిగతా అన్ని పనులను జోడించడానికి దీన్ని తెరవండి.';
+      'సేవ్ అయింది. మరో పనిని జోడించడానికి దీన్ని తెరవండి.';
 
   @override
   String get onboardingSkillsBody =>
       'మీరు చేసే అన్ని పనులను జోడించండి. మీరు ఒక్క పనికే పరిమితం కాదు.';
+
+  @override
+  String get onboardingSkillsTitle => 'మీరు ఏ ఏ పనులు చేస్తారు?';
+
+  @override
+  String get onboardingSkillsSheetBody =>
+      'మీ ప్రధాన పని మాత్రమే కాదు, మీరు చేయగల అన్ని పనులను టిక్ చేయండి. ప్రతి కొత్త పనిని మా బృందం తనిఖీ చేసిన తర్వాతే మీకు ఆ పనిలో ఉద్యోగాలు వస్తాయి.';
+
+  @override
+  String get onboardingSkillsSaved => 'మీ పనులు సేవ్ అయ్యాయి.';
 
   @override
   String get onboardingAreaBody =>
