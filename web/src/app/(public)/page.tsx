@@ -4,6 +4,7 @@ import {
   BadgeCheck,
   ClipboardCheck,
   CreditCard,
+  Download,
   FileCheck2,
   Fingerprint,
   Receipt,
@@ -79,6 +80,10 @@ export default async function HomePage() {
                 </ButtonLink>
                 <ButtonLink href={publicRoutes.forWorkers} variant="outline" size="lg">
                   Join as a worker
+                </ButtonLink>
+                <ButtonLink href={publicRoutes.download} variant="secondary" size="lg">
+                  <Download aria-hidden className="size-4" />
+                  Download the app
                 </ButtonLink>
               </div>
 

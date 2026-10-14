@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogIn, Menu, X } from 'lucide-react';
+import { Download, LogIn, Menu, X } from 'lucide-react';
 
 import { BrandLogo } from '@/components/shared/brand-logo';
 import { ButtonLink } from '@/components/ui/button';
@@ -92,16 +92,27 @@ export function SiteHeader({ brandName }: { brandName: string }) {
             </ButtonLink>
           </div>
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-navigation"
-            className="-mr-2 rounded-lg p-2 text-ink-700 hover:bg-ink-100 xl:hidden"
-          >
-            {menuOpen ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
-            <span className="sr-only">{menuOpen ? 'Close menu' : 'Open menu'}</span>
-          </button>
+          {/* Phones never see the desktop nav, and the Download link is buried in
+              the menu, so the app download gets its own button beside the toggle. */}
+          <div className="flex items-center gap-1 xl:hidden">
+            {!isActive(publicRoutes.download) && (
+              <ButtonLink href={publicRoutes.download} size="sm">
+                <Download aria-hidden className="size-4" />
+                Get the app
+              </ButtonLink>
+            )}
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen((open) => !open)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-navigation"
+              className="-mr-2 rounded-lg p-2 text-ink-700 hover:bg-ink-100"
+            >
+              {menuOpen ? <X aria-hidden className="size-5" /> : <Menu aria-hidden className="size-5" />}
+              <span className="sr-only">{menuOpen ? 'Close menu' : 'Open menu'}</span>
+            </button>
+          </div>
         </div>
       </div>
 
