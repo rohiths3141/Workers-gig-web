@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Link, { useLinkStatus } from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronRight, LogOut, Menu, X } from 'lucide-react';
+import { ChevronRight, Loader2, LogOut, Menu, X } from 'lucide-react';
 
 import { visibleNavigation } from '@/components/admin/navigation';
 import { BrandLogo } from '@/components/shared/brand-logo';
@@ -94,6 +94,7 @@ export function AdminShell({
                   >
                     <Icon aria-hidden className="size-4 shrink-0" />
                     <span className="truncate">{item.label}</span>
+                    <NavPending />
                   </Link>
                 </li>
               );
@@ -213,6 +214,21 @@ export function AdminShell({
         </main>
       </div>
     </div>
+  );
+}
+
+/**
+ * A spinner on the menu item that was just clicked, until its page arrives.
+ * useLinkStatus reads the enclosing Link, so this must render inside one.
+ */
+function NavPending() {
+  const { pending } = useLinkStatus();
+  if (!pending) return null;
+  return (
+    <>
+      <Loader2 aria-hidden className="ml-auto size-3.5 shrink-0 animate-spin" />
+      <span className="sr-only">Loading</span>
+    </>
   );
 }
 

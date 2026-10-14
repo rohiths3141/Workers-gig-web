@@ -1,6 +1,8 @@
+import { Suspense } from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/next';
 
+import { NavigationProgress } from '@/components/shared/navigation-progress';
 import { publicEnv } from '@/lib/config/env';
 import { absolutePublicUrl } from '@/lib/config/routes';
 
@@ -57,6 +59,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en-IN">
       <body className="min-h-dvh bg-white antialiased">
+        {/* useSearchParams needs a Suspense boundary, or every static public
+            page would opt out of prerendering. */}
+        <Suspense fallback={null}>
+          <NavigationProgress />
+        </Suspense>
         {children}
         <Analytics />
       </body>
