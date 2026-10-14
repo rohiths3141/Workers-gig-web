@@ -73,9 +73,11 @@ const csp = [
   "default-src 'self'",
   // Next.js injects an inline bootstrap script. Beyond that, scripts may come
   // only from this origin and from Google's sign-in and reCAPTCHA hosts — no
-  // general-purpose script CDN is permitted.
+  // general-purpose script CDN is permitted. Vercel Analytics is served from
+  // this origin (/_vercel/insights) in production; in development it loads a
+  // debug build from Vercel's script host instead.
   `script-src 'self' 'unsafe-inline' ${googleSignInOrigins.join(' ')}${
-    process.env.NODE_ENV === 'development' ? " 'unsafe-eval'" : ''
+    process.env.NODE_ENV === 'development' ? " 'unsafe-eval' https://va.vercel-scripts.com" : ''
   }`,
   "style-src 'self' 'unsafe-inline'",
   `img-src ${imgSrc.join(' ')}`,

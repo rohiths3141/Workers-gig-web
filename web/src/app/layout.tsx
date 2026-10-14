@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import { Analytics } from '@vercel/analytics/next';
 
 import { publicEnv } from '@/lib/config/env';
 import { absolutePublicUrl } from '@/lib/config/routes';
@@ -55,7 +56,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-IN">
-      <body className="min-h-dvh bg-white antialiased">{children}</body>
+      <body className="min-h-dvh bg-white antialiased">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
